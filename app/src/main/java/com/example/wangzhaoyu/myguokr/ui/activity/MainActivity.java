@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.wangzhaoyu.myguokr.R;
+import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.ui.adapter.TabViewPagerAdapter;
 import com.example.wangzhaoyu.myguokr.ui.fragment.PagerTextFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ScientificFragment;
@@ -21,7 +22,7 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
-
+    private static String TAG = MainActivity.class.getSimpleName();
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //TODO
+                                ArticleServer.test();
                             }
                         }).show();
             }
