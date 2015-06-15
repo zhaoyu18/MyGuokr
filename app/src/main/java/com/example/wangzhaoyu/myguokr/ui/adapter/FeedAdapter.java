@@ -8,7 +8,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.wangzhaoyu.myguokr.R;
+import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.ui.view.SquaredImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -18,9 +22,15 @@ import butterknife.InjectView;
  */
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
+    private ArrayList<ArticleSnapShot> mSnapShots;
 
-    public FeedAdapter(Context mContext) {
+    public FeedAdapter(Context mContext, ArrayList<ArticleSnapShot> articleList) {
         this.mContext = mContext;
+        this.mSnapShots = articleList;
+    }
+
+    public void setArticleList(ArrayList<ArticleSnapShot> articleList) {
+        this.mSnapShots = articleList;
     }
 
     @Override
@@ -31,13 +41,17 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ArticleSnapShot snapShot = mSnapShots.get(position);
         CellFeedViewHolder viewHolder = (CellFeedViewHolder) holder;
-        viewHolder.mIvTitle.setImageResource(R.drawable.img_feed_center_1);
+        ImageLoader.getInstance().displayImage(snapShot.getSmall_image(),
+                viewHolder.mIvTitle);
+        viewHolder.mTvTitle.setText(snapShot.getTitle());
+        viewHolder.mTvAbstract.setText(snapShot.getSummary());
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return mSnapShots.size();
     }
 
     public static class CellFeedViewHolder extends RecyclerView.ViewHolder {

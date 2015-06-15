@@ -7,6 +7,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 /**
  * @author wangzhaoyu
@@ -22,6 +25,25 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+        initImageLoader();
+    }
+
+    /**
+     * 初始化imageloader
+     */
+    private void initImageLoader() {
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
+                .threadPoolSize(5)
+                .memoryCache(new WeakMemoryCache())
+                .writeDebugLogs()
+//                .denyCacheImageMultipleSizesInMemory()
+//                .memoryCache(new LruMemoryCache(20 * 1024 * 1024))
+//                .memoryCacheSize(20 * 1024 * 1024)
+//                .memoryCacheSizePercentage(20)
+//                .memoryCacheExtraOptions(480, 800)
+                .build();
+
+        ImageLoader.getInstance().init(config);
     }
 
     /**

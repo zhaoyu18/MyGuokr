@@ -10,7 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.wangzhaoyu.myguokr.R;
+import com.example.wangzhaoyu.myguokr.core.net.SimpleDataListener;
+import com.example.wangzhaoyu.myguokr.model.reply.ArticleList;
+import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
+import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.ui.adapter.FeedAdapter;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -21,7 +27,8 @@ import butterknife.InjectView;
 public class ScientificFragment extends Fragment {
     private View mRootView;
     @InjectView(R.id.rv_feed)
-    RecyclerView mRvFeed;
+    RecyclerView mFeedRecycler;
+    private FeedAdapter mFeedAdapter;
 
     public ScientificFragment() {
     }
@@ -38,15 +45,23 @@ public class ScientificFragment extends Fragment {
     }
 
     private void setupFeed() {
+        ArticleServer.getArticleList(new SimpleDataListener<ArticleList>() {
+            @Override
+            public void onRequestSuccess(ArticleList data) {
+                mFeedAdapter.setArticleList(data.getResult());
+                mFeedAdapter.notifyDataSetChanged();
+            }
+        });
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()) {
             @Override
             protected int getExtraLayoutSpace(RecyclerView.State state) {
                 return 300;
             }
         };
-        mRvFeed.setLayoutManager(linearLayoutManager);
+        mFeedRecycler.setLayoutManager(linearLayoutManager);
 
-        FeedAdapter feedAdapter = new FeedAdapter(getActivity());
-        mRvFeed.setAdapter(feedAdapter);
+        mFeedAdapter = new FeedAdapter(getActivity(), new ArrayList<ArticleSnapShot>());
+        mFeedRecycler.setAdapter(mFeedAdapter);
     }
 }
