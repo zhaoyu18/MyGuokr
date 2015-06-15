@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ArticleServer.test();
+                                ArticleServer.test2();
                             }
                         }).show();
             }

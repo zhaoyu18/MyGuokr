@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 /**
  * @author wangzhaoyu
@@ -15,6 +16,7 @@ public class AppController extends Application {
     private static AppController sInstance;
 
     private RequestQueue mReqQueue;
+    private Gson mGson;
 
     @Override
     public void onCreate() {
@@ -65,5 +67,12 @@ public class AppController extends Application {
         if (mReqQueue != null) {
             mReqQueue.cancelAll(tag);
         }
+    }
+
+    public Gson getGson() {
+        if (mGson == null) {
+            mGson = new Gson();
+        }
+        return mGson;
     }
 }
