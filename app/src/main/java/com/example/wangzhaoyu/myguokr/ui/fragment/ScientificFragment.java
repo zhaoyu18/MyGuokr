@@ -3,6 +3,7 @@ package com.example.wangzhaoyu.myguokr.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,6 +29,9 @@ public class ScientificFragment extends Fragment {
     private View mRootView;
     @InjectView(R.id.rv_feed)
     RecyclerView mFeedRecycler;
+    @InjectView(R.id.refeshlayout)
+    SwipeRefreshLayout mRefreshLayout;
+
     private FeedAdapter mFeedAdapter;
 
     public ScientificFragment() {
@@ -39,20 +43,12 @@ public class ScientificFragment extends Fragment {
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_scientific, container, false);
             ButterKnife.inject(this, mRootView);
-            setupFeed();
+            initView();
         }
         return mRootView;
     }
 
-    private void setupFeed() {
-        ArticleServer.getArticleList(new SimpleDataListener<ArticleList>() {
-            @Override
-            public void onRequestSuccess(ArticleList data) {
-                mFeedAdapter.setArticleList(data.getResult());
-                mFeedAdapter.notifyDataSetChanged();
-            }
-        });
-
+    private void initView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()) {
             @Override
             protected int getExtraLayoutSpace(RecyclerView.State state) {
@@ -63,5 +59,24 @@ public class ScientificFragment extends Fragment {
 
         mFeedAdapter = new FeedAdapter(getActivity(), new ArrayList<ArticleSnapShot>());
         mFeedRecycler.setAdapter(mFeedAdapter);
+
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+            }
+        });
+    }
+
+    private void loadData() {
+        mRefreshLayout.setRefreshing(true);
+        ArticleServer.getArticleList(new SimpleDataListener<ArticleList>() {
+            @Override
+            public void onRequestSuccess(ArticleList data) {
+                mFeedAdapter.setArticleList(data.getResult());
+                mFeedAdapter.notifyDataSetChanged();
+                mRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 }

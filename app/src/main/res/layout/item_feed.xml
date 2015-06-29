@@ -3,36 +3,36 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="120dp"
     android:layout_gravity="center"
     android:layout_margin="8dp"
     card_view:cardCornerRadius="4dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <com.example.wangzhaoyu.myguokr.ui.view.SquaredImageView
-            android:id="@+id/iv_feed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tv_title"
             style="@style/AppTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="北京这两天为啥颜值爆表?" />
+            android:layout_margin="16dp"
+            android:layout_toLeftOf="@+id/iv_title"
+            android:layout_toStartOf="@+id/iv_title"
+            android:maxLines="3"
+            android:text="北京这两天为啥颜值爆表?"
+            android:textSize="@dimen/abc_text_size_title_material" />
 
-        <TextView
-            android:id="@+id/tv_abstract"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="这两天，你的朋友圈又被北京的朋友的蓝天照片刷爆，北京的天这两天到底是怎么了，究其原因，”北风“这两个字就可以概括..." />
+        <ImageView
+            android:id="@+id/iv_title"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            android:background="@color/primary_material_light"
+            android:scaleType="centerCrop" />
 
-    </LinearLayout>
+    </RelativeLayout>
 </android.support.v7.widget.CardView>

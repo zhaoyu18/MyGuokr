@@ -14,6 +14,7 @@ import java.lang.reflect.Type;
 
 /**
  * 可以解析model的
+ *
  * @author wangzhaoyu
  */
 public abstract class DataListener<T> implements Response.Listener<JSONObject>, Response.ErrorListener {
