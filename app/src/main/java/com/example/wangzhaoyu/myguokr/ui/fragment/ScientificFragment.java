@@ -3,7 +3,6 @@ package com.example.wangzhaoyu.myguokr.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +15,11 @@ import com.example.wangzhaoyu.myguokr.model.reply.ArticleList;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.ui.adapter.FeedAdapter;
+import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
+import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
+import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrHandler;
+import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.RentalsSunHeaderView;
+import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.util.PtrLocalDisplay;
 
 import java.util.ArrayList;
 
@@ -30,7 +34,7 @@ public class ScientificFragment extends Fragment {
     @InjectView(R.id.rv_feed)
     RecyclerView mFeedRecycler;
     @InjectView(R.id.refeshlayout)
-    SwipeRefreshLayout mRefreshLayout;
+    PtrFrameLayout mRefreshLayout;
 
     private FeedAdapter mFeedAdapter;
 
@@ -60,22 +64,45 @@ public class ScientificFragment extends Fragment {
         mFeedAdapter = new FeedAdapter(getActivity(), new ArrayList<ArticleSnapShot>());
         mFeedRecycler.setAdapter(mFeedAdapter);
 
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        //init pull to refresh
+        RentalsSunHeaderView header = new RentalsSunHeaderView(getActivity());
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setPadding(0, PtrLocalDisplay.dp2px(15), 0, PtrLocalDisplay.dp2px(10));
+        header.setUp(mRefreshLayout);
+
+        mRefreshLayout.setLoadingMinTime(1000);
+        mRefreshLayout.setDurationToCloseHeader(1500);
+        mRefreshLayout.setHeaderView(header);
+        mRefreshLayout.addPtrUIHandler(header);
+
+        mRefreshLayout.postDelayed(new Runnable() {
             @Override
-            public void onRefresh() {
+            public void run() {
+                mRefreshLayout.autoRefresh(true);
+            }
+        }, 100);
+
+        mRefreshLayout.setPtrHandler(new PtrHandler() {
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+            }
+
+            @Override
+            public void onRefreshBegin(final PtrFrameLayout frame) {
                 loadData();
             }
         });
+
     }
 
     private void loadData() {
-        mRefreshLayout.setRefreshing(true);
         ArticleServer.getArticleList(new SimpleDataListener<ArticleList>() {
             @Override
             public void onRequestSuccess(ArticleList data) {
                 mFeedAdapter.setArticleList(data.getResult());
                 mFeedAdapter.notifyDataSetChanged();
-                mRefreshLayout.setRefreshing(false);
+                mRefreshLayout.refreshComplete();
             }
         });
     }
