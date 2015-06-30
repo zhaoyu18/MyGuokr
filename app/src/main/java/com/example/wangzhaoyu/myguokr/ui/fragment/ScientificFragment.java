@@ -8,7 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.net.SimpleDataListener;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleList;
@@ -18,7 +20,7 @@ import com.example.wangzhaoyu.myguokr.ui.adapter.FeedAdapter;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrHandler;
-import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.RentalsSunHeaderView;
+import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.MoocGlassesHeaderView;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.util.PtrLocalDisplay;
 
 import java.util.ArrayList;
@@ -65,7 +67,7 @@ public class ScientificFragment extends Fragment {
         mFeedRecycler.setAdapter(mFeedAdapter);
 
         //init pull to refresh
-        RentalsSunHeaderView header = new RentalsSunHeaderView(getActivity());
+        MoocGlassesHeaderView header = new MoocGlassesHeaderView(getActivity());
         header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
         header.setPadding(0, PtrLocalDisplay.dp2px(15), 0, PtrLocalDisplay.dp2px(10));
         header.setUp(mRefreshLayout);
@@ -102,6 +104,18 @@ public class ScientificFragment extends Fragment {
             public void onRequestSuccess(ArticleList data) {
                 mFeedAdapter.setArticleList(data.getResult());
                 mFeedAdapter.notifyDataSetChanged();
+                mRefreshLayout.refreshComplete();
+            }
+
+            @Override
+            public void onRequestError() {
+                Toast.makeText(getActivity(), "请求错误", Toast.LENGTH_SHORT).show();
+                mRefreshLayout.refreshComplete();
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(), "请求错误", Toast.LENGTH_SHORT).show();
                 mRefreshLayout.refreshComplete();
             }
         });

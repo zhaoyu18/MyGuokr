@@ -35,7 +35,7 @@ public class AppController extends Application {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .threadPoolSize(5)
                 .memoryCache(new WeakMemoryCache())
-                .writeDebugLogs()
+//                .writeDebugLogs()
 //                .denyCacheImageMultipleSizesInMemory()
 //                .memoryCache(new LruMemoryCache(20 * 1024 * 1024))
 //                .memoryCacheSize(20 * 1024 * 1024)
