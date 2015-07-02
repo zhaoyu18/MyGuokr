@@ -117,7 +117,7 @@ public class MoocGlassesDrawable extends Drawable implements Animatable {
 
     private void initiateDimens() {
         PtrLocalDisplay.init(mContext);
-        mTotalDragDistance = PtrLocalDisplay.dp2px(80);
+        mTotalDragDistance = PtrLocalDisplay.dp2px(55);
         mScreenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
 
         //Glass init

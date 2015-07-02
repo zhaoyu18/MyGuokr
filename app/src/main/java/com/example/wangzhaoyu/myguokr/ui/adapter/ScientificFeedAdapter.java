@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.util.ArrayList;
 
@@ -20,11 +22,16 @@ import butterknife.InjectView;
 /**
  * @author wangzhaoyu
  */
-public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
     private ArrayList<ArticleSnapShot> mSnapShots;
+    private DisplayImageOptions mDisImageOptions = new DisplayImageOptions.Builder()
+            .resetViewBeforeLoading(true)
+            .displayer(new FadeInBitmapDisplayer(300))
+            .cacheOnDisk(true)
+            .build();
 
-    public FeedAdapter(Context mContext, ArrayList<ArticleSnapShot> articleList) {
+    public ScientificFeedAdapter(Context mContext, ArrayList<ArticleSnapShot> articleList) {
         this.mContext = mContext;
         this.mSnapShots = articleList;
     }
@@ -35,7 +42,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_feed, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.scientfic_item_feed, parent, false);
         return new CellFeedViewHolder(view);
     }
 
@@ -44,7 +51,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ArticleSnapShot snapShot = mSnapShots.get(position);
         CellFeedViewHolder viewHolder = (CellFeedViewHolder) holder;
         ImageLoader.getInstance().displayImage(snapShot.getSmall_image(),
-                viewHolder.mIvTitle);
+                viewHolder.mIvTitle, mDisImageOptions);
         viewHolder.mTvTitle.setText(snapShot.getTitle());
     }
 

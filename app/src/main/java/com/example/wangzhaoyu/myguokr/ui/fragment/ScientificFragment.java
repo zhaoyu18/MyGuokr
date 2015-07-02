@@ -16,7 +16,7 @@ import com.example.wangzhaoyu.myguokr.core.net.SimpleDataListener;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleList;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
-import com.example.wangzhaoyu.myguokr.ui.adapter.FeedAdapter;
+import com.example.wangzhaoyu.myguokr.ui.adapter.ScientificFeedAdapter;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrHandler;
@@ -33,12 +33,14 @@ import butterknife.InjectView;
  */
 public class ScientificFragment extends Fragment {
     private View mRootView;
+
     @InjectView(R.id.rv_feed)
     RecyclerView mFeedRecycler;
+
     @InjectView(R.id.refeshlayout)
     PtrFrameLayout mRefreshLayout;
 
-    private FeedAdapter mFeedAdapter;
+    private ScientificFeedAdapter mScientificFeedAdapter;
 
     public ScientificFragment() {
     }
@@ -63,17 +65,18 @@ public class ScientificFragment extends Fragment {
         };
         mFeedRecycler.setLayoutManager(linearLayoutManager);
 
-        mFeedAdapter = new FeedAdapter(getActivity(), new ArrayList<ArticleSnapShot>());
-        mFeedRecycler.setAdapter(mFeedAdapter);
+        mScientificFeedAdapter = new ScientificFeedAdapter(getActivity(), new ArrayList<ArticleSnapShot>());
+        mFeedRecycler.setAdapter(mScientificFeedAdapter);
 
         //init pull to refresh
         MoocGlassesHeaderView header = new MoocGlassesHeaderView(getActivity());
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
         header.setPadding(0, PtrLocalDisplay.dp2px(15), 0, PtrLocalDisplay.dp2px(10));
         header.setUp(mRefreshLayout);
 
-        mRefreshLayout.setLoadingMinTime(1000);
-        mRefreshLayout.setDurationToCloseHeader(1500);
+        mRefreshLayout.setLoadingMinTime(500);
+        mRefreshLayout.setDurationToCloseHeader(1000);
         mRefreshLayout.setHeaderView(header);
         mRefreshLayout.addPtrUIHandler(header);
 
@@ -102,8 +105,8 @@ public class ScientificFragment extends Fragment {
         ArticleServer.getArticleList(new SimpleDataListener<ArticleList>() {
             @Override
             public void onRequestSuccess(ArticleList data) {
-                mFeedAdapter.setArticleList(data.getResult());
-                mFeedAdapter.notifyDataSetChanged();
+                mScientificFeedAdapter.setArticleList(data.getResult());
+                mScientificFeedAdapter.notifyDataSetChanged();
                 mRefreshLayout.refreshComplete();
             }
 

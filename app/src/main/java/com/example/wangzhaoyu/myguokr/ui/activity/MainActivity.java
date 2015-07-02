@@ -20,25 +20,40 @@ import com.example.wangzhaoyu.myguokr.ui.fragment.ScientificFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 
 public class MainActivity extends AppCompatActivity {
     private static String TAG = MainActivity.class.getSimpleName();
-    private ViewPager mViewPager;
-    private TabLayout mTabLayout;
+
+    @InjectView(R.id.viewpager)
+    ViewPager mViewPager;
+
+    @InjectView(R.id.tab)
+    TabLayout mTabLayout;
+
+    @InjectView(R.id.toolbar)
+    Toolbar mToolbar;
+
+    @InjectView(R.id.fab)
+    FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+        //set up toolbar
+        setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("果壳");
+        if (actionBar != null) {
+            actionBar.setTitle("果壳");
+        }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        //set up fab
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Snackbar.make(v, "here I am", Snackbar.LENGTH_SHORT)
@@ -51,12 +66,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setupViewPager();
-    }
-
-    private void setupViewPager() {
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mTabLayout = (TabLayout) findViewById(R.id.tab);
+        //set up viewpager
         List<String> titiles = new ArrayList<>();
         titiles.add("科学人");
         titiles.add("果壳小组");
