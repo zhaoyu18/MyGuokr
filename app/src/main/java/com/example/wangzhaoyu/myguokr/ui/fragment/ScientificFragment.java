@@ -95,14 +95,14 @@ public class ScientificFragment extends Fragment {
 
             @Override
             public void onRefreshBegin(final PtrFrameLayout frame) {
-                loadData();
+                refresh();
             }
         });
 
     }
 
-    private void loadData() {
-        ArticleServer.getArticleList(new SimpleDataListener<ArticleList>() {
+    private void refresh() {
+        ArticleServer.getInstance().getArticleList(new SimpleDataListener<ArticleList>() {
             @Override
             public void onRequestSuccess(ArticleList data) {
                 mScientificFeedAdapter.setArticleList(data.getResult());
@@ -122,5 +122,9 @@ public class ScientificFragment extends Fragment {
                 mRefreshLayout.refreshComplete();
             }
         });
+    }
+
+    private void loadMore() {
+
     }
 }

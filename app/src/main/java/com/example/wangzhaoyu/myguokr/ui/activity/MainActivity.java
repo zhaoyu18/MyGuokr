@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ArticleServer.test2();
+
                             }
                         }).show();
             }
