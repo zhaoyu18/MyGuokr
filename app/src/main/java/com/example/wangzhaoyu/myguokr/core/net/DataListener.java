@@ -19,7 +19,7 @@ import java.lang.reflect.Type;
  */
 public abstract class DataListener<T> implements Response.Listener<JSONObject>, Response.ErrorListener {
     private static final String TAG = DataListener.class.getSimpleName();
-    private static Gson gson = AppController.getInstance().getGson();
+    private static Gson gson = NetManager.getInstance().getGson();
 
     private Type typeOfT;
 
