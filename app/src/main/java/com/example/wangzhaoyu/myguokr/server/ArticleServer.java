@@ -1,8 +1,6 @@
 package com.example.wangzhaoyu.myguokr.server;
 
-import android.support.v7.widget.RecyclerView;
-
-import com.example.wangzhaoyu.myguokr.core.net.DataListener;
+import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
 import com.example.wangzhaoyu.myguokr.core.net.NetManager;
 import com.example.wangzhaoyu.myguokr.core.net.Network;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleList;
@@ -75,5 +73,14 @@ public class ArticleServer {
 
                     }
                 });
+    }
+
+    /**
+     * 根据文章id加载文章内容
+     *
+     * @param articleUrl
+     */
+    public void getArticleDetail(String articleUrl) {
+        NetManager.getInstance().requestHtml(articleUrl);
     }
 }

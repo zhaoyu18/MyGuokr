@@ -9,6 +9,25 @@ public class ArticleSnapShot {
     private String summary;
     private String resource_url;
     private String date_created;
+    private String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -52,12 +71,14 @@ public class ArticleSnapShot {
 
     @Override
     public String toString() {
-        return "ArticleList{" +
+        return "ArticleSnapShot{" +
                 "title='" + title + '\'' +
                 ", small_image='" + small_image + '\'' +
                 ", summary='" + summary + '\'' +
                 ", resource_url='" + resource_url + '\'' +
                 ", date_created='" + date_created + '\'' +
+                ", url='" + url + '\'' +
+                ", id=" + id +
                 '}';
     }
 }

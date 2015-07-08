@@ -1,4 +1,6 @@
-package com.example.wangzhaoyu.myguokr.core.net;
+package com.example.wangzhaoyu.myguokr.core.net.callback;
+
+import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
 
 /**
  * @author wangzhaoyu

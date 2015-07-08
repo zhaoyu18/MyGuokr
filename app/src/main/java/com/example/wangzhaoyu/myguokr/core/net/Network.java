@@ -9,7 +9,7 @@ import com.android.volley.Request;
  */
 public class Network {
     //根节点
-    public static final String ROOT_URL = "www.guokr.com/apis/";
+    public static final String ROOT_URL = "www.guokr.com/";
 
     /**
      * HttpHeader信息配置类
@@ -29,8 +29,8 @@ public class Network {
      * 变量命名规则：
      */
     public final class API {
-        // 科学人article
-        public static final String MINISITE_ARTICLE = "minisite/article.json";
+        // 科学人article list
+        public static final String MINISITE_ARTICLE = "apis/minisite/article.json";
     }
 
     /**

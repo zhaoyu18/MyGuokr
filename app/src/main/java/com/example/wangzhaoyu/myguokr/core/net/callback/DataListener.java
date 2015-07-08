@@ -1,10 +1,10 @@
-package com.example.wangzhaoyu.myguokr.core.net;
+package com.example.wangzhaoyu.myguokr.core.net.callback;
 
 import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.example.wangzhaoyu.myguokr.AppController;
+import com.example.wangzhaoyu.myguokr.core.net.NetManager;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -13,7 +13,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * 可以解析model的
+ * 可以解析model的，T为model，实现volley json请求的两种回调，传递结果给自己的两个回调
  *
  * @author wangzhaoyu
  */

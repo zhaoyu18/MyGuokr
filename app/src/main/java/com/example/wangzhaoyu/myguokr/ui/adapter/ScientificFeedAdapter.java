@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
+import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -53,6 +54,8 @@ public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         ImageLoader.getInstance().displayImage(snapShot.getSmall_image(),
                 viewHolder.mIvTitle, mDisImageOptions);
         viewHolder.mTvTitle.setText(snapShot.getTitle());
+        //用于onclick
+        viewHolder.mItemView.setTag(snapShot.getUrl());
     }
 
     @Override
@@ -61,6 +64,7 @@ public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public static class CellFeedViewHolder extends RecyclerView.ViewHolder {
+        View mItemView;
         @InjectView(R.id.iv_title)
         ImageView mIvTitle;
         @InjectView(R.id.tv_title)
@@ -68,7 +72,15 @@ public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         public CellFeedViewHolder(View itemView) {
             super(itemView);
+            mItemView = itemView;
             ButterKnife.inject(this, itemView);
+            mItemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String url = (String) v.getTag();
+                    ArticleServer.getInstance().getArticleDetail(url);
+                }
+            });
         }
     }
 }
