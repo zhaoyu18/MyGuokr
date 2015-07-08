@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <declare-styleable name="PtrFrameLayout">
         <!-- Optional. If you put header and content in xml, you can you these to specify them. -->
         <attr name="ptr_header" format="reference" />

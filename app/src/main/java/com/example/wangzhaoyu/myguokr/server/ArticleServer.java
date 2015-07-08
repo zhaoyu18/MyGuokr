@@ -3,6 +3,7 @@ package com.example.wangzhaoyu.myguokr.server;
 import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
 import com.example.wangzhaoyu.myguokr.core.net.NetManager;
 import com.example.wangzhaoyu.myguokr.core.net.Network;
+import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleList;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.handler.ServerHandler;
@@ -80,7 +81,7 @@ public class ArticleServer {
      *
      * @param articleUrl
      */
-    public void getArticleDetail(String articleUrl) {
-        NetManager.getInstance().requestHtml(articleUrl);
+    public void getArticleDetail(String articleUrl, HtmlDataListener dataListener) {
+        NetManager.getInstance().requestHtml(articleUrl, dataListener);
     }
 }

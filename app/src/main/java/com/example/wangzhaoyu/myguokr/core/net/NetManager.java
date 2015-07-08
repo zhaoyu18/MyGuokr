@@ -6,11 +6,10 @@ import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
+import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
 import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
@@ -43,7 +42,7 @@ public class NetManager {
     }
 
     /**
-     * 添加请求到队列
+     * 添加请求到队列 TODO tag目前没用
      *
      * @param req
      * @param tag
@@ -88,19 +87,9 @@ public class NetManager {
         mRequestQueue.add(request);
     }
 
-    public void requestHtml(String url) {
+    public void requestHtml(String url, HtmlDataListener dataListener) {
         Log.i(TAG, url);
-        Request request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i(TAG, response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, error.toString());
-            }
-        });
+        Request request = new StringRequest(Request.Method.GET, url, dataListener, dataListener);
         mRequestQueue.add(request);
     }
 
@@ -127,7 +116,6 @@ public class NetManager {
                     e.printStackTrace();
                 }
             }
-
             return sb.toString().substring(0, sb.length() - 1);
         }
     }

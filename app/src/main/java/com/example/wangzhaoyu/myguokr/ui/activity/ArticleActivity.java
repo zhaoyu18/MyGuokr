@@ -23,6 +23,7 @@ public class ArticleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
         ButterKnife.inject(this);
-        mArticleWebView.loadDataWithBaseURL("http://www.guokr.com/", "", "text/html", "charset=UTF-8", null);
+        String html = getIntent().getStringExtra("html");
+        mArticleWebView.loadDataWithBaseURL("http://www.guokr.com/", html, "text/html", "charset=UTF-8", null);
     }
 }
