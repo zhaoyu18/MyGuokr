@@ -1,9 +1,11 @@
 package com.example.wangzhaoyu.myguokr.model.reply;
 
+import java.io.Serializable;
+
 /**
  * @author wangzhaoyu
  */
-public class ArticleSnapShot {
+public class ArticleSnapShot implements Serializable {
     private String title;
     private String small_image;
     private String summary;

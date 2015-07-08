@@ -84,4 +84,14 @@ public class ArticleServer {
     public void getArticleDetail(String articleUrl, HtmlDataListener dataListener) {
         NetManager.getInstance().requestHtml(articleUrl, dataListener);
     }
+
+    /**
+     * 根据文章resource url获取文章详情
+     *
+     * @param resUrl
+     * @param dataListener
+     */
+    public void getArticle(String resUrl, DataListener dataListener) {
+        NetManager.getInstance().request(Network.HttpMethod.GET, resUrl, dataListener);
+    }
 }

@@ -22,7 +22,7 @@ public abstract class HtmlDataListener implements Response.Listener<String>, Res
     @Override
     public void onResponse(String response) {
         Document doc = Jsoup.parse(response);
-        String articleContent = doc.getElementById("articleContent").outerHtml();//.replaceAll("line-height: normal;", "");
+        String articleContent = doc.getElementById("articleContent").outerHtml();
         String copyright = doc.getElementsByClass("copyright").outerHtml();
         String content = articleContent + copyright;
         onRequestSuccess(NetUtils.getArticleHtml(content));

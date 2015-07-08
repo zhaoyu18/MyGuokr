@@ -2,6 +2,7 @@ package com.example.wangzhaoyu.myguokr.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.wangzhaoyu.myguokr.R;
+import com.example.wangzhaoyu.myguokr.core.net.NetUtils;
+import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
 import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
+import com.example.wangzhaoyu.myguokr.model.reply.Article;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.ui.activity.ArticleActivity;
@@ -61,7 +65,7 @@ public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 viewHolder.mIvTitle, mDisImageOptions);
         viewHolder.mTvTitle.setText(snapShot.getTitle());
         //用于onclick
-        viewHolder.mItemView.setTag(position);
+        viewHolder.mItemView.setTag(snapShot);
     }
 
     @Override
@@ -72,22 +76,28 @@ public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private View.OnClickListener mOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            int pos = (int) v.getTag();
-            String url = mSnapShots.get(pos).getUrl();
-            ArticleServer.getInstance().getArticleDetail(url, new HtmlDataListener() {
-                @Override
-                public void onRequestSuccess(String data) {
-                    Log.i(TAG, data);
-                    Intent intent = new Intent(mContext, ArticleActivity.class);
-                    intent.putExtra("html", data);
-                    mContext.startActivity(intent);
-                }
-
-                @Override
-                public void onRequestError() {
-
-                }
-            });
+            ArticleSnapShot snapShot = (ArticleSnapShot) v.getTag();
+            //test
+//            String url = mSnapShots.get(pos).getResource_url();
+//            ArticleServer.getInstance().getArticle(url, new DataListener<Article>() {
+//                @Override
+//                public void onRequestSuccess(Article data) {
+//                    Log.i(TAG, data.getResult().getTitle());
+//                    Intent intent = new Intent(mContext, ArticleActivity.class);
+////                    String html = NetUtils.getArticleHtml(data.getResult().getContent());
+//                    String html = data.getResult().getContent();
+//                    intent.putExtra("html", html);
+//                    mContext.startActivity(intent);
+//                }
+//
+//                @Override
+//                public void onRequestError() {
+//
+//                }
+//            });
+            Intent intent = new Intent(mContext, ArticleActivity.class);
+            intent.putExtra("snapShot", snapShot);
+            mContext.startActivity(intent);
         }
     };
 

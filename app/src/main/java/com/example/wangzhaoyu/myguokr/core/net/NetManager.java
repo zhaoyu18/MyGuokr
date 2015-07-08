@@ -87,6 +87,11 @@ public class NetManager {
         mRequestQueue.add(request);
     }
 
+    public void request(int method, String url, DataListener dataListener) {
+        Request request = new GuokrJsonRequest(method, url, "", dataListener);
+        mRequestQueue.add(request);
+    }
+
     public void requestHtml(String url, HtmlDataListener dataListener) {
         Log.i(TAG, url);
         Request request = new StringRequest(Request.Method.GET, url, dataListener, dataListener);
