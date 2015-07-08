@@ -12,6 +12,15 @@ public class ArticleSnapShot implements Serializable {
     private String resource_url;
     private String date_created;
     private String url;
+    private ImageInfo image_info;
+
+    public ImageInfo getImage_info() {
+        return image_info;
+    }
+
+    public void setImage_info(ImageInfo image_info) {
+        this.image_info = image_info;
+    }
 
     public String getUrl() {
         return url;
@@ -69,6 +78,42 @@ public class ArticleSnapShot implements Serializable {
 
     public void setDate_created(String date_created) {
         this.date_created = date_created;
+    }
+
+    public class ImageInfo implements Serializable {
+
+        /**
+         * height : 240
+         * width : 330
+         * url : http://2.im.guokr.com/aeJJQ7X2zvAkkQ0j_MUE1ThdTjv96z4QE5uESvFRkFVKAQAA8AAAAEpQ.jpg
+         */
+        private int height;
+        private int width;
+        private String url;
+
+        public void setHeight(int height) {
+            this.height = height;
+        }
+
+        public void setWidth(int width) {
+            this.width = width;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public String getUrl() {
+            return url;
+        }
     }
 
     @Override
