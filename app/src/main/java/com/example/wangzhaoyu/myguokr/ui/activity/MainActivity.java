@@ -1,35 +1,25 @@
 package com.example.wangzhaoyu.myguokr.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
-import com.example.wangzhaoyu.myguokr.ui.adapter.TabViewPagerAdapter;
-import com.example.wangzhaoyu.myguokr.ui.fragment.PagerTextFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ScientificFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -37,6 +27,8 @@ import butterknife.InjectView;
 
 public class MainActivity extends AppCompatActivity {
     private static String TAG = MainActivity.class.getSimpleName();
+    private static final int ANIM_DURATION_TOOLBAR = 300;
+
     @InjectView(R.id.fragment_container)
     FrameLayout mFrameLayout;
 
@@ -75,16 +67,13 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        //set up main fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, new ScientificFragment()).commit();
-
         //set up navigation drawer
         ImageLoader.getInstance().displayImage(
                 "http://images.17173.com/2011/wow/2011/02/24/nanshengqi17.jpg",
                 mAvatarImage,
                 ImageServer.getAvatarDisplayOptions(getResources().getDimensionPixelSize(R.dimen.nav_avatar_size)));
+
+        setUpMainFragment();
     }
 
     @Override
@@ -95,5 +84,30 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        startIntroAnimation();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /**
+     * 启动时toolbar动画
+     */
+    private void startIntroAnimation() {
+        int barSize = mToolbar.getHeight();
+        mToolbar.setTranslationY(-barSize);
+        mToolbar.animate()
+                .translationY(0)
+                .setDuration(ANIM_DURATION_TOOLBAR)
+                .setStartDelay(300)
+                .start();
+    }
+
+    private void setUpMainFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, new ScientificFragment()).commit();
     }
 }

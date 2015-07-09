@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.wangzhaoyu.myguokr.R;
+import com.example.wangzhaoyu.myguokr.core.Utils;
 import com.example.wangzhaoyu.myguokr.core.net.NetUtils;
 import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
 import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
@@ -33,6 +35,8 @@ import butterknife.InjectView;
  */
 public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = ScientificFeedAdapter.class.getSimpleName();
+    private static final int ANIMATED_ITEMS_COUNT = 5;
+
     private Context mContext;
     private ArrayList<ArticleSnapShot> mSnapShots;
     private DisplayImageOptions mDisImageOptions = new DisplayImageOptions.Builder()
@@ -40,6 +44,7 @@ public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             .displayer(new FadeInBitmapDisplayer(300))
             .cacheOnDisk(true)
             .build();
+    private int lastAnimatedPosition = -1;
 
     public ScientificFeedAdapter(Context mContext, ArrayList<ArticleSnapShot> articleList) {
         this.mContext = mContext;
@@ -59,6 +64,7 @@ public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        runEnterAnimation(holder.itemView, position);
         ArticleSnapShot snapShot = mSnapShots.get(position);
         CellFeedViewHolder viewHolder = (CellFeedViewHolder) holder;
         ImageLoader.getInstance().displayImage(snapShot.getSmall_image(),
@@ -112,6 +118,22 @@ public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             super(itemView);
             mItemView = itemView;
             ButterKnife.inject(this, itemView);
+        }
+    }
+
+    private void runEnterAnimation(View view, int position) {
+        if (position >= ANIMATED_ITEMS_COUNT - 1) {
+            return;
+        }
+
+        if (position > lastAnimatedPosition) {
+            lastAnimatedPosition = position;
+            view.setTranslationY(Utils.getScreenHeight(mContext));
+            view.animate()
+                    .translationY(0)
+                    .setInterpolator(new DecelerateInterpolator(3.f))
+                    .setDuration(700)
+                    .start();
         }
     }
 }

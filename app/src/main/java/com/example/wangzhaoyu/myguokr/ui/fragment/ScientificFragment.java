@@ -104,9 +104,9 @@ public class ScientificFragment extends Fragment {
         mRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mRefreshLayout.autoRefresh(true);
+                refresh();
             }
-        }, 100);
+        }, 500);
 
         mRefreshLayout.setPtrHandler(new PtrHandler() {
             @Override
