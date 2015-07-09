@@ -9,11 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
+import com.example.wangzhaoyu.myguokr.server.ImageServer;
 import com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -37,6 +39,10 @@ public class ArticleActivity extends AppCompatActivity {
     Toolbar mToolbar;
     @InjectView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingBar;
+    @InjectView(R.id.article_author_avatar)
+    ImageView mAuthorAvatar;
+    @InjectView(R.id.article_author_name)
+    TextView mAuthorName;
 
     private DisplayImageOptions mDisImageOptions = new DisplayImageOptions.Builder()
             .displayer(new FadeInBitmapDisplayer(300))
@@ -64,6 +70,10 @@ public class ArticleActivity extends AppCompatActivity {
         //init tool bar image
         ImageLoader.getInstance().displayImage(snapShot.getImage_info().getUrl(), mArticleImage,
                 mDisImageOptions);
+        ImageLoader.getInstance().displayImage(snapShot.getAuthor().getAvatar().getNormal(),
+                mAuthorAvatar,
+                ImageServer.getAvatarDisplayOptions(getResources().getDimensionPixelSize(R.dimen.article_avatar_size)));
+        mAuthorName.setText(snapShot.getAuthor().getNickname());
 
         //init web content
         ArticleServer.getInstance().getArticleDetail(snapShot.getUrl(), new HtmlDataListener() {

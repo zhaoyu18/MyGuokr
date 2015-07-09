@@ -26,9 +26,9 @@ public class ImageServer {
      */
     public static DisplayImageOptions getAvatarDisplayOptions(int size) {
         return new DisplayImageOptions.Builder()
-                .showImageOnFail(R.mipmap.ic_launcher)
-                .showImageForEmptyUri(R.mipmap.ic_launcher)
-                .showImageOnLoading(R.mipmap.ic_launcher)
+//                .showImageOnFail(R.mipmap.ic_launcher)
+//                .showImageForEmptyUri(R.mipmap.ic_launcher)
+//                .showImageOnLoading(R.mipmap.ic_launcher)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .displayer(new RoundedBitmapDisplayer(size)).build();

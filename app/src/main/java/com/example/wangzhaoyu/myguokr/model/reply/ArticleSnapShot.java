@@ -13,6 +13,15 @@ public class ArticleSnapShot implements Serializable {
     private String date_created;
     private String url;
     private ImageInfo image_info;
+    private Author author;
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
 
     public ImageInfo getImage_info() {
         return image_info;
@@ -114,18 +123,5 @@ public class ArticleSnapShot implements Serializable {
         public String getUrl() {
             return url;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "ArticleSnapShot{" +
-                "title='" + title + '\'' +
-                ", small_image='" + small_image + '\'' +
-                ", summary='" + summary + '\'' +
-                ", resource_url='" + resource_url + '\'' +
-                ", date_created='" + date_created + '\'' +
-                ", url='" + url + '\'' +
-                ", id=" + id +
-                '}';
     }
 }

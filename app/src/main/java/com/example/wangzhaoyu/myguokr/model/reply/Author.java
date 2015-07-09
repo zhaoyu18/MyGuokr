@@ -1,9 +1,11 @@
 package com.example.wangzhaoyu.myguokr.model.reply;
 
+import java.io.Serializable;
+
 /**
  * @author wangzhaoyu
  */
-public class Author {
+public class Author implements Serializable {
 
     /**
      * title : 神经科学博士生
@@ -118,7 +120,7 @@ public class Author {
         return amended_reliability;
     }
 
-    public class AvatarEntity {
+    public class AvatarEntity implements Serializable {
         /**
          * normal : http://2.im.guokr.com/IjrCqnTg_TLn8ShsrYDuSsLmPXxcjGEqX6YwBV1cZTmgAAAAoAAAAEpQ.jpg?imageView2/1/w/48/h/48
          * small : http://2.im.guokr.com/IjrCqnTg_TLn8ShsrYDuSsLmPXxcjGEqX6YwBV1cZTmgAAAAoAAAAEpQ.jpg?imageView2/1/w/24/h/24
