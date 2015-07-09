@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_feed"
+            android:icon="@drawable/ic_global_menu_feed"
+            android:title="我的帖子" />
+        <item
+            android:id="@+id/menu_likes"
+            android:icon="@drawable/ic_global_menu_likes"
+            android:title="收藏" />
+        <item
+            android:id="@+id/menu_news"
+            android:icon="@drawable/ic_global_menu_news"
+            android:title="消息" />
+        <item
+            android:id="@+id/menu_view_mode"
+            android:icon="@drawable/ic_brightness_4_white_24dp"
+            android:title="夜间模式" />
+    </group>
+
+    <group
+        android:id="@+id/nav_footer"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/menu_settings"
+            android:icon="@drawable/ic_settings_brightness_white_24dp"
+            android:title="设置" />
+        <item
+            android:id="@+id/menu_about"
+            android:icon="@drawable/ic_visibility_white_24dp"
+            android:title="关于" />
+    </group>
+
+</menu>

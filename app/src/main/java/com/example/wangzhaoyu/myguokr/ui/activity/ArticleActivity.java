@@ -2,9 +2,12 @@ package com.example.wangzhaoyu.myguokr.ui.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.view.GravityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.example.wangzhaoyu.myguokr.R;
@@ -50,7 +53,12 @@ public class ArticleActivity extends AppCompatActivity {
 
         //init tool bar
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle(snapShot.getTitle());
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(snapShot.getTitle());
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         mCollapsingBar.setTitle(snapShot.getTitle());
 
         //init tool bar image
@@ -71,5 +79,15 @@ public class ArticleActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
