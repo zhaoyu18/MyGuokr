@@ -97,7 +97,7 @@ public class ScientificFragment extends Fragment {
         header.setUp(mRefreshLayout);
 
         mRefreshLayout.setLoadingMinTime(500);
-        mRefreshLayout.setDurationToCloseHeader(1000);
+        mRefreshLayout.setDurationToCloseHeader(750);
         mRefreshLayout.setHeaderView(header);
         mRefreshLayout.addPtrUIHandler(header);
 

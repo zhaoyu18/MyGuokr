@@ -234,7 +234,7 @@ public class MoocGlassesDrawable extends Drawable implements Animatable {
         if (dragPercent < EYE_ALPHA_START_PERCENT) {
             alpha = 0;
         } else {
-            alpha = (int) (100 * (dragPercent - EYE_ALPHA_START_PERCENT) * (1 / EYE_ALPHA_START_PERCENT));
+            alpha = (int) (255 * ((dragPercent > 1 ? 1 : dragPercent) - EYE_ALPHA_START_PERCENT) * (1 / EYE_ALPHA_START_PERCENT));
         }
         paint.setAlpha(alpha);
 
