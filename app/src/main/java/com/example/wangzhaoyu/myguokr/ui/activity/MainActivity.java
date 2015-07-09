@@ -14,15 +14,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
+import com.example.wangzhaoyu.myguokr.server.ImageServer;
 import com.example.wangzhaoyu.myguokr.ui.adapter.TabViewPagerAdapter;
 import com.example.wangzhaoyu.myguokr.ui.fragment.PagerTextFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ScientificFragment;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
     @InjectView(R.id.nv_main_navigation)
     NavigationView mNaviView;
+
+    @InjectView(R.id.nav_header_avatar)
+    ImageView mAvatarImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +79,12 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.fragment_container, new ScientificFragment()).commit();
+
+        //set up navigation drawer
+        ImageLoader.getInstance().displayImage(
+                "http://images.17173.com/2011/wow/2011/02/24/nanshengqi17.jpg",
+                mAvatarImage,
+                ImageServer.getAvatarDisplayOptions(getResources().getDimensionPixelSize(R.dimen.nav_avatar_size)));
     }
 
     @Override
