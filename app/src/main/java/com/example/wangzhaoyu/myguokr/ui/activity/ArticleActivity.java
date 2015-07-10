@@ -1,17 +1,23 @@
 package com.example.wangzhaoyu.myguokr.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.DecelerateInterpolator;
+import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.wangzhaoyu.myguokr.R;
+import com.example.wangzhaoyu.myguokr.core.Utils;
 import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
@@ -31,6 +37,9 @@ import butterknife.InjectView;
  */
 public class ArticleActivity extends AppCompatActivity {
     public static final String TAG = ArticleActivity.class.getSimpleName();
+    private static final int ANIM_DURATION_TOOLBAR = 250;
+    private static final int ANIM_DURATION_AUTHOR = 150;
+
     @InjectView(R.id.article_web)
     GuokrWebView mArticleWebView;
     @InjectView(R.id.article_image)
@@ -43,6 +52,10 @@ public class ArticleActivity extends AppCompatActivity {
     ImageView mAuthorAvatar;
     @InjectView(R.id.article_author_name)
     TextView mAuthorName;
+    @InjectView(R.id.appbar)
+    AppBarLayout mAppBarLayout;
+    @InjectView(R.id.article_author)
+    LinearLayout mAuthor;
 
     private DisplayImageOptions mDisImageOptions = new DisplayImageOptions.Builder()
             .displayer(new FadeInBitmapDisplayer(300))
@@ -81,7 +94,6 @@ public class ArticleActivity extends AppCompatActivity {
             public void onRequestSuccess(String html) {
                 mArticleWebView.loadDataWithBaseURL("http://www.guokr.com/", html, "text/html",
                         "charset=UTF-8", null);
-                Log.i(TAG, html);
             }
 
             @Override
@@ -92,6 +104,12 @@ public class ArticleActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        startIntroAnimation();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -99,5 +117,40 @@ public class ArticleActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 启动时toolbar动画
+     */
+    private void startIntroAnimation() {
+        int barSize = mAppBarLayout.getHeight();
+        mArticleWebView.setPageLoadListener(new GuokrWebView.PageLoadListener() {
+            @Override
+            public void onFinished(WebView view, String url) {
+                view.animate()
+                        .translationY(0)
+                        .setInterpolator(new DecelerateInterpolator(3.f))
+                        .setDuration(600)
+                        .start();
+            }
+        });
+        mArticleWebView.setTranslationY(Utils.getScreenHeight(this));
+        mAuthor.setTranslationY(-2 * mAuthor.getHeight());
+        mAppBarLayout.setTranslationY(-barSize);
+        mAppBarLayout.animate()
+                .translationY(0)
+                .setDuration(ANIM_DURATION_TOOLBAR)
+                .setStartDelay(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mAuthor.animate()
+                                .translationY(0)
+                                .setDuration(ANIM_DURATION_AUTHOR)
+                                .start();
+                    }
+                })
+                .start();
+
     }
 }

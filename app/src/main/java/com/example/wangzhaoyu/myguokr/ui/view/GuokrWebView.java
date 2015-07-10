@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.animation.DecelerateInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -11,6 +12,8 @@ import android.webkit.WebViewClient;
  * @author wangzhaoyu
  */
 public class GuokrWebView extends WebView {
+    private PageLoadListener mPageLoadListener;
+
     public GuokrWebView(Context context) {
         super(context);
         init();
@@ -45,14 +48,25 @@ public class GuokrWebView extends WebView {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            if (mPageLoadListener != null) {
+                mPageLoadListener.onFinished(view, url);
+            }
             //图片在此进行延迟加载
             getSettings().setBlockNetworkImage(false);
         }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            //TODO 拦截重定向
+            //TODO
             return true;
         }
     };
+
+    public void setPageLoadListener(PageLoadListener listener) {
+        mPageLoadListener = listener;
+    }
+
+    public interface PageLoadListener {
+        void onFinished(WebView view, String url);
+    }
 }

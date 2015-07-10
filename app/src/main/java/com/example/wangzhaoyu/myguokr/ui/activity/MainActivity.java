@@ -1,7 +1,5 @@
 package com.example.wangzhaoyu.myguokr.ui.activity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -31,16 +29,12 @@ public class MainActivity extends AppCompatActivity {
 
     @InjectView(R.id.fragment_container)
     FrameLayout mFrameLayout;
-
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
-
     @InjectView(R.id.main_drawer)
     DrawerLayout mDrawerLayout;
-
     @InjectView(R.id.nv_main_navigation)
     NavigationView mNaviView;
-
     @InjectView(R.id.nav_header_avatar)
     ImageView mAvatarImage;
 
