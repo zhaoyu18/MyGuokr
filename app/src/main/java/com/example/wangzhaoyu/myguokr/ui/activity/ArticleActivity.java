@@ -5,11 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -39,6 +42,8 @@ public class ArticleActivity extends AppCompatActivity {
     public static final String TAG = ArticleActivity.class.getSimpleName();
     private static final int ANIM_DURATION_TOOLBAR = 250;
     private static final int ANIM_DURATION_AUTHOR = 150;
+    private static final int ANIM_DURATION_WEB = 600;
+    private static final int ANIM_DURATION_BOTTOMBAR = 100;
 
     @InjectView(R.id.article_web)
     GuokrWebView mArticleWebView;
@@ -56,6 +61,13 @@ public class ArticleActivity extends AppCompatActivity {
     AppBarLayout mAppBarLayout;
     @InjectView(R.id.article_author)
     LinearLayout mAuthor;
+    @InjectView(R.id.article_bottom_bar)
+    LinearLayout mBootombar;
+    @InjectView(R.id.article_scoll_view)
+    NestedScrollView mScrollView;
+
+    private int mPreScrollY = 0;
+    private boolean mIsBottombarShow = true;
 
     private DisplayImageOptions mDisImageOptions = new DisplayImageOptions.Builder()
             .displayer(new FadeInBitmapDisplayer(300))
@@ -101,6 +113,24 @@ public class ArticleActivity extends AppCompatActivity {
 
             }
         });
+
+        //on scroll
+        mScrollView.getViewTreeObserver().addOnScrollChangedListener(
+                new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                int deltaY = mScrollView.getScrollY() - mPreScrollY;
+                mPreScrollY = mScrollView.getScrollY();
+
+                if (deltaY < -24 && !mIsBottombarShow) {
+                    //显示
+                    bottomBarAnimation();
+                } else if (deltaY > 24 && mIsBottombarShow) {
+                    //隐藏
+                    bottomBarAnimation();
+                }
+            }
+        });
     }
 
     @Override
@@ -124,19 +154,25 @@ public class ArticleActivity extends AppCompatActivity {
      */
     private void startIntroAnimation() {
         int barSize = mAppBarLayout.getHeight();
+        mArticleWebView.setTranslationY(Utils.getScreenHeight(this));
+        mAuthor.setTranslationY(-2 * mAuthor.getHeight());
+        mAppBarLayout.setTranslationY(-barSize);
+        mBootombar.setTranslationY(mBootombar.getHeight());
+
         mArticleWebView.setPageLoadListener(new GuokrWebView.PageLoadListener() {
             @Override
             public void onFinished(WebView view, String url) {
                 view.animate()
                         .translationY(0)
                         .setInterpolator(new DecelerateInterpolator(3.f))
-                        .setDuration(600)
+                        .setDuration(ANIM_DURATION_WEB)
+                        .start();
+                mBootombar.animate()
+                        .translationY(0)
+                        .setDuration(ANIM_DURATION_BOTTOMBAR)
                         .start();
             }
         });
-        mArticleWebView.setTranslationY(Utils.getScreenHeight(this));
-        mAuthor.setTranslationY(-2 * mAuthor.getHeight());
-        mAppBarLayout.setTranslationY(-barSize);
         mAppBarLayout.animate()
                 .translationY(0)
                 .setDuration(ANIM_DURATION_TOOLBAR)
@@ -152,5 +188,24 @@ public class ArticleActivity extends AppCompatActivity {
                 })
                 .start();
 
+    }
+
+    private void bottomBarAnimation() {
+        int startPos;
+        int destPos;
+        if (mIsBottombarShow) {
+            startPos = 0;
+            destPos = mBootombar.getHeight();
+        } else {
+            startPos = mBootombar.getHeight();
+            destPos = 0;
+        }
+
+        mIsBottombarShow = !mIsBottombarShow;
+        mBootombar.setTranslationY(startPos);
+        mBootombar.animate()
+                .translationY(destPos)
+                .setDuration(ANIM_DURATION_BOTTOMBAR)
+                .start();
     }
 }
