@@ -10,6 +10,8 @@ import com.android.volley.Request;
 public class Network {
     //根节点
     public static final String ROOT_URL = "www.guokr.com/";
+    public static final String GUOKR_CLIENT_ID = "32393";
+    public static final String GUOKR_CLIENT_SECRET = "cmkevizuydunmcn0h5pu2tch3b7pz5zeh7ubjsp4";
 
     /**
      * HttpHeader信息配置类

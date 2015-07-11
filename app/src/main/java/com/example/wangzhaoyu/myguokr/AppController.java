@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.example.wangzhaoyu.myguokr.core.SPUtils;
 import com.example.wangzhaoyu.myguokr.core.net.NetManager;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
@@ -32,6 +33,9 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+
+        // 初始化SharedPreferences
+        SPUtils.getInstance().init(getApplicationContext());
 
         //init image loader
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())

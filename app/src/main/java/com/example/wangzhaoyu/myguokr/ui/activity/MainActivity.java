@@ -11,8 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
@@ -21,6 +24,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -48,6 +52,30 @@ public class MainActivity extends AppCompatActivity {
         mNaviView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.menu_scientific:
+                        Toast.makeText(MainActivity.this, "scientific clicked", Toast.LENGTH_SHORT)
+                                .show();
+                        break;
+                    case R.id.menu_group:
+                        break;
+                    case R.id.menu_ask:
+                        break;
+                    case R.id.menu_feed:
+                        break;
+                    case R.id.menu_likes:
+                        break;
+                    case R.id.menu_news:
+                        break;
+                    case R.id.menu_view_mode:
+                        break;
+                    case R.id.menu_settings:
+                        break;
+                    case R.id.menu_about:
+                        break;
+                    default:
+                        break;
+                }
                 return true;
             }
         });
@@ -84,6 +112,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         startIntroAnimation();
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @OnClick(R.id.nav_header)
+    public void OnNavHeaderClicked(View view) {
+        Toast.makeText(MainActivity.this, "header clicked", Toast.LENGTH_SHORT).show();
     }
 
     /**

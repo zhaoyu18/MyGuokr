@@ -4,7 +4,7 @@
     <group android:id="@+id/nav_channel"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/menu_scientfic"
+            android:id="@+id/menu_scientific"
             android:icon="@drawable/ic_accessibility_white_24dp"
             android:title="科学人" />
         <item
