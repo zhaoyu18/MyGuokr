@@ -16,10 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
+import com.example.wangzhaoyu.myguokr.model.reply.User;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
+import com.example.wangzhaoyu.myguokr.server.UserServer;
+import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ScientificFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -42,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
     @InjectView(R.id.nv_main_navigation)
     NavigationView mNaviView;
     @InjectView(R.id.nav_header_avatar)
-    ImageView mAvatarImage;
+    ImageView mNavAvatarImage;
+    @InjectView(R.id.nav_header_name)
+    TextView mNavUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,11 +97,7 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        //set up navigation drawer
-        ImageLoader.getInstance().displayImage(
-                "http://images.17173.com/2011/wow/2011/02/24/nanshengqi17.jpg",
-                mAvatarImage,
-                ImageServer.getAvatarDisplayOptions(getResources().getDimensionPixelSize(R.dimen.nav_avatar_size)));
+        updateUserDisplay();
 
         setUpMainFragment();
     }
@@ -127,7 +129,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == START_LOGIN_ACTIVITY_CODE && resultCode == RESULT_OK) {
-            Toast.makeText(MainActivity.this, "login ok", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "access token: " + UserServer.getInstance().getAccessToken());
+            Log.i(TAG, "ukey: " + UserServer.getInstance().getUserUkey());
+            updateUserDisplay();
         }
     }
 
@@ -148,5 +152,29 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.fragment_container, new ScientificFragment()).commit();
+    }
+
+    private void updateUserDisplay() {
+        UserServer.getInstance().getUserInfo(new DefaultServerHandler<User>(this) {
+            @Override
+            public void onRequestSuccess(User user) {
+                //set up navigation drawer
+                ImageLoader.getInstance().displayImage(
+                        user.getResult().getAvatar().getLarge(),
+                        mNavAvatarImage,
+                        ImageServer.getAvatarDisplayOptions(
+                                getResources().getDimensionPixelSize(R.dimen.nav_avatar_size)));
+                mNavUserName.setText(user.getResult().getNickname());
+            }
+
+            @Override
+            public void onRequestError() {
+                //set up navigation drawer
+                ImageLoader.getInstance().displayImage(
+                        "http://images.17173.com/2011/wow/2011/02/24/nanshengqi17.jpg",
+                        mNavAvatarImage,
+                        ImageServer.getAvatarDisplayOptions(getResources().getDimensionPixelSize(R.dimen.nav_avatar_size)));
+            }
+        });
     }
 }

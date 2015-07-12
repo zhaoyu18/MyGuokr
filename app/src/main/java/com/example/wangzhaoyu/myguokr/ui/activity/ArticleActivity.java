@@ -9,7 +9,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver;
@@ -117,20 +116,20 @@ public class ArticleActivity extends AppCompatActivity {
         //on scroll
         mScrollView.getViewTreeObserver().addOnScrollChangedListener(
                 new ViewTreeObserver.OnScrollChangedListener() {
-            @Override
-            public void onScrollChanged() {
-                int deltaY = mScrollView.getScrollY() - mPreScrollY;
-                mPreScrollY = mScrollView.getScrollY();
+                    @Override
+                    public void onScrollChanged() {
+                        int deltaY = mScrollView.getScrollY() - mPreScrollY;
+                        mPreScrollY = mScrollView.getScrollY();
 
-                if (deltaY < -24 && !mIsBottombarShow) {
-                    //显示
-                    bottomBarAnimation();
-                } else if (deltaY > 24 && mIsBottombarShow) {
-                    //隐藏
-                    bottomBarAnimation();
-                }
-            }
-        });
+                        if (deltaY < -24 && !mIsBottombarShow) {
+                            //显示
+                            bottomBarAnimation();
+                        } else if (deltaY > 24 && mIsBottombarShow) {
+                            //隐藏
+                            bottomBarAnimation();
+                        }
+                    }
+                });
     }
 
     @Override

@@ -1,9 +1,11 @@
 package com.example.wangzhaoyu.myguokr.ui.activity;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
@@ -48,6 +50,11 @@ public class LoginActivity extends AppCompatActivity {
         //toolbar
         mToolbar.setTitle("登录果壳");
         setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         //clear cookie
         CookieSyncManager.createInstance(AppController.getInstance());
@@ -137,5 +144,15 @@ public class LoginActivity extends AppCompatActivity {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
