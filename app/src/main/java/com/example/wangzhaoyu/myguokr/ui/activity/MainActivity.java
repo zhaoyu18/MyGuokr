@@ -1,5 +1,6 @@
 package com.example.wangzhaoyu.myguokr.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -9,12 +10,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
@@ -30,6 +31,7 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity {
     private static String TAG = MainActivity.class.getSimpleName();
     private static final int ANIM_DURATION_TOOLBAR = 300;
+    private static final int START_LOGIN_ACTIVITY_CODE = 5518;
 
     @InjectView(R.id.fragment_container)
     FrameLayout mFrameLayout;
@@ -116,7 +118,17 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.nav_header)
     public void OnNavHeaderClicked(View view) {
-        Toast.makeText(MainActivity.this, "header clicked", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(MainActivity.this, "header clicked", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivityForResult(intent, START_LOGIN_ACTIVITY_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == START_LOGIN_ACTIVITY_CODE && resultCode == RESULT_OK) {
+            Toast.makeText(MainActivity.this, "login ok", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
