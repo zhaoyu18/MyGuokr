@@ -5,32 +5,31 @@ import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.DecelerateInterpolator;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.core.Utils;
-import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
-import com.example.wangzhaoyu.myguokr.server.ArticleServer;
-import com.example.wangzhaoyu.myguokr.server.ImageServer;
-import com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView;
+import com.example.wangzhaoyu.myguokr.ui.fragment.ArticleContentFragment;
+import com.example.wangzhaoyu.myguokr.ui.fragment.PagerTextFragment;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
  * 文章详情页面
@@ -39,27 +38,18 @@ import butterknife.InjectView;
  */
 public class ArticleActivity extends AppCompatActivity {
     public static final String TAG = ArticleActivity.class.getSimpleName();
+    public static final String ARTICLE_SNAPSHOT_KEY = "article_snapshot_key";
     private static final int ANIM_DURATION_TOOLBAR = 250;
-    private static final int ANIM_DURATION_AUTHOR = 150;
-    private static final int ANIM_DURATION_WEB = 600;
     private static final int ANIM_DURATION_BOTTOMBAR = 100;
 
-    @InjectView(R.id.article_web)
-    GuokrWebView mArticleWebView;
     @InjectView(R.id.article_image)
     ImageView mArticleImage;
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
     @InjectView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingBar;
-    @InjectView(R.id.article_author_avatar)
-    ImageView mAuthorAvatar;
-    @InjectView(R.id.article_author_name)
-    TextView mAuthorName;
     @InjectView(R.id.appbar)
     AppBarLayout mAppBarLayout;
-    @InjectView(R.id.article_author)
-    LinearLayout mAuthor;
     @InjectView(R.id.article_bottom_bar)
     LinearLayout mBootombar;
     @InjectView(R.id.article_scoll_view)
@@ -67,6 +57,7 @@ public class ArticleActivity extends AppCompatActivity {
 
     private int mPreScrollY = 0;
     private boolean mIsBottombarShow = true;
+    private ArticleSnapShot mSnapShot;
 
     private DisplayImageOptions mDisImageOptions = new DisplayImageOptions.Builder()
             .displayer(new FadeInBitmapDisplayer(300))
@@ -79,39 +70,21 @@ public class ArticleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_article);
         ButterKnife.inject(this);
 
-        ArticleSnapShot snapShot = (ArticleSnapShot) getIntent().getSerializableExtra("snapShot");
+        mSnapShot = (ArticleSnapShot) getIntent().getSerializableExtra(ARTICLE_SNAPSHOT_KEY);
 
         //init tool bar
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(snapShot.getTitle());
+            actionBar.setTitle(mSnapShot.getTitle());
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        mCollapsingBar.setTitle(snapShot.getTitle());
+        mCollapsingBar.setTitle(mSnapShot.getTitle());
 
         //init tool bar image
-        ImageLoader.getInstance().displayImage(snapShot.getImage_info().getUrl(), mArticleImage,
+        ImageLoader.getInstance().displayImage(mSnapShot.getImage_info().getUrl(), mArticleImage,
                 mDisImageOptions);
-        ImageLoader.getInstance().displayImage(snapShot.getAuthor().getAvatar().getNormal(),
-                mAuthorAvatar,
-                ImageServer.getAvatarDisplayOptions(getResources().getDimensionPixelSize(R.dimen.article_avatar_size)));
-        mAuthorName.setText(snapShot.getAuthor().getNickname());
-
-        //init web content
-        ArticleServer.getInstance().getArticleDetail(snapShot.getUrl(), new HtmlDataListener() {
-            @Override
-            public void onRequestSuccess(String html) {
-                mArticleWebView.loadDataWithBaseURL("http://www.guokr.com/", html, "text/html",
-                        "charset=UTF-8", null);
-            }
-
-            @Override
-            public void onRequestError() {
-
-            }
-        });
 
         //on scroll
         mScrollView.getViewTreeObserver().addOnScrollChangedListener(
@@ -130,6 +103,8 @@ public class ArticleActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+        setUpMainFragment();
     }
 
     @Override
@@ -148,30 +123,33 @@ public class ArticleActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @OnClick(R.id.btnComments)
+    public void OnCommentsClicked(View view) {
+        replaceFragment(new PagerTextFragment(), PagerTextFragment.class.getSimpleName());
+    }
+
+    private void setUpMainFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, new ArticleContentFragment()).commit();
+    }
+
+    private void replaceFragment(Fragment fragment, String tag) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = manager.beginTransaction();
+        fragmentTransaction
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(tag)
+                .commit();
+    }
+
     /**
      * 启动时toolbar动画
      */
     private void startIntroAnimation() {
         int barSize = mAppBarLayout.getHeight();
-        mArticleWebView.setTranslationY(Utils.getScreenHeight(this));
-        mAuthor.setTranslationY(-2 * mAuthor.getHeight());
         mAppBarLayout.setTranslationY(-barSize);
         mBootombar.setTranslationY(mBootombar.getHeight());
-
-        mArticleWebView.setPageLoadListener(new GuokrWebView.PageLoadListener() {
-            @Override
-            public void onFinished(WebView view, String url) {
-                view.animate()
-                        .translationY(0)
-                        .setInterpolator(new DecelerateInterpolator(3.f))
-                        .setDuration(ANIM_DURATION_WEB)
-                        .start();
-                mBootombar.animate()
-                        .translationY(0)
-                        .setDuration(ANIM_DURATION_BOTTOMBAR)
-                        .start();
-            }
-        });
         mAppBarLayout.animate()
                 .translationY(0)
                 .setDuration(ANIM_DURATION_TOOLBAR)
@@ -179,14 +157,13 @@ public class ArticleActivity extends AppCompatActivity {
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        mAuthor.animate()
+                        mBootombar.animate()
                                 .translationY(0)
-                                .setDuration(ANIM_DURATION_AUTHOR)
+                                .setDuration(ANIM_DURATION_BOTTOMBAR)
                                 .start();
                     }
                 })
                 .start();
-
     }
 
     private void bottomBarAnimation() {
@@ -206,5 +183,9 @@ public class ArticleActivity extends AppCompatActivity {
                 .translationY(destPos)
                 .setDuration(ANIM_DURATION_BOTTOMBAR)
                 .start();
+    }
+
+    public ArticleSnapShot getSnapShot() {
+        return mSnapShot;
     }
 }

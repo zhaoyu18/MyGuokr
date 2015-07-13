@@ -2,9 +2,7 @@ package com.example.wangzhaoyu.myguokr.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +12,7 @@ import android.widget.TextView;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.Utils;
-import com.example.wangzhaoyu.myguokr.core.net.NetUtils;
-import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
-import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
-import com.example.wangzhaoyu.myguokr.model.reply.Article;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
-import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.ui.activity.ArticleActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -102,7 +95,7 @@ public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //                }
 //            });
             Intent intent = new Intent(mContext, ArticleActivity.class);
-            intent.putExtra("snapShot", snapShot);
+            intent.putExtra(ArticleActivity.ARTICLE_SNAPSHOT_KEY, snapShot);
             mContext.startActivity(intent);
         }
     };
