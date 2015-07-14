@@ -21,8 +21,8 @@ import android.widget.LinearLayout;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
+import com.example.wangzhaoyu.myguokr.ui.fragment.ArticleRepliseFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ArticleContentFragment;
-import com.example.wangzhaoyu.myguokr.ui.fragment.PagerTextFragment;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -76,7 +76,6 @@ public class ArticleActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(mSnapShot.getTitle());
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -125,7 +124,7 @@ public class ArticleActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnComments)
     public void OnCommentsClicked(View view) {
-        replaceFragment(new PagerTextFragment(), PagerTextFragment.class.getSimpleName());
+        replaceFragment(new ArticleRepliseFragment(), ArticleRepliseFragment.class.getSimpleName());
     }
 
     private void setUpMainFragment() {

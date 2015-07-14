@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.android.databinding'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "23.0.0 rc2"
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
         applicationId "com.example.wangzhaoyu.myguokr"

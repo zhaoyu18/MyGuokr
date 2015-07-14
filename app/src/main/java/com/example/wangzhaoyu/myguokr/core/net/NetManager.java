@@ -107,7 +107,7 @@ public class NetManager {
      */
     private String parsedUrl(String api, Map<String, String> params) {
         StringBuilder sb = new StringBuilder();
-        sb.append(Network.getAPIRootUrl());
+        sb.append(Network.getAPIProtocol());
         sb.append(api);
 
         if (null == params) {

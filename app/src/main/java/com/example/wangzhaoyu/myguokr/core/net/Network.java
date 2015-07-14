@@ -9,7 +9,7 @@ import com.android.volley.Request;
  */
 public class Network {
     //根节点
-    public static final String ROOT_URL = "www.guokr.com/";
+//    public static final String ROOT_URL = "www.guokr.com/";
     public static final String GUOKR_CLIENT_ID = "32393";
     public static final String GUOKR_CLIENT_SECRET = "cmkevizuydunmcn0h5pu2tch3b7pz5zeh7ubjsp4";
 
@@ -32,7 +32,8 @@ public class Network {
      */
     public final class API {
         // 科学人article list
-        public static final String MINISITE_ARTICLE = "apis/minisite/article.json";
+        public static final String MINISITE_ARTICLE = "www.guokr.com/apis/minisite/article.json";
+        public static final String ARTICLE_REPLY = "apis.guokr.com/minisite/article_reply.json";
     }
 
     /**
@@ -44,10 +45,12 @@ public class Network {
         public static final String OFFSET = "offset";
         public static final String SUBJECT_KEY = "subject_key";
         public static final String CHANNEL_KEY = "channel_key";
+        public static final String ARTICLE_ID = "article_id";
 
         public final class RetrieveType {
             public static final String BY_SUBJECT = "by_subject";
             public static final String BY_CHANNEL = "by_channel";
+            public static final String BY_ARTICLE = "by_article";
         }
     }
 
@@ -76,9 +79,9 @@ public class Network {
      * @param protocol 协议
      * @return root url
      */
-    public static String getAPIRootUrl(String protocol) {
-        String rootUrl = ROOT_URL;
-        return protocol + rootUrl;
+    public static String getAPIProtocol(String protocol) {
+//        String rootUrl = ROOT_URL;
+        return protocol;
     }
 
     /**
@@ -86,7 +89,7 @@ public class Network {
      *
      * @return root url
      */
-    public static String getAPIRootUrl() {
-        return getAPIRootUrl(Protocol.HTTP);
+    public static String getAPIProtocol() {
+        return getAPIProtocol(Protocol.HTTP);
     }
 }

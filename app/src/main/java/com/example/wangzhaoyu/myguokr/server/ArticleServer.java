@@ -1,10 +1,12 @@
 package com.example.wangzhaoyu.myguokr.server;
 
-import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
 import com.example.wangzhaoyu.myguokr.core.net.NetManager;
 import com.example.wangzhaoyu.myguokr.core.net.Network;
+import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
 import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleList;
+import com.example.wangzhaoyu.myguokr.model.reply.ArticleReplies;
+import com.example.wangzhaoyu.myguokr.model.reply.ArticleReply;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.handler.ServerHandler;
 
@@ -91,7 +93,25 @@ public class ArticleServer {
      * @param resUrl
      * @param dataListener
      */
-    public void getArticle(String resUrl, DataListener dataListener) {
+    public void getArticleDetail(String resUrl, DataListener dataListener) {
         NetManager.getInstance().request(Network.HttpMethod.GET, resUrl, dataListener);
+    }
+
+    public void getArticleReplies(int articleId, final ServerHandler<ArrayList<ArticleReply>> serverHandler) {
+        Map<String, String> params = new HashMap<>();
+        params.put(Network.Parameters.RETRIEVE_TYPE, Network.Parameters.RetrieveType.BY_ARTICLE);
+        params.put(Network.Parameters.ARTICLE_ID, articleId + "");
+        NetManager.getInstance().request(Network.HttpMethod.GET, Network.API.ARTICLE_REPLY,
+                params, new DataListener<ArticleReplies>() {
+                    @Override
+                    public void onRequestSuccess(ArticleReplies data) {
+                        serverHandler.onRequestSuccess(data.getResult());
+                    }
+
+                    @Override
+                    public void onRequestError() {
+
+                    }
+                });
     }
 }
