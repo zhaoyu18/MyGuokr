@@ -5,9 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,13 +13,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
+import android.webkit.WebView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.wangzhaoyu.myguokr.R;
+import com.example.wangzhaoyu.myguokr.core.Utils;
+import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
-import com.example.wangzhaoyu.myguokr.ui.fragment.ArticleRepliesFragment;
-import com.example.wangzhaoyu.myguokr.ui.fragment.ArticleContentFragment;
+import com.example.wangzhaoyu.myguokr.server.ArticleServer;
+import com.example.wangzhaoyu.myguokr.server.ImageServer;
+import com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -41,6 +45,7 @@ public class ArticleActivity extends AppCompatActivity {
     public static final String ARTICLE_SNAPSHOT_KEY = "article_snapshot_key";
     private static final int ANIM_DURATION_TOOLBAR = 250;
     private static final int ANIM_DURATION_BOTTOMBAR = 100;
+    private static final int ANIM_DURATION_WEB = 600;
 
     @InjectView(R.id.article_image)
     ImageView mArticleImage;
@@ -54,6 +59,22 @@ public class ArticleActivity extends AppCompatActivity {
     LinearLayout mBootombar;
     @InjectView(R.id.article_scoll_view)
     NestedScrollView mScrollView;
+    @InjectView(R.id.article_author_avatar)
+    ImageView mArticleAuthorAvatar;
+    @InjectView(R.id.article_author_name)
+    TextView mArticleAuthorName;
+    @InjectView(R.id.article_author)
+    LinearLayout mArticleAuthor;
+    @InjectView(R.id.article_web)
+    GuokrWebView mArticleWeb;
+    @InjectView(R.id.article_content)
+    LinearLayout mArticleContent;
+    @InjectView(R.id.btnLike)
+    ImageButton mBtnLike;
+    @InjectView(R.id.btnComments)
+    ImageButton mBtnComments;
+    @InjectView(R.id.btnMore)
+    ImageButton mBtnMore;
 
     private int mPreScrollY = 0;
     private boolean mIsBottombarShow = true;
@@ -103,7 +124,29 @@ public class ArticleActivity extends AppCompatActivity {
                     }
                 });
 
-        setUpMainFragment();
+        //init author
+        ImageLoader.getInstance().displayImage(
+                mSnapShot.getAuthor().getAvatar().getNormal(),
+                mArticleAuthorAvatar,
+                ImageServer.getAvatarDisplayOptions(
+                        getResources().getDimensionPixelSize(R.dimen.article_avatar_size)));
+        mArticleAuthorName.setText(mSnapShot.getAuthor().getNickname());
+
+        //init web content
+        ArticleServer.getInstance().getArticleDetail(mSnapShot.getUrl(), new HtmlDataListener() {
+            @Override
+            public void onRequestSuccess(String html) {
+                mArticleWeb.loadDataWithBaseURL("http://www.guokr.com/", html, "text/html",
+                        "charset=UTF-8", null);
+                startWebViewAnimation();
+            }
+
+            @Override
+            public void onRequestError() {
+
+            }
+        });
+
     }
 
     @Override
@@ -124,22 +167,6 @@ public class ArticleActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnComments)
     public void OnCommentsClicked(View view) {
-        replaceFragment(new ArticleRepliesFragment(), ArticleRepliesFragment.class.getSimpleName());
-    }
-
-    private void setUpMainFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, new ArticleContentFragment()).commit();
-    }
-
-    private void replaceFragment(Fragment fragment, String tag) {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        fragmentTransaction
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(tag)
-                .commit();
     }
 
     /**
@@ -149,6 +176,7 @@ public class ArticleActivity extends AppCompatActivity {
         int barSize = mAppBarLayout.getHeight();
         mAppBarLayout.setTranslationY(-barSize);
         mBootombar.setTranslationY(mBootombar.getHeight());
+        mArticleContent.setTranslationY(Utils.getScreenHeight(this));
         mAppBarLayout.animate()
                 .translationY(0)
                 .setDuration(ANIM_DURATION_TOOLBAR)
@@ -163,6 +191,19 @@ public class ArticleActivity extends AppCompatActivity {
                     }
                 })
                 .start();
+    }
+
+    private void startWebViewAnimation() {
+        mArticleWeb.setPageLoadListener(new GuokrWebView.PageLoadListener() {
+            @Override
+            public void onFinished(WebView view, String url) {
+                mArticleContent.animate()
+                        .translationY(0)
+                        .setInterpolator(new DecelerateInterpolator(3.f))
+                        .setDuration(ANIM_DURATION_WEB)
+                        .start();
+            }
+        });
     }
 
     private void bottomBarAnimation() {
