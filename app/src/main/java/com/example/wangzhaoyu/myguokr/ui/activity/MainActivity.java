@@ -24,7 +24,7 @@ import com.example.wangzhaoyu.myguokr.model.reply.User;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
 import com.example.wangzhaoyu.myguokr.server.UserServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
-import com.example.wangzhaoyu.myguokr.ui.fragment.ArticleListFragment;
+import com.example.wangzhaoyu.myguokr.ui.fragment.ArticlesListFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.ButterKnife;
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     private void setUpMainFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, new ArticleListFragment()).commit();
+        fragmentTransaction.add(R.id.fragment_container, new ArticlesListFragment()).commit();
     }
 
     private void updateUserDisplay() {

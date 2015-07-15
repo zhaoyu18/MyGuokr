@@ -1,17 +1,24 @@
 package com.example.wangzhaoyu.myguokr.ui.adapter;
 
 import android.content.Context;
+import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.widget.ImageView;
 
 import com.example.wangzhaoyu.myguokr.BR;
 import com.example.wangzhaoyu.myguokr.R;
+import com.example.wangzhaoyu.myguokr.core.net.NetUtils;
 import com.example.wangzhaoyu.myguokr.databinding.ArticleReplyItemBinding;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleReply;
+import com.example.wangzhaoyu.myguokr.server.ImageServer;
+import com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.util.ArrayList;
@@ -21,18 +28,16 @@ import java.util.ArrayList;
  */
 public class ArticleReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = ArticleReplyAdapter.class.getSimpleName();
+    private DisplayImageOptions mDisImageOptions;
 
     private Context mContext;
     private ArrayList<ArticleReply> mReplies;
-    private DisplayImageOptions mDisImageOptions = new DisplayImageOptions.Builder()
-            .resetViewBeforeLoading(true)
-            .displayer(new FadeInBitmapDisplayer(300))
-            .cacheOnDisk(true)
-            .build();
 
     public ArticleReplyAdapter(Context context, ArrayList<ArticleReply> replies) {
         this.mContext = context;
         this.mReplies = replies;
+        mDisImageOptions = ImageServer.getAvatarDisplayOptions(
+                mContext.getResources().getDimensionPixelSize(R.dimen.article_avatar_size));
     }
 
     public void setReplyList(ArrayList<ArticleReply> replies) {
@@ -57,6 +62,7 @@ public class ArticleReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ArticleReply reply = mReplies.get(position);
         ReplyViewHolder viewHolder = (ReplyViewHolder) holder;
         viewHolder.getBinding().setVariable(BR.reply, reply);
+        viewHolder.getBinding().setVariable(BR.option, mDisImageOptions);
         viewHolder.getBinding().executePendingBindings();
     }
 
@@ -79,5 +85,10 @@ public class ArticleReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void setBinding(ArticleReplyItemBinding binding) {
             this.mBinding = binding;
         }
+    }
+
+    @BindingAdapter({"bind:imageUrl", "bind:imageOption"})
+    public static void loadAvatar(ImageView view, String url, DisplayImageOptions options) {
+        ImageLoader.getInstance().displayImage(url, view, options);
     }
 }

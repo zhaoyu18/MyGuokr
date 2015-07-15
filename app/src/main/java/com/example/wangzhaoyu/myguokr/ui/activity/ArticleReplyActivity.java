@@ -13,6 +13,7 @@ import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.handler.ServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleReplyAdapter;
+import com.example.wangzhaoyu.myguokr.ui.adapter.DividerItemDecoration;
 
 import java.util.ArrayList;
 
@@ -47,6 +48,8 @@ public class ArticleReplyActivity extends AppCompatActivity {
         mBinding.replyRecycler.setHasFixedSize(true);
         mBinding.replyRecycler.setLayoutManager(
                 new LinearLayoutManager(this));
+        mBinding.replyRecycler.addItemDecoration(
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
         mBinding.replyRecycler.setAdapter(mAdapter);
 
         //request replies
