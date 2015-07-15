@@ -151,8 +151,8 @@
                     android:layout_height="48dp"
                     android:background="@drawable/btn_feed_action"
                     android:fitsSystemWindows="true"
-                    android:src="@drawable/ic_comment_outline_grey"
-                    android:onClick="replyBtnClicked"/>
+                    android:onClick="replyBtnClicked"
+                    android:src="@drawable/ic_comment_outline_grey"/>
 
                 <ImageButton
                     android:id="@+id/btnMore"

@@ -97,6 +97,12 @@ public class ArticleServer {
         NetManager.getInstance().request(Network.HttpMethod.GET, resUrl, dataListener);
     }
 
+    /**
+     * 刷新评论
+     *
+     * @param articleId
+     * @param serverHandler
+     */
     public void getArticleReplies(int articleId, final ServerHandler<ArrayList<ArticleReply>> serverHandler) {
         Map<String, String> params = new HashMap<>();
         params.put(Network.Parameters.RETRIEVE_TYPE, Network.Parameters.RetrieveType.BY_ARTICLE);
@@ -110,7 +116,36 @@ public class ArticleServer {
 
                     @Override
                     public void onRequestError() {
+                        serverHandler.onRequestError();
+                    }
+                });
+    }
 
+    /**
+     * 加载更多评论
+     *
+     * @param articleId
+     * @param offset
+     * @param serverHandler
+     */
+    public void loadMoreArticleReplies(
+            int articleId,
+            int offset,
+            final ServerHandler<ArrayList<ArticleReply>> serverHandler) {
+        Map<String, String> params = new HashMap<>();
+        params.put(Network.Parameters.RETRIEVE_TYPE, Network.Parameters.RetrieveType.BY_ARTICLE);
+        params.put(Network.Parameters.ARTICLE_ID, articleId + "");
+        params.put(Network.Parameters.OFFSET, offset + "");
+        NetManager.getInstance().request(Network.HttpMethod.GET, Network.API.ARTICLE_REPLY,
+                params, new DataListener<ArticleReplies>() {
+                    @Override
+                    public void onRequestSuccess(ArticleReplies data) {
+                        serverHandler.onRequestSuccess(data.getResult());
+                    }
+
+                    @Override
+                    public void onRequestError() {
+                        serverHandler.onRequestError();
                     }
                 });
     }
