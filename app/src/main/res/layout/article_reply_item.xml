@@ -1,52 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout
-        android:id="@+id/reply_header"
+    <data>
+        <variable name="reply" type="com.example.wangzhaoyu.myguokr.model.reply.ArticleReply" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
-        <ImageView
-            android:id="@+id/reply_item_avatar"
-            android:layout_width="@dimen/article_avatar_size"
-            android:layout_height="@dimen/article_avatar_size"
-            android:layout_centerVertical="true" />
+        <RelativeLayout
+            android:id="@+id/reply_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/reply_item_avatar"
+                android:layout_width="@dimen/article_avatar_size"
+                android:layout_height="@dimen/article_avatar_size"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/reply_item_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/reply_item_avatar"
+                android:layout_toRightOf="@+id/reply_item_avatar"
+                android:gravity="center_vertical"
+                android:text="@{reply.author.nickname}"
+                android:textColor="@color/style_color_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
+            <ImageButton
+                android:id="@+id/reply_like_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/btn_feed_action"
+                android:src="@drawable/ic_heart_outline_grey"/>
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/reply_item_nickname"
-            android:layout_width="wrap_content"
+            android:id="@+id/reply_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_toEndOf="@+id/reply_item_avatar"
-            android:layout_toRightOf="@+id/reply_item_avatar"
-            android:gravity="center_vertical"
-            android:text="no one"
-            android:textColor="@color/style_color_primary"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:text="@{reply.content}"/>
 
-        <ImageButton
-            android:id="@+id/reply_like_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/btn_feed_action"
-            android:src="@drawable/ic_heart_outline_grey" />
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/reply_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="回复回复回复，字数字数字数"/>
-
-</LinearLayout>
+    </LinearLayout>
+</layout>

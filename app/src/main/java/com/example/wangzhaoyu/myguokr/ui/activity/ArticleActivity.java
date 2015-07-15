@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
-import com.example.wangzhaoyu.myguokr.ui.fragment.ArticleRepliseFragment;
+import com.example.wangzhaoyu.myguokr.ui.fragment.ArticleRepliesFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ArticleContentFragment;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -124,7 +124,7 @@ public class ArticleActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnComments)
     public void OnCommentsClicked(View view) {
-        replaceFragment(new ArticleRepliseFragment(), ArticleRepliseFragment.class.getSimpleName());
+        replaceFragment(new ArticleRepliesFragment(), ArticleRepliesFragment.class.getSimpleName());
     }
 
     private void setUpMainFragment() {
