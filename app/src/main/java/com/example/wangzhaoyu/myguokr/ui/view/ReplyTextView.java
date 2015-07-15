@@ -1,12 +1,21 @@
 package com.example.wangzhaoyu.myguokr.ui.view;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Selection;
@@ -22,22 +31,30 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 
 import com.example.wangzhaoyu.myguokr.AppController;
+import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.DisplayUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by NashLegend on 2015/1/13 0013
- * http://www.cnblogs.com/TerryBlog/archive/2013/04/02/2994815.html
+ *
  */
 public class ReplyTextView extends TextView {
     boolean noConsumeNonUrlClicks = true;
     boolean linkHit;
-    private double maxWidth;
-    //    private HtmlLoaderTask htmlTask;
-    String html = "";
+    private double mMaxImageWidth;
+    private HtmlLoaderTask htmlTask;
+    String mHtml = "";
 
     public ReplyTextView(Context context) {
         super(context);
@@ -61,16 +78,16 @@ public class ReplyTextView extends TextView {
     }
 
     public void loadHtml(String content) {
-//        cancelPotentialTask();
-        maxWidth = getMaxImageWidth();
-        html = content;
+        cancelPotentialTask();
+        mMaxImageWidth = getMaxImageWidth();
+        mHtml = content;
         Spanned spanned = correctLinkPaths(Html.fromHtml(content, emptyImageGetter, null));
         CharSequence charSequence = trimEnd(spanned);
         setText(charSequence);
-//        if (content.contains("<img")) {
-//            htmlTask = new HtmlLoaderTask();
-//            htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, content);
-//        }
+        if (content.contains("<img")) {
+            htmlTask = new HtmlLoaderTask();
+            htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, content);
+        }
     }
 
     @Override
@@ -82,25 +99,25 @@ public class ReplyTextView extends TextView {
         return res;
     }
 
-//    private void cancelPotentialTask() {
-//        if (htmlTask != null && htmlTask.getStatus() == AsyncTask.Status.RUNNING) {
-//            htmlTask.cancel(false);
-//        }
-//    }
+    private void cancelPotentialTask() {
+        if (htmlTask != null && htmlTask.getStatus() == AsyncTask.Status.RUNNING) {
+            htmlTask.cancel(false);
+        }
+    }
 
-//    class HtmlLoaderTask extends AsyncTask<String, Integer, CharSequence> {
-//
-//        @Override
-//        protected CharSequence doInBackground(String... params) {
-//            Spanned spanned = Html.fromHtml(params[0], imageGetter, null);
-//            return trimEnd(spanned);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(CharSequence spanned) {
-//            setText(spanned);
-//        }
-//    }
+    class HtmlLoaderTask extends AsyncTask<String, Integer, CharSequence> {
+
+        @Override
+        protected CharSequence doInBackground(String... params) {
+            Spanned spanned = Html.fromHtml(params[0], imageGetter, null);
+            return trimEnd(spanned);
+        }
+
+        @Override
+        protected void onPostExecute(CharSequence spanned) {
+            setText(spanned);
+        }
+    }
 
     /**
      * 消除Html尾部空白
@@ -154,7 +171,7 @@ public class ReplyTextView extends TextView {
             //这是图片格式
             //http://2.im.guokr.com/xxx.jpg?imageView2/1/w/480/h/329
             float stretch = DisplayUtil.getPixelDensity(AppController.getInstance());
-            maxWidth = getMaxImageWidth();
+            mMaxImageWidth = getMaxImageWidth();
             Drawable drawable = null;
 
             int width = 0;
@@ -172,9 +189,9 @@ public class ReplyTextView extends TextView {
                 }
             }
             if (width > 0 && height > 0) {
-                if (width > maxWidth) {
-                    height *= (maxWidth / width);
-                    width = (int) maxWidth;
+                if (width > mMaxImageWidth) {
+                    height *= (mMaxImageWidth / width);
+                    width = (int) mMaxImageWidth;
                 }
                 drawable = new ColorDrawable(0);//透明
                 drawable.setBounds(0, 0, width, height);
@@ -184,72 +201,74 @@ public class ReplyTextView extends TextView {
         }
     };
 
-//    Html.ImageGetter imageGetter = new Html.ImageGetter() {
-//        @Override
-//        public Drawable getDrawable(String source) {
-//            float stretch = DisplayUtil.getPixelDensity(AppController.getInstance());
-//            maxWidth = getMaxImageWidth();
-//            Drawable drawable = null;
-//            try {
-//                if (source.startsWith("http")) {
-//                    Bitmap bitmap = Picasso.with(getContext()).load(source).resize((int) maxWidth, 0).setTargetSizeAsMax(true).get();
-//                    if (bitmap != null) {
-//                        String reg = ".+/w/(\\d+)/h/(\\d+)";
-//                        Matcher matcher = Pattern.compile(reg).matcher(source);
-//                        float width;
-//                        float height;
-//                        if (matcher.find()) {
-//                            width = Integer.valueOf(matcher.group(1)) * stretch;
-//                            height = Integer.valueOf(matcher.group(2)) * stretch;
-//                        } else {
-//                            width = bitmap.getWidth() * stretch;
-//                            height = bitmap.getHeight() * stretch;
-//                        }
-//                        if (width > maxWidth) {
-//                            height *= (maxWidth / width);
-//                            width = (int) maxWidth;
-//                        }
-//                        ImageSizeMap.put(source, (int) width, (int) height);
-//
-//                        String realLink = source.replaceAll("\\?.*$", "");
-//                        String suffix = "";
-//                        int offset = realLink.lastIndexOf(".");
-//                        if (offset >= 0) {
-//                            suffix = realLink.substring(offset + 1);
-//                        }
-//                        if ("gif".equalsIgnoreCase(suffix)) {
-//                            Bitmap tmpBitmap = Bitmap.createBitmap((int) width, (int) height, Bitmap.Config.ARGB_8888);
-//                            Bitmap indBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.gif_text);
-//                            Canvas canvas = new Canvas(tmpBitmap);
-//                            Matrix matrix = new Matrix();
-//                            matrix.setScale(width / bitmap.getWidth(), height / bitmap.getHeight());
-//                            canvas.drawBitmap(bitmap, matrix, null);
-//                            if (width > 2 * indBitmap.getWidth() && height > 2 * indBitmap.getHeight()) {
-//                                canvas.drawBitmap(indBitmap, 0, 0, null);
-//                            }
-//                            drawable = new BitmapDrawable(getContext().getResources(), tmpBitmap);
-//                            drawable.setBounds(0, 0, (int) width, (int) height);
-//                        } else {
-//                            drawable = new BitmapDrawable(getContext().getResources(), bitmap);
-//                            drawable.setBounds(0, 0, (int) width, (int) height);
-//                        }
-//                        return drawable;
-//                    }
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            if (drawable == null) {
-//                drawable = getContext().getResources().getDrawable(R.drawable.broken_image);
-//                if (drawable != null) {
-//                    int width = drawable.getIntrinsicWidth();
-//                    int height = drawable.getIntrinsicHeight();
-//                    drawable.setBounds(0, 0, width, height);
-//                }
-//            }
-//            return drawable;
-//        }
-//    };
+    Html.ImageGetter imageGetter = new Html.ImageGetter() {
+        @Override
+        public Drawable getDrawable(String source) {
+            float stretch = DisplayUtil.getPixelDensity(AppController.getInstance());
+            mMaxImageWidth = getMaxImageWidth();
+            Drawable drawable = null;
+            try {
+                if (source.startsWith("http")) {
+                    Bitmap bitmap = ImageLoader.getInstance().loadImageSync(
+                            source,
+                            new ImageSize((int)mMaxImageWidth, (int)mMaxImageWidth));
+                    if (bitmap != null) {
+                        String reg = ".+/w/(\\d+)/h/(\\d+)";
+                        Matcher matcher = Pattern.compile(reg).matcher(source);
+                        float width;
+                        float height;
+                        if (matcher.find()) {
+                            width = Integer.valueOf(matcher.group(1)) * stretch;
+                            height = Integer.valueOf(matcher.group(2)) * stretch;
+                        } else {
+                            width = bitmap.getWidth() * stretch;
+                            height = bitmap.getHeight() * stretch;
+                        }
+                        if (width > mMaxImageWidth) {
+                            height *= (mMaxImageWidth / width);
+                            width = (int) mMaxImageWidth;
+                        }
+                        ImageSizeMap.put(source, (int) width, (int) height);
+
+                        String realLink = source.replaceAll("\\?.*$", "");
+                        String suffix = "";
+                        int offset = realLink.lastIndexOf(".");
+                        if (offset >= 0) {
+                            suffix = realLink.substring(offset + 1);
+                        }
+                        if ("gif".equalsIgnoreCase(suffix)) {
+                            Bitmap tmpBitmap = Bitmap.createBitmap((int) width, (int) height, Bitmap.Config.ARGB_8888);
+                            Bitmap indBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.gif_text);
+                            Canvas canvas = new Canvas(tmpBitmap);
+                            Matrix matrix = new Matrix();
+                            matrix.setScale(width / bitmap.getWidth(), height / bitmap.getHeight());
+                            canvas.drawBitmap(bitmap, matrix, null);
+                            if (width > 2 * indBitmap.getWidth() && height > 2 * indBitmap.getHeight()) {
+                                canvas.drawBitmap(indBitmap, 0, 0, null);
+                            }
+                            drawable = new BitmapDrawable(getContext().getResources(), tmpBitmap);
+                            drawable.setBounds(0, 0, (int) width, (int) height);
+                        } else {
+                            drawable = new BitmapDrawable(getContext().getResources(), bitmap);
+                            drawable.setBounds(0, 0, (int) width, (int) height);
+                        }
+                        return drawable;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (drawable == null) {
+                drawable = getContext().getResources().getDrawable(R.mipmap.ic_launcher);
+                if (drawable != null) {
+                    int width = drawable.getIntrinsicWidth();
+                    int height = drawable.getIntrinsicHeight();
+                    drawable.setBounds(0, 0, width, height);
+                }
+            }
+            return drawable;
+        }
+    };
 
     private double getMaxImageWidth() {
         int w = getWidth() - getPaddingLeft() - getPaddingRight();
@@ -269,11 +288,11 @@ public class ReplyTextView extends TextView {
     }
 
     private static void handleImageSpanClick(TextView textView, ImageSpan imageSpan) {
-//        if (textView instanceof TTextView) {
-//            String html = ((TTextView) textView).html;
+//        if (textView instanceof ReplyTextView) {
+//            String mHtml = ((ReplyTextView) textView).mHtml;
 //            String clickedUrl = imageSpan.getSource();
-//            if (!TextUtils.isEmpty(html)) {
-//                Document doc = Jsoup.parse(html);
+//            if (!TextUtils.isEmpty(mHtml)) {
+//                Document doc = Jsoup.parse(mHtml);
 //                Elements elements = doc.getElementsByTag("img");
 //                ArrayList<String> images = new ArrayList<>();
 //                int clickedPosition = 0;
