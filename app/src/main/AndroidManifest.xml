@@ -34,7 +34,10 @@
 
         <activity
             android:name=".ui.activity.LoginActivity"
-            android:label="Login Guokr"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".ui.activity.ArticleReplyActivity"
             android:screenOrientation="portrait"/>
     </application>
 

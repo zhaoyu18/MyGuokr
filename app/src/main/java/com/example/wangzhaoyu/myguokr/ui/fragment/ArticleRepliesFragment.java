@@ -44,7 +44,7 @@ public class ArticleRepliesFragment extends Fragment {
     }
 
     private void initView() {
-        mSnapShot = ((ArticleActivity) getActivity()).getSnapShot();
+//        mSnapShot = ((ArticleActivity) getActivity()).getSnapShot();
         mReplies = new ArrayList<>();
         mAdapter = new ArticleReplyAdapter(getActivity(), mReplies);
         mBinding.articleRecycler.setHasFixedSize(true);

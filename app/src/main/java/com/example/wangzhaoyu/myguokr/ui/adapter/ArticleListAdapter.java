@@ -26,8 +26,8 @@ import butterknife.InjectView;
 /**
  * @author wangzhaoyu
  */
-public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = ScientificFeedAdapter.class.getSimpleName();
+public class ArticleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = ArticleListAdapter.class.getSimpleName();
     private static final int ANIMATED_ITEMS_COUNT = 5;
 
     private Context mContext;
@@ -39,7 +39,7 @@ public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             .build();
     private int lastAnimatedPosition = -1;
 
-    public ScientificFeedAdapter(Context mContext, ArrayList<ArticleSnapShot> articleList) {
+    public ArticleListAdapter(Context mContext, ArrayList<ArticleSnapShot> articleList) {
         this.mContext = mContext;
         this.mSnapShots = articleList;
     }
@@ -76,24 +76,6 @@ public class ScientificFeedAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         @Override
         public void onClick(View v) {
             ArticleSnapShot snapShot = (ArticleSnapShot) v.getTag();
-            //test
-//            String url = mSnapShots.get(pos).getResource_url();
-//            ArticleServer.getInstance().getArticle(url, new DataListener<Article>() {
-//                @Override
-//                public void onRequestSuccess(Article data) {
-//                    Log.i(TAG, data.getResult().getTitle());
-//                    Intent intent = new Intent(mContext, ArticleActivity.class);
-////                    String html = NetUtils.getArticleHtml(data.getResult().getContent());
-//                    String html = data.getResult().getContent();
-//                    intent.putExtra("html", html);
-//                    mContext.startActivity(intent);
-//                }
-//
-//                @Override
-//                public void onRequestError() {
-//
-//                }
-//            });
             Intent intent = new Intent(mContext, ArticleActivity.class);
             intent.putExtra(ArticleActivity.ARTICLE_SNAPSHOT_KEY, snapShot);
             mContext.startActivity(intent);

@@ -58,7 +58,7 @@ public class ArticleContentFragment extends Fragment {
     }
 
     private void initView() {
-        mSnapShot = ((ArticleActivity) getActivity()).getSnapShot();
+//        mSnapShot = ((ArticleActivity) getActivity()).getSnapShot();
         ImageLoader.getInstance().displayImage(mSnapShot.getAuthor().getAvatar().getNormal(),
                 mArticleAuthorAvatar,
                 ImageServer.getAvatarDisplayOptions(getResources().getDimensionPixelSize(R.dimen.article_avatar_size)));
