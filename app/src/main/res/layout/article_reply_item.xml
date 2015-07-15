@@ -29,7 +29,7 @@
                 android:layout_height="@dimen/article_avatar_size"
                 android:layout_centerVertical="true"
                 app:imageOption="@{option}"
-                app:imageUrl="@{reply.author.avatar.normal}"/>
+                app:imageUrl="@{reply.author.avatar.large}"/>
 
             <TextView
                 android:id="@+id/reply_item_nickname"
@@ -42,7 +42,7 @@
                 android:layout_toRightOf="@+id/reply_item_avatar"
                 android:gravity="center_vertical"
                 android:text="@{reply.author.nickname}"
-                android:textColor="@color/style_color_accent"
+                android:textColor="@color/style_color_primary"
                 android:textSize="15sp"/>
 
             <ImageButton
@@ -56,11 +56,13 @@
                 android:src="@drawable/ic_heart_outline_grey"/>
         </RelativeLayout>
 
-        <TextView
+        <com.example.wangzhaoyu.myguokr.ui.view.ReplyTextView
             android:id="@+id/reply_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{reply.content}"/>
+            android:layout_marginBottom="8dp"
+            android:textColorLink="@color/style_color_primary"
+            app:html="@{reply.html}"/>
 
     </LinearLayout>
 </layout>

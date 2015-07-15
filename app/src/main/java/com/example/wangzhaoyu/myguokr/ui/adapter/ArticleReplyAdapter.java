@@ -7,19 +7,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.ImageView;
 
 import com.example.wangzhaoyu.myguokr.BR;
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.core.net.NetUtils;
 import com.example.wangzhaoyu.myguokr.databinding.ArticleReplyItemBinding;
 import com.example.wangzhaoyu.myguokr.model.reply.ArticleReply;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
-import com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView;
+import com.example.wangzhaoyu.myguokr.ui.view.ReplyTextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.util.ArrayList;
 
@@ -90,5 +87,10 @@ public class ArticleReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @BindingAdapter({"bind:imageUrl", "bind:imageOption"})
     public static void loadAvatar(ImageView view, String url, DisplayImageOptions options) {
         ImageLoader.getInstance().displayImage(url, view, options);
+    }
+
+    @BindingAdapter({"bind:html"})
+    public static void loadHtml(ReplyTextView textView, String html) {
+        textView.loadHtml(html);
     }
 }
