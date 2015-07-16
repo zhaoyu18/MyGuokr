@@ -26,6 +26,7 @@ import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.MoocGlassesHeaderView;
+import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.StoreHouseHeader;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.util.PtrLocalDisplay;
 
 import java.util.ArrayList;
@@ -67,11 +68,13 @@ public class ArticleReplyActivity extends AppCompatActivity implements SendComme
         mBinding.replyRecycler.setAdapter(mAdapter);
 
         //init pull to refresh
-        MoocGlassesHeaderView header = new MoocGlassesHeaderView(this);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        header.setPadding(0, PtrLocalDisplay.dp2px(15), 0, PtrLocalDisplay.dp2px(10));
-        header.setUp(mBinding.refeshLayout);
+//        MoocGlassesHeaderView header = new MoocGlassesHeaderView(this);
+//        header.setLayoutParams(new PtrFrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT));
+//        header.setPadding(0, PtrLocalDisplay.dp2px(15), 0, PtrLocalDisplay.dp2px(10));
+//        header.setUp(mBinding.refeshLayout);
+        StoreHouseHeader header = new StoreHouseHeader(this);
+        header.initWithString("Guokr");
 
         mBinding.refeshLayout.setLoadingMinTime(500);
         mBinding.refeshLayout.setDurationToCloseHeader(750);

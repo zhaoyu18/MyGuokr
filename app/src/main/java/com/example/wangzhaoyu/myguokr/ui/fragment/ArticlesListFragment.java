@@ -18,6 +18,7 @@ import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.MoocGlassesHeaderView;
+import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.StoreHouseHeader;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.util.PtrLocalDisplay;
 
 import java.util.ArrayList;
@@ -90,14 +91,16 @@ public class ArticlesListFragment extends Fragment {
         });
 
         //init pull to refresh
-        MoocGlassesHeaderView header = new MoocGlassesHeaderView(getActivity());
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        header.setPadding(0, PtrLocalDisplay.dp2px(15), 0, PtrLocalDisplay.dp2px(10));
-        header.setUp(mRefreshLayout);
+//        MoocGlassesHeaderView header = new MoocGlassesHeaderView(getActivity());
+//        header.setLayoutParams(new PtrFrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT));
+//        header.setPadding(0, PtrLocalDisplay.dp2px(15), 0, PtrLocalDisplay.dp2px(10));
+//        header.setUp(mRefreshLayout);
+        StoreHouseHeader header = new StoreHouseHeader(getActivity());
+        header.initWithString("Guokr");
 
-        mRefreshLayout.setLoadingMinTime(500);
-        mRefreshLayout.setDurationToCloseHeader(750);
+        mRefreshLayout.setLoadingMinTime(750);
+        mRefreshLayout.setDurationToCloseHeader(1000);
         mRefreshLayout.setHeaderView(header);
         mRefreshLayout.addPtrUIHandler(header);
 
