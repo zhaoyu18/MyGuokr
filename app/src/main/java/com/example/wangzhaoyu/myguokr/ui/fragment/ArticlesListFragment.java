@@ -13,6 +13,7 @@ import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
+import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleAdapter;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleListAdapter;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
@@ -39,7 +40,7 @@ public class ArticlesListFragment extends Fragment {
     @InjectView(R.id.refeshlayout)
     PtrFrameLayout mRefreshLayout;
 
-    private ArticleListAdapter mAdapter;
+    private ArticleAdapter mAdapter;
 
     public ArticlesListFragment() {
     }
@@ -65,7 +66,7 @@ public class ArticlesListFragment extends Fragment {
         };
         mFeedRecycler.setLayoutManager(linearLayoutManager);
 
-        mAdapter = new ArticleListAdapter(getActivity(), new ArrayList<ArticleSnapShot>());
+        mAdapter = new ArticleAdapter(getActivity(), new ArrayList<ArticleSnapShot>());
         mArticleList = new ArrayList<>();
         mAdapter.setArticleList(mArticleList);
         mFeedRecycler.setAdapter(mAdapter);
