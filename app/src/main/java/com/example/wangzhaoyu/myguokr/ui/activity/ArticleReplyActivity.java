@@ -100,7 +100,7 @@ public class ArticleReplyActivity extends AppCompatActivity {
                         && manager.findFirstCompletelyVisibleItemPosition() > 0
                         && manager.findLastVisibleItemPosition() == mAdapter.getItemCount() - 1
                         && !mBinding.refeshLayout.isRefreshing()) {
-                    loadMore();
+//                    loadMore();
                 }
             }
         });
