@@ -1,4 +1,4 @@
-package com.example.wangzhaoyu.myguokr.model.reply;
+package com.example.wangzhaoyu.myguokr.model.response;
 
 import java.util.List;
 

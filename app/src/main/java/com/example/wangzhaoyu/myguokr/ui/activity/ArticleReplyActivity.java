@@ -14,8 +14,9 @@ import android.view.animation.AnimationUtils;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityArticleReplyBinding;
-import com.example.wangzhaoyu.myguokr.model.reply.ArticleReply;
-import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleReply;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleSendComment;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleReplyAdapter;
@@ -105,7 +106,7 @@ public class ArticleReplyActivity extends AppCompatActivity implements SendComme
                         && manager.findFirstCompletelyVisibleItemPosition() > 0
                         && manager.findLastVisibleItemPosition() == mAdapter.getItemCount() - 1
                         && !mBinding.refeshLayout.isRefreshing()) {
-//                    loadMore();
+                    loadMore();
                 }
             }
         });
@@ -169,9 +170,17 @@ public class ArticleReplyActivity extends AppCompatActivity implements SendComme
 //            commentsAdapter.setAnimationsLocked(false);
 //            commentsAdapter.setDelayEnterAnimation(false);
 //            rvComments.smoothScrollBy(0, rvComments.getChildAt(0).getHeight() * commentsAdapter.getItemCount());
+            ArticleServer.getInstance().sendArticleComment(mSnapShot.getId(),
+                    mBinding.editComment.getText().toString(),
+                    new DefaultServerHandler<ArticleSendComment>(ArticleReplyActivity.this) {
 
-            mBinding.editComment.setText(null);
-            mBinding.btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
+                        @Override
+                        public void onResponse() {
+                            super.onResponse();
+                            mBinding.editComment.setText(null);
+                            mBinding.btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
+                        }
+                    });
         }
     }
 

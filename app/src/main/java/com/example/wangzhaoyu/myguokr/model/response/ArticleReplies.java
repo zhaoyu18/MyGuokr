@@ -1,7 +1,6 @@
-package com.example.wangzhaoyu.myguokr.model.reply;
+package com.example.wangzhaoyu.myguokr.model.response;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author wangzhaoyu

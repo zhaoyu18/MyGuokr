@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleListAdapter;

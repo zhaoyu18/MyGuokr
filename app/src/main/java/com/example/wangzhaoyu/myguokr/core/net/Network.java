@@ -32,7 +32,7 @@ public class Network {
      */
     public final class API {
         // 科学人article list
-        public static final String MINISITE_ARTICLE = "www.guokr.com/apis/minisite/article.json";
+        public static final String MINISITE_ARTICLE = "apis.guokr.com/minisite/article.json";
         public static final String ARTICLE_REPLY = "apis.guokr.com/minisite/article_reply.json";
     }
 
@@ -46,6 +46,8 @@ public class Network {
         public static final String SUBJECT_KEY = "subject_key";
         public static final String CHANNEL_KEY = "channel_key";
         public static final String ARTICLE_ID = "article_id";
+        public static final String ACCESS_TOKEN = "access_token";
+        public static final String CONTENT = "content";
 
         public final class RetrieveType {
             public static final String BY_SUBJECT = "by_subject";

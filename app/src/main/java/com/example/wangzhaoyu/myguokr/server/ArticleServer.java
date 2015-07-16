@@ -4,10 +4,11 @@ import com.example.wangzhaoyu.myguokr.core.net.NetManager;
 import com.example.wangzhaoyu.myguokr.core.net.Network;
 import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
 import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
-import com.example.wangzhaoyu.myguokr.model.reply.ArticleList;
-import com.example.wangzhaoyu.myguokr.model.reply.ArticleReplies;
-import com.example.wangzhaoyu.myguokr.model.reply.ArticleReply;
-import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleList;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleReplies;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleReply;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleSendComment;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.handler.ServerHandler;
 
 import java.util.ArrayList;
@@ -128,10 +129,9 @@ public class ArticleServer {
      * @param offset
      * @param serverHandler
      */
-    public void loadMoreArticleReplies(
-            int articleId,
-            int offset,
-            final ServerHandler<ArrayList<ArticleReply>> serverHandler) {
+    public void loadMoreArticleReplies(int articleId,
+                                       int offset,
+                                       final ServerHandler<ArrayList<ArticleReply>> serverHandler) {
         Map<String, String> params = new HashMap<>();
         params.put(Network.Parameters.RETRIEVE_TYPE, Network.Parameters.RetrieveType.BY_ARTICLE);
         params.put(Network.Parameters.ARTICLE_ID, articleId + "");
@@ -141,6 +141,35 @@ public class ArticleServer {
                     @Override
                     public void onRequestSuccess(ArticleReplies data) {
                         serverHandler.onRequestSuccess(data.getResult());
+                    }
+
+                    @Override
+                    public void onRequestError() {
+                        serverHandler.onRequestError();
+                    }
+                });
+    }
+
+    /**
+     * 对文章发表点评
+     *
+     * @param articleId
+     * @param content
+     * @param serverHandler
+     */
+    public void sendArticleComment(int articleId,
+                                   String content,
+                                   final ServerHandler<ArticleSendComment> serverHandler) {
+        Map<String, String> params = new HashMap<>();
+        params.put(Network.Parameters.ARTICLE_ID, articleId + "");
+        params.put(Network.Parameters.CONTENT, content);
+        params.put(Network.Parameters.ACCESS_TOKEN, UserServer.getInstance().getAccessToken());
+
+        NetManager.getInstance().request(Network.HttpMethod.POST, Network.API.ARTICLE_REPLY,
+                params, new DataListener<ArticleSendComment>() {
+                    @Override
+                    public void onRequestSuccess(ArticleSendComment data) {
+                        serverHandler.onRequestSuccess(data);
                     }
 
                     @Override

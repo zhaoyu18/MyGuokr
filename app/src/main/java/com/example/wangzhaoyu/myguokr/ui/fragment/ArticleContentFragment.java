@@ -15,10 +15,9 @@ import android.widget.TextView;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.Utils;
 import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
-import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
-import com.example.wangzhaoyu.myguokr.ui.activity.ArticleActivity;
 import com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 

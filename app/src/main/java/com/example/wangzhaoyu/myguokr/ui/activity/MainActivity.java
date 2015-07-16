@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.model.reply.User;
+import com.example.wangzhaoyu.myguokr.model.response.User;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
 import com.example.wangzhaoyu.myguokr.server.UserServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;

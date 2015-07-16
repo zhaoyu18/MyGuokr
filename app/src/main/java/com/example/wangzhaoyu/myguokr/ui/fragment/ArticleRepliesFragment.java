@@ -8,15 +8,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.FragmentArticleRepliesBinding;
-import com.example.wangzhaoyu.myguokr.model.reply.ArticleReply;
-import com.example.wangzhaoyu.myguokr.model.reply.ArticleSnapShot;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleReply;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.handler.ServerHandler;
-import com.example.wangzhaoyu.myguokr.ui.activity.ArticleActivity;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleReplyAdapter;
 
 import java.util.ArrayList;

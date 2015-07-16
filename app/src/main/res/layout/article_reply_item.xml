@@ -6,7 +6,7 @@
 
         <variable
             name="reply"
-            type="com.example.wangzhaoyu.myguokr.model.reply.ArticleReply"/>
+            type="com.example.wangzhaoyu.myguokr.model.response.ArticleReply"/>
 
         <variable
             name="option"

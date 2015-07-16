@@ -7,7 +7,7 @@ import com.example.wangzhaoyu.myguokr.core.SPUtils;
 import com.example.wangzhaoyu.myguokr.core.net.GuokrJsonRequest;
 import com.example.wangzhaoyu.myguokr.core.net.NetManager;
 import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
-import com.example.wangzhaoyu.myguokr.model.reply.User;
+import com.example.wangzhaoyu.myguokr.model.response.User;
 import com.example.wangzhaoyu.myguokr.server.handler.ServerHandler;
 
 /**

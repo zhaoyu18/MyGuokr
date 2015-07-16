@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import com.example.wangzhaoyu.myguokr.BR;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ArticleReplyItemBinding;
-import com.example.wangzhaoyu.myguokr.model.reply.ArticleReply;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleReply;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
 import com.example.wangzhaoyu.myguokr.ui.view.ReplyTextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
