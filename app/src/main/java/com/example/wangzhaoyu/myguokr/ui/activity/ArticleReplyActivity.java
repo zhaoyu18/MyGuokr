@@ -6,8 +6,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityArticleReplyBinding;
@@ -17,6 +20,7 @@ import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleReplyAdapter;
 import com.example.wangzhaoyu.myguokr.ui.adapter.DividerItemDecoration;
+import com.example.wangzhaoyu.myguokr.ui.view.SendCommentButton;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrHandler;
@@ -28,7 +32,7 @@ import java.util.ArrayList;
 /**
  * @author wangzhaoyu
  */
-public class ArticleReplyActivity extends AppCompatActivity {
+public class ArticleReplyActivity extends AppCompatActivity implements SendCommentButton.OnSendClickListener {
     private static final String TAG = ArticleReplyActivity.class.getSimpleName();
     public static final String ARTICLE_SNAPSHOT_KEY = "article_snapshot_key";
     private ActivityArticleReplyBinding mBinding;
@@ -46,6 +50,7 @@ public class ArticleReplyActivity extends AppCompatActivity {
         setSupportActionBar(mBinding.toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setTitle("点评");
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -104,6 +109,19 @@ public class ArticleReplyActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //init send btn
+        mBinding.btnSendComment.setOnSendClickListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //TODO 上拉加载更多
@@ -144,5 +162,25 @@ public class ArticleReplyActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    public void onSendClickListener(View v) {
+        if (validateComment()) {
+//            commentsAdapter.addItem();
+//            commentsAdapter.setAnimationsLocked(false);
+//            commentsAdapter.setDelayEnterAnimation(false);
+//            rvComments.smoothScrollBy(0, rvComments.getChildAt(0).getHeight() * commentsAdapter.getItemCount());
 
+            mBinding.editComment.setText(null);
+            mBinding.btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
+        }
+    }
+
+    private boolean validateComment() {
+        if (TextUtils.isEmpty(mBinding.editComment.getText())) {
+            mBinding.btnSendComment.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shake_error));
+            return false;
+        }
+
+        return true;
+    }
 }

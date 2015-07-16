@@ -39,7 +39,7 @@
         </com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout>
 
         <LinearLayout
-            android:id="@+id/llAddComment"
+            android:id="@+id/reply_bottom_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
@@ -51,7 +51,7 @@
             android:paddingTop="8dp">
 
             <EditText
-                android:id="@+id/etComment"
+                android:id="@+id/edit_comment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -59,11 +59,12 @@
                 android:textSize="14sp"/>
 
             <com.example.wangzhaoyu.myguokr.ui.view.SendCommentButton
-                android:id="@+id/btnSendComment"
+                android:id="@+id/btn_send_comment"
                 android:layout_width="72dp"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="2dp"
                 android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/btn_send_comment"
                 android:elevation="4dp"
                 android:orientation="vertical"/>
