@@ -143,6 +143,7 @@
                     android:layout_height="48dp"
                     android:background="@drawable/btn_feed_action"
                     android:fitsSystemWindows="true"
+                    android:onClick="onLikeBtnClicked"
                     android:src="@drawable/ic_heart_outline_grey"/>
 
                 <ImageButton
@@ -151,7 +152,7 @@
                     android:layout_height="48dp"
                     android:background="@drawable/btn_feed_action"
                     android:fitsSystemWindows="true"
-                    android:onClick="replyBtnClicked"
+                    android:onClick="onReplyBtnClicked"
                     android:src="@drawable/ic_comment_outline_grey"/>
 
                 <ImageButton

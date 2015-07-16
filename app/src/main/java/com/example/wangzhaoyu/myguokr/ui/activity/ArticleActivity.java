@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -185,9 +186,23 @@ public class ArticleActivity extends AppCompatActivity {
                 .start();
     }
 
-    public void replyBtnClicked(View view) {
+    public void onReplyBtnClicked(View view) {
         Intent intent = new Intent(this, ArticleReplyActivity.class);
         intent.putExtra(ArticleActivity.ARTICLE_SNAPSHOT_KEY, mSnapShot);
         this.startActivity(intent);
+    }
+
+    public void onLikeBtnClicked(View view) {
+        Snackbar snackbar = Snackbar.make(mBinding.articleBottomBar,
+                "请先登录",
+                Snackbar.LENGTH_SHORT);
+
+        snackbar.setAction("登录", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        snackbar.show();
     }
 }
