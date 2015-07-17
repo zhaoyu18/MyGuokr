@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -204,5 +205,14 @@ public class ArticleActivity extends AppCompatActivity {
             }
         });
         snackbar.show();
+    }
+
+    public void onAuthorAvatarClicked(View view) {
+        String ukey = mSnapShot.getAuthor().getUkey();
+        if (!TextUtils.isEmpty(ukey)) {
+            Intent intent = new Intent(this, UserInfoActivity.class);
+            intent.putExtra(UserInfoActivity.ARG_UKEY, ukey);
+            startActivity(intent);
+        }
     }
 }

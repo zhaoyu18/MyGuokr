@@ -85,7 +85,8 @@
                             android:id="@+id/article_author_avatar"
                             android:layout_width="@dimen/article_avatar_size"
                             android:layout_height="@dimen/article_avatar_size"
-                            android:layout_gravity="center_vertical"/>
+                            android:layout_gravity="center_vertical"
+                            android:onClick="onAuthorAvatarClicked"/>
 
                         <TextView
                             android:id="@+id/article_author_name"

@@ -41,10 +41,6 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".ui.activity.UserProfileActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity
             android:name=".ui.activity.UserInfoActivity"
             android:screenOrientation="portrait"/>
     </application>

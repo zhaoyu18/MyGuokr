@@ -56,7 +56,10 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter {
         binding.replyItemAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext, UserInfoActivity.class));
+                String ukey = ((ArticleReply)v.getTag()).getAuthor().getUkey();
+                Intent intent = new Intent(mContext, UserInfoActivity.class);
+                intent.putExtra(UserInfoActivity.ARG_UKEY, ukey);
+                mContext.startActivity(intent);
             }
         });
         return holder;

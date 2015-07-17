@@ -26,7 +26,6 @@ import com.example.wangzhaoyu.myguokr.server.ImageServer;
 import com.example.wangzhaoyu.myguokr.server.UserServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ArticlesListFragment;
-import com.example.wangzhaoyu.myguokr.ui.fragment.UserProfileFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.ButterKnife;
@@ -126,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, START_LOGIN_ACTIVITY_CODE);
         } else {
-            Intent intent = new Intent(this, UserProfileActivity.class);
-            intent.putExtra(UserProfileActivity.ARG_UKEY, UserServer.getInstance().getUserUkey());
+            Intent intent = new Intent(this, UserInfoActivity.class);
+            intent.putExtra(UserInfoActivity.ARG_UKEY, UserServer.getInstance().getUserUkey());
             startActivity(intent);
         }
     }

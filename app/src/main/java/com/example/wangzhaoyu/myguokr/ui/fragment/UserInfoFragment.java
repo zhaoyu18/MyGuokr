@@ -14,15 +14,15 @@ import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.FragmentUserProfileMainBinding;
 import com.example.wangzhaoyu.myguokr.model.response.User;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
-import com.example.wangzhaoyu.myguokr.ui.activity.UserProfileActivity;
+import com.example.wangzhaoyu.myguokr.ui.activity.UserInfoActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * @author wangzhaoyu
  */
-public class UserProfileFragment extends Fragment {
-    private static final String TAG = UserProfileFragment.class.getSimpleName();
+public class UserInfoFragment extends Fragment {
+    private static final String TAG = UserInfoFragment.class.getSimpleName();
     private FragmentUserProfileMainBinding mBinding;
     private User mUser;
     private DisplayImageOptions mDisplayImageOptions;
@@ -32,7 +32,7 @@ public class UserProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_user_profile_main, container, false);
         mBinding = DataBindingUtil.bind(rootView);
-        mUser = ((UserProfileActivity) getActivity()).getUser();
+        mUser = ((UserInfoActivity) getActivity()).getUser();
         mDisplayImageOptions = ImageServer.getAvatarDisplayOptions(
                 getActivity().getResources().getDimensionPixelSize(R.dimen.user_profile_avatar_size));
         mBinding.setUser(mUser);
