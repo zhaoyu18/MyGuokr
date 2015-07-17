@@ -14,13 +14,10 @@ import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleAdapter;
-import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleListAdapter;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrHandler;
-import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.MoocGlassesHeaderView;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.StoreHouseHeader;
-import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.util.PtrLocalDisplay;
 
 import java.util.ArrayList;
 
@@ -160,7 +157,7 @@ public class ArticlesListFragment extends Fragment {
                         super.onRequestSuccess(articleSnapShots);
                         int beforeSize = mArticleList.size();
                         mArticleList.addAll(articleSnapShots);
-                        mAdapter.notifyItemRangeInserted(beforeSize, mArticleList.size());
+                        mAdapter.notifyContentItemRangeInserted(beforeSize, articleSnapShots.size());
                     }
 
                     @Override

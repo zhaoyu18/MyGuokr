@@ -15,6 +15,7 @@ import com.example.wangzhaoyu.myguokr.BR;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.Utils;
 import com.example.wangzhaoyu.myguokr.databinding.ScientficItemFeedBinding;
+import com.example.wangzhaoyu.myguokr.databinding.ViewListFooterBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.ui.activity.ArticleActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
  * @author wangzhaoyu
  */
 public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
-    private static final String TAG = ArticleListAdapter.class.getSimpleName();
+    private static final String TAG = ArticleAdapter.class.getSimpleName();
     private static final int ANIMATED_ITEMS_COUNT = 5;
 
     private Context mContext;
@@ -65,7 +66,7 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
 
     @Override
     protected int getFooterItemCount() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -80,7 +81,15 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
 
     @Override
     protected RecyclerView.ViewHolder onCreateFooterItemViewHolder(ViewGroup parent, int footerViewType) {
-        return null;
+        ViewListFooterBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.getContext()),
+                R.layout.view_list_footer,
+                parent,
+                false);
+
+        FooterHolder holder = new FooterHolder(binding.getRoot());
+        holder.setBinding(binding);
+        return holder;
     }
 
     @Override
@@ -104,7 +113,9 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
 
     @Override
     protected void onBindFooterItemViewHolder(RecyclerView.ViewHolder footerViewHolder, int position) {
-
+        FooterHolder viewHolder = (FooterHolder) footerViewHolder;
+        viewHolder.getBinding().setVariable(BR.footerText, "正在加载...");
+        viewHolder.getBinding().executePendingBindings();
     }
 
     @Override
@@ -133,6 +144,22 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
         }
 
         public void setBinding(ScientficItemFeedBinding binding) {
+            this.mBinding = binding;
+        }
+    }
+
+    public static class FooterHolder extends RecyclerView.ViewHolder {
+        private ViewListFooterBinding mBinding;
+
+        FooterHolder(View itemView) {
+            super(itemView);
+        }
+
+        public ViewListFooterBinding getBinding() {
+            return mBinding;
+        }
+
+        public void setBinding(ViewListFooterBinding binding) {
             this.mBinding = binding;
         }
     }
