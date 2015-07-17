@@ -27,7 +27,7 @@ import java.util.ArrayList;
 /**
  * @author wangzhaoyu
  */
-public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
+public class ArticleAdapter extends LoadmoreFooterViewAdapter {
     private static final String TAG = ArticleAdapter.class.getSimpleName();
     private static final int ANIMATED_ITEMS_COUNT = 5;
 
@@ -48,7 +48,6 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
         }
     };
     private int lastAnimatedPosition = -1;
-    private FooterModel mFooterModel = new FooterModel();
 
     public ArticleAdapter(Context context, ArrayList<ArticleSnapShot> articleList) {
         mContext = context;
@@ -61,36 +60,8 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
     }
 
     @Override
-    protected int getHeaderItemCount() {
-        return 0;
-    }
-
-    @Override
-    protected int getFooterItemCount() {
-        return 1;
-    }
-
-    @Override
     protected int getContentItemCount() {
         return mSnapShots.size();
-    }
-
-    @Override
-    protected RecyclerView.ViewHolder onCreateHeaderItemViewHolder(ViewGroup parent, int headerViewType) {
-        return null;
-    }
-
-    @Override
-    protected RecyclerView.ViewHolder onCreateFooterItemViewHolder(ViewGroup parent, int footerViewType) {
-        ViewListFooterBinding binding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.getContext()),
-                R.layout.view_list_footer,
-                parent,
-                false);
-
-        FooterHolder holder = new FooterHolder(binding.getRoot());
-        holder.setBinding(binding);
-        return holder;
     }
 
     @Override
@@ -105,18 +76,6 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
         holder.setBinding(binding);
         binding.cardView.setOnClickListener(mOnClick);
         return holder;
-    }
-
-    @Override
-    protected void onBindHeaderItemViewHolder(RecyclerView.ViewHolder headerViewHolder, int position) {
-
-    }
-
-    @Override
-    protected void onBindFooterItemViewHolder(RecyclerView.ViewHolder footerViewHolder, int position) {
-        FooterHolder viewHolder = (FooterHolder) footerViewHolder;
-        viewHolder.getBinding().setVariable(BR.footer, mFooterModel);
-        viewHolder.getBinding().executePendingBindings();
     }
 
     @Override
@@ -187,15 +146,5 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
                     .setDuration(700)
                     .start();
         }
-    }
-
-
-    /**
-     * set footer text
-     *
-     * @param text
-     */
-    public void setFooterText(String text) {
-        mFooterModel.setText(text);
     }
 }
