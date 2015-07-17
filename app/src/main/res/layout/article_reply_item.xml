@@ -5,7 +5,7 @@
     <data>
 
         <variable
-            name="reply"
+            name="comment"
             type="com.example.wangzhaoyu.myguokr.model.response.ArticleReply"/>
 
         <variable
@@ -29,7 +29,7 @@
                 android:layout_height="@dimen/article_avatar_size"
                 android:layout_centerVertical="true"
                 app:imageOption="@{option}"
-                app:imageUrl="@{reply.author.avatar.large}"/>
+                app:imageUrl="@{comment.author.avatar.large}"/>
 
             <TextView
                 android:id="@+id/reply_item_nickname"
@@ -41,7 +41,7 @@
                 android:layout_toEndOf="@+id/reply_item_avatar"
                 android:layout_toRightOf="@+id/reply_item_avatar"
                 android:gravity="center_vertical"
-                android:text="@{reply.author.nickname}"
+                android:text="@{comment.author.nickname}"
                 android:textColor="@color/style_color_primary"
                 android:textSize="15sp"/>
 
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:textColorLink="@color/style_color_primary"
-            app:html="@{reply.html}"/>
+            app:html="@{comment.html}"/>
 
     </LinearLayout>
 </layout>

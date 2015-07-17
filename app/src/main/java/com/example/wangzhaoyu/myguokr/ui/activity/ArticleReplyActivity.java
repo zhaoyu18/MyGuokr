@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 
 import com.example.wangzhaoyu.myguokr.R;
@@ -19,15 +18,13 @@ import com.example.wangzhaoyu.myguokr.model.response.ArticleSendComment;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
-import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleReplyAdapter;
+import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleCommentAdapter;
 import com.example.wangzhaoyu.myguokr.ui.adapter.DividerItemDecoration;
 import com.example.wangzhaoyu.myguokr.ui.view.SendCommentButton;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrHandler;
-import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.MoocGlassesHeaderView;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.StoreHouseHeader;
-import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.util.PtrLocalDisplay;
 
 import java.util.ArrayList;
 
@@ -40,7 +37,7 @@ public class ArticleReplyActivity extends AppCompatActivity implements SendComme
     private ActivityArticleReplyBinding mBinding;
     private ArticleSnapShot mSnapShot;
     private ArrayList<ArticleReply> mReplies;
-    private ArticleReplyAdapter mAdapter;
+    private ArticleCommentAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +56,7 @@ public class ArticleReplyActivity extends AppCompatActivity implements SendComme
 
         //init recycler view
         mReplies = new ArrayList<>();
-        mAdapter = new ArticleReplyAdapter(this, mReplies);
+        mAdapter = new ArticleCommentAdapter(this, mReplies);
         mBinding.replyRecycler.setHasFixedSize(true);
         mBinding.replyRecycler.setLayoutManager(
                 new LinearLayoutManager(this));
@@ -137,7 +134,7 @@ public class ArticleReplyActivity extends AppCompatActivity implements SendComme
                         super.onRequestSuccess(articleReplies);
                         int beforeSize = mReplies.size();
                         mReplies.addAll(articleReplies);
-                        mAdapter.notifyItemRangeInserted(beforeSize, mReplies.size());
+                        mAdapter.notifyContentItemRangeInserted(beforeSize, articleReplies.size());
                     }
 
                     @Override
