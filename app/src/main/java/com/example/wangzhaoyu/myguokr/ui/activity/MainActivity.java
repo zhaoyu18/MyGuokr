@@ -120,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.nav_header)
     public void OnNavHeaderClicked(View view) {
-//        Toast.makeText(MainActivity.this, "header clicked", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivityForResult(intent, START_LOGIN_ACTIVITY_CODE);
     }
