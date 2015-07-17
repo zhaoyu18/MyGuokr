@@ -33,13 +33,13 @@ public class UserServer {
         return SPUtils.getInstance().getString(SPUtils.KEYS.USER_UKEY);
     }
 
-    public void getUserInfo(final ServerHandler<User> handler) {
+    public void getUserInfo(String ukey, final ServerHandler<User> handler) {
         if (TextUtils.isEmpty(getUserUkey())) {
             handler.onRequestError();
             return;
         }
 
-        String url = "http://apis.guokr.com/community/user/" + getUserUkey() + ".json";
+        String url = "http://apis.guokr.com/community/user/" + ukey + ".json";
         NetManager.getInstance().addToRequestQueue(
                 new GuokrJsonRequest(Request.Method.GET, url, "", new DataListener<User>() {
                     @Override

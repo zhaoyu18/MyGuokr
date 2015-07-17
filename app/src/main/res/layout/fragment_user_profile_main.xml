@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="user"
+            type="com.example.wangzhaoyu.myguokr.model.response.User"/>
+
+        <variable
+            name="option"
+            type="com.nostra13.universalimageloader.core.DisplayImageOptions"/>
+    </data>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background_material_light"
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background_material_light"
             android:orientation="vertical">
 
             <LinearLayout
@@ -28,6 +40,8 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        app:imageOption="@{option}"
+                        app:imageUrl="@{user.result.avatar.large}"
                         android:layout_width="@dimen/user_profile_avatar_size"
                         android:layout_height="@dimen/user_profile_avatar_size"
                         android:layout_marginEnd="16dp"
@@ -42,21 +56,24 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Zhaoyu Wang"
+                            android:maxLines="1"
+                            android:text="@{user.result.nickname}"
                             android:textColor="#ffffff"
                             android:textSize="24sp"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="BeiJing"
+                            android:maxLines="1"
+                            android:text="@{user.result.city}"
                             android:textColor="#bbbbbb"
                             android:textSize="12sp"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Mobile development passionate."
+                            android:maxLines="1"
+                            android:text="@{user.result.introduction}"
                             android:textColor="#ffffff"
                             android:textSize="12sp"/>
 
@@ -92,7 +109,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1167"
+                            android:text="@{String.valueOf(user.result.badge_counts.total)}"
                             android:textColor="#ffffff"
                             android:textSize="20sp"/>
 
@@ -114,7 +131,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="396"
+                            android:text="@{String.valueOf(user.result.followers_count)}"
                             android:textColor="#ffffff"
                             android:textSize="20sp"/>
 
@@ -136,7 +153,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="485"
+                            android:text="@{String.valueOf(user.result.followings_count)}"
                             android:textColor="#ffffff"
                             android:textSize="20sp"/>
 
@@ -167,39 +184,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="文章"
-                    android:textColor="@color/style_color_primary"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="(123)"
-                    android:textColor="#bbbbbb"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_global_menu_likes"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="0.5dp"
-                android:background="#ececec"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="#ffffff"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="日志"
                     android:textColor="@color/style_color_primary"
                     android:textSize="14sp"/>
@@ -208,13 +192,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="(123)"
+                    android:text="@{@string/user_statistics(user.result.blogs_count)}"
                     android:textColor="#bbbbbb"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_global_menu_likes"/>
+                    android:alpha="0.3"
+                    android:src="@drawable/ic_navigate_next_black_36dp"/>
             </LinearLayout>
 
             <View
@@ -241,19 +226,49 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="(123)"
+                    android:text="@{@string/user_statistics(user.result.answers_count)}"
                     android:textColor="#bbbbbb"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_global_menu_likes"/>
+                    android:alpha="0.3"
+                    android:src="@drawable/ic_navigate_next_black_36dp"/>
             </LinearLayout>
 
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="0.5dp"
                 android:background="#ececec"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#ffffff"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="提问"
+                    android:textColor="@color/style_color_primary"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{@string/user_statistics(user.result.questions_count)}"
+                    android:textColor="#bbbbbb"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.3"
+                    android:src="@drawable/ic_navigate_next_black_36dp"/>
+            </LinearLayout>
 
             <ImageView
                 android:layout_width="match_parent"
@@ -272,39 +287,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="提问"
-                    android:textColor="@color/style_color_primary"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="(123)"
-                    android:textColor="#bbbbbb"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_global_menu_likes"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="0.5dp"
-                android:background="#ececec"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="#ffffff"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="帖子"
                     android:textColor="@color/style_color_primary"
                     android:textSize="14sp"/>
@@ -313,13 +295,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="(123)"
+                    android:text="@{@string/user_statistics(user.result.posts_count)}"
                     android:textColor="#bbbbbb"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_global_menu_likes"/>
+                    android:alpha="0.3"
+                    android:src="@drawable/ic_navigate_next_black_36dp"/>
             </LinearLayout>
 
             <View
@@ -346,80 +329,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="(123)"
+                    android:text="@{@string/user_statistics(user.result.activities_count)}"
                     android:textColor="#bbbbbb"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_global_menu_likes"/>
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1.5dp"
-                android:src="@drawable/shadow_bottom"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
-                android:background="#ffffff"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="标签"
-                    android:textColor="@color/style_color_primary"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="(123)"
-                    android:textColor="#bbbbbb"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_global_menu_likes"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="0.5dp"
-                android:background="#ececec"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="#ffffff"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="小组"
-                    android:textColor="@color/style_color_primary"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="(123)"
-                    android:textColor="#bbbbbb"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_global_menu_likes"/>
+                    android:alpha="0.3"
+                    android:src="@drawable/ic_navigate_next_black_36dp"/>
             </LinearLayout>
 
             <View
@@ -446,21 +363,20 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="(123)"
+                    android:text="@{@string/user_statistics(user.result.baskets_count)}"
                     android:textColor="#bbbbbb"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_global_menu_likes"/>
+                    android:alpha="0.3"
+                    android:src="@drawable/ic_navigate_next_black_36dp"/>
             </LinearLayout>
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="1.5dp"
-                android:layout_marginBottom="16dp"
-                android:src="@drawable/shadow_bottom"
-                />
+                android:src="@drawable/shadow_bottom"/>
 
         </LinearLayout>
 

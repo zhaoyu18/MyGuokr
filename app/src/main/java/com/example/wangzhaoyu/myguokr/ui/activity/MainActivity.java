@@ -26,6 +26,7 @@ import com.example.wangzhaoyu.myguokr.server.ImageServer;
 import com.example.wangzhaoyu.myguokr.server.UserServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ArticlesListFragment;
+import com.example.wangzhaoyu.myguokr.ui.fragment.UserProfileFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.ButterKnife;
@@ -125,7 +126,9 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, START_LOGIN_ACTIVITY_CODE);
         } else {
-            startActivity(new Intent(this, UserProfileActivity.class));
+            Intent intent = new Intent(this, UserProfileActivity.class);
+            intent.putExtra(UserProfileActivity.ARG_UKEY, UserServer.getInstance().getUserUkey());
+            startActivity(intent);
         }
     }
 
@@ -159,7 +162,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUserDisplay() {
-        UserServer.getInstance().getUserInfo(new DefaultServerHandler<User>(this) {
+        UserServer.getInstance().getUserInfo(
+                UserServer.getInstance().getUserUkey(),
+                new DefaultServerHandler<User>(this) {
             @Override
             public void onRequestSuccess(User user) {
                 //set up navigation drawer
