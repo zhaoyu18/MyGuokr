@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -120,8 +121,12 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.nav_header)
     public void OnNavHeaderClicked(View view) {
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivityForResult(intent, START_LOGIN_ACTIVITY_CODE);
+        if (TextUtils.isEmpty(UserServer.getInstance().getAccessToken())) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, START_LOGIN_ACTIVITY_CODE);
+        } else {
+            startActivity(new Intent(this, UserProfileActivity.class));
+        }
     }
 
     @Override

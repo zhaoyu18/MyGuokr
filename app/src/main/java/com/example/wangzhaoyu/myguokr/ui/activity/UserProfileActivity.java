@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.wangzhaoyu.myguokr.R;
+import com.example.wangzhaoyu.myguokr.databinding.ActivitySingleFragmentBinding;
 import com.example.wangzhaoyu.myguokr.ui.fragment.UserProfileFragment;
 
 /**
@@ -15,12 +16,12 @@ import com.example.wangzhaoyu.myguokr.ui.fragment.UserProfileFragment;
  */
 public class UserProfileActivity extends AppCompatActivity {
     private static final String TAG = UserProfileActivity.class.getSimpleName();
-//    private ActivitySingleFragmentBinding mBinding;
+    private ActivitySingleFragmentBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_single_fragment);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_single_fragment);
         setContentView(R.layout.activity_single_fragment);
         addMainFragment(new UserProfileFragment());
     }
