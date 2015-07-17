@@ -1,6 +1,7 @@
 package com.example.wangzhaoyu.myguokr.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ArticleReplyItemBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleReply;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
+import com.example.wangzhaoyu.myguokr.ui.activity.UserInfoActivity;
 import com.example.wangzhaoyu.myguokr.ui.view.ReplyTextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -51,6 +53,12 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter {
 
         ReplyViewHolder holder = new ReplyViewHolder(binding.getRoot());
         holder.setBinding(binding);
+        binding.replyItemAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, UserInfoActivity.class));
+            }
+        });
         return holder;
     }
 
@@ -61,6 +69,7 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter {
         viewHolder.getBinding().setVariable(BR.comment, comment);
         viewHolder.getBinding().setVariable(BR.option, mDisplayImageOptions);
         viewHolder.getBinding().executePendingBindings();
+        viewHolder.getBinding().replyItemAvatar.setTag(comment);
     }
 
     /**
