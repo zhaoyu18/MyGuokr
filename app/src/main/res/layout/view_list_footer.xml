@@ -2,10 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="com.example.wangzhaoyu.myguokr.ui.adapter.FooterModel"/>
 
         <variable
-            name="footerText"
-            type="String"/>
+            name="footer"
+            type="FooterModel"/>
     </data>
 
 
@@ -18,7 +19,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@{footerText}"/>
+            android:text="@{footer.text}"/>
 
     </FrameLayout>
 </layout>

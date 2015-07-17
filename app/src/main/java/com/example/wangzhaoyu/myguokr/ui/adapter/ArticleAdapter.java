@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import com.example.wangzhaoyu.myguokr.BR;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.Utils;
-import com.example.wangzhaoyu.myguokr.databinding.ScientficItemFeedBinding;
+import com.example.wangzhaoyu.myguokr.databinding.ViewArticleFeedBinding;
 import com.example.wangzhaoyu.myguokr.databinding.ViewListFooterBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.ui.activity.ArticleActivity;
@@ -48,6 +48,7 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
         }
     };
     private int lastAnimatedPosition = -1;
+    private FooterModel mFooterModel = new FooterModel();
 
     public ArticleAdapter(Context context, ArrayList<ArticleSnapShot> articleList) {
         mContext = context;
@@ -94,9 +95,9 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
 
     @Override
     protected RecyclerView.ViewHolder onCreateContentItemViewHolder(ViewGroup parent, int contentViewType) {
-        ScientficItemFeedBinding binding = DataBindingUtil.inflate(
+        ViewArticleFeedBinding binding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()),
-                R.layout.scientfic_item_feed,
+                R.layout.view_article_feed,
                 parent,
                 false);
 
@@ -114,7 +115,7 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
     @Override
     protected void onBindFooterItemViewHolder(RecyclerView.ViewHolder footerViewHolder, int position) {
         FooterHolder viewHolder = (FooterHolder) footerViewHolder;
-        viewHolder.getBinding().setVariable(BR.footerText, "正在加载...");
+        viewHolder.getBinding().setVariable(BR.footer, mFooterModel);
         viewHolder.getBinding().executePendingBindings();
     }
 
@@ -133,17 +134,17 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
      * snapshot view holder
      */
     public static class SnapShotViewHolder extends RecyclerView.ViewHolder {
-        private ScientficItemFeedBinding mBinding;
+        private ViewArticleFeedBinding mBinding;
 
         SnapShotViewHolder(View view) {
             super(view);
         }
 
-        public ScientficItemFeedBinding getBinding() {
+        public ViewArticleFeedBinding getBinding() {
             return mBinding;
         }
 
-        public void setBinding(ScientficItemFeedBinding binding) {
+        public void setBinding(ViewArticleFeedBinding binding) {
             this.mBinding = binding;
         }
     }
@@ -186,5 +187,15 @@ public class ArticleAdapter extends HeaderFooterRecyclerViewAdapter {
                     .setDuration(700)
                     .start();
         }
+    }
+
+
+    /**
+     * set footer text
+     *
+     * @param text
+     */
+    public void setFooterText(String text) {
+        mFooterModel.setText(text);
     }
 }

@@ -29,6 +29,7 @@ public class ArticleCommentAdapter extends HeaderFooterRecyclerViewAdapter {
     private DisplayImageOptions mDisplayImageOptions;
     private Context mContext;
     private ArrayList<ArticleReply> mComments;
+    private FooterModel mFooterModel = new FooterModel();
 
     public ArticleCommentAdapter(Context context, ArrayList<ArticleReply> comments) {
         mContext = context;
@@ -91,7 +92,7 @@ public class ArticleCommentAdapter extends HeaderFooterRecyclerViewAdapter {
     @Override
     protected void onBindFooterItemViewHolder(RecyclerView.ViewHolder footerViewHolder, int position) {
         FooterHolder viewHolder = (FooterHolder) footerViewHolder;
-        viewHolder.getBinding().setVariable(BR.footerText, "正在加载...");
+        viewHolder.getBinding().setVariable(BR.footer, mFooterModel);
         viewHolder.getBinding().executePendingBindings();
     }
 
@@ -150,5 +151,14 @@ public class ArticleCommentAdapter extends HeaderFooterRecyclerViewAdapter {
     @BindingAdapter({"bind:html"})
     public static void loadHtml(ReplyTextView textView, String html) {
         textView.loadHtml(html);
+    }
+
+    /**
+     * set footer text
+     *
+     * @param text
+     */
+    public void setFooterText(String text) {
+        mFooterModel.setText(text);
     }
 }
