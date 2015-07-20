@@ -4,6 +4,7 @@ import com.example.wangzhaoyu.myguokr.core.net.NetManager;
 import com.example.wangzhaoyu.myguokr.core.net.Network;
 import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPosts;
+import com.example.wangzhaoyu.myguokr.model.response.PostDetail;
 import com.example.wangzhaoyu.myguokr.model.response.PostSnapShot;
 import com.example.wangzhaoyu.myguokr.server.handler.ServerHandler;
 
@@ -72,6 +73,26 @@ public class GroupServer {
                     @Override
                     public void onRequestError() {
                         serverHandler.onRequestError();
+                    }
+                });
+    }
+
+    /**
+     * request post detail
+     *
+     * @param id
+     */
+    public void getPostDetail(int id, final ServerHandler<PostDetail> serverHandler) {
+        NetManager.getInstance().request(Network.HttpMethod.GET, Network.API.GROUP_POST_DETAIL,
+                null, id, new DataListener<PostDetail>() {
+                    @Override
+                    public void onRequestSuccess(PostDetail data) {
+                        serverHandler.onRequestSuccess(data);
+                    }
+
+                    @Override
+                    public void onRequestError() {
+
                     }
                 });
     }

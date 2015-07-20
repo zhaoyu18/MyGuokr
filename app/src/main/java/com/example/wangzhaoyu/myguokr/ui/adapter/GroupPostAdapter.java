@@ -1,6 +1,7 @@
 package com.example.wangzhaoyu.myguokr.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import com.example.wangzhaoyu.myguokr.BR;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ViewGroupPostItemBinding;
 import com.example.wangzhaoyu.myguokr.model.response.PostSnapShot;
+import com.example.wangzhaoyu.myguokr.ui.activity.PostActivity;
 
 import java.util.ArrayList;
 
@@ -43,6 +45,15 @@ public class GroupPostAdapter extends LoadmoreFooterViewAdapter {
 
         SnapShotViewHolder viewHolder = new SnapShotViewHolder(binding.getRoot());
         viewHolder.setBinding(binding);
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int postId = (int) v.getTag();
+                Intent intent = new Intent(mContext, PostActivity.class);
+                intent.putExtra(PostActivity.POST_ID_KEY, postId);
+                mContext.startActivity(intent);
+            }
+        });
         return viewHolder;
     }
 
@@ -52,6 +63,7 @@ public class GroupPostAdapter extends LoadmoreFooterViewAdapter {
         SnapShotViewHolder viewHolder = (SnapShotViewHolder) contentViewHolder;
         viewHolder.getBinding().setVariable(BR.postSnapShot, snapShot);
         viewHolder.getBinding().executePendingBindings();
+        viewHolder.itemView.setTag(snapShot.getId());
     }
 
     public static class SnapShotViewHolder extends RecyclerView.ViewHolder {

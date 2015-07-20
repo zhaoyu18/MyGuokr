@@ -87,6 +87,13 @@ public class NetManager {
         mRequestQueue.add(request);
     }
 
+    public void request(int method, String api, Map<String, String> params, int id, DataListener dataListener) {
+        String url = parsedUrl(api, params);
+        url = url.replace("{id}", id + "");
+        Request request = new GuokrJsonRequest(method, url, "", dataListener);
+        mRequestQueue.add(request);
+    }
+
     public void request(int method, String url, DataListener dataListener) {
         Request request = new GuokrJsonRequest(method, url, "", dataListener);
         mRequestQueue.add(request);

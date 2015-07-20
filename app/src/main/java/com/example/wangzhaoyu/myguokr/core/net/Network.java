@@ -35,6 +35,7 @@ public class Network {
         public static final String MINISITE_ARTICLE = "apis.guokr.com/minisite/article.json";
         public static final String ARTICLE_REPLY = "apis.guokr.com/minisite/article_reply.json";
         public static final String GROUP_POST = "apis.guokr.com/group/post.json";
+        public static final String GROUP_POST_DETAIL = "apis.guokr.com/group/post/{id}.json";
     }
 
     /**

@@ -28,4 +28,26 @@ public class NetUtils {
                 "</html>";
         return prefix + content + suffix;
     }
+
+    public static String getPostHtml(String content) {
+        String style =
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/755794f4.m.css\" /> \n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/group/styles/e8ff5a9c.gbbcode.css\" type=\"text/css\" /> \n" ;
+//                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/81e10205.group.css\" type=\"text/css\" /> \n";
+
+        String prefix = "<html>\n" +
+                " <head> \n" +
+                "  <meta charset=\"UTF-8\" /> \n" +
+                "  <meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no\" name=\"viewport\" /> \n" +
+                style +
+                " </head> \n" +
+                " <body> \n" +
+                "  <div class=\"msite-container \"> \n" +
+                "   <article id=\"contentMain\" class=\"content-main post\"> ";
+        String suffix = "</article> \n" +
+                "  </div> \n" +
+                " </body>\n" +
+                "</html>";
+        return prefix + content + suffix;
+    }
 }
