@@ -188,7 +188,7 @@ public class ArticleActivity extends AppCompatActivity {
     }
 
     public void onReplyBtnClicked(View view) {
-        Intent intent = new Intent(this, ArticleReplyActivity.class);
+        Intent intent = new Intent(this, ArticleCommentActivity.class);
         intent.putExtra(ArticleActivity.ARTICLE_SNAPSHOT_KEY, mSnapShot);
         this.startActivity(intent);
     }

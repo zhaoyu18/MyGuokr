@@ -37,7 +37,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".ui.activity.ArticleReplyActivity"
+            android:name=".ui.activity.ArticleCommentActivity"
             android:screenOrientation="portrait"/>
 
         <activity

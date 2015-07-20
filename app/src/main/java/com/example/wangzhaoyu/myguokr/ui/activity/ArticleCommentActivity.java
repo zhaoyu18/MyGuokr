@@ -31,8 +31,8 @@ import java.util.ArrayList;
 /**
  * @author wangzhaoyu
  */
-public class ArticleReplyActivity extends AppCompatActivity implements SendCommentButton.OnSendClickListener {
-    private static final String TAG = ArticleReplyActivity.class.getSimpleName();
+public class ArticleCommentActivity extends AppCompatActivity implements SendCommentButton.OnSendClickListener {
+    private static final String TAG = ArticleCommentActivity.class.getSimpleName();
     public static final String ARTICLE_SNAPSHOT_KEY = "article_snapshot_key";
     private ActivityArticleReplyBinding mBinding;
     private ArticleSnapShot mSnapShot;
@@ -174,7 +174,7 @@ public class ArticleReplyActivity extends AppCompatActivity implements SendComme
 //            rvComments.smoothScrollBy(0, rvComments.getChildAt(0).getHeight() * commentsAdapter.getItemCount());
             ArticleServer.getInstance().sendArticleComment(mSnapShot.getId(),
                     mBinding.editComment.getText().toString(),
-                    new DefaultServerHandler<ArticleSendComment>(ArticleReplyActivity.this) {
+                    new DefaultServerHandler<ArticleSendComment>(ArticleCommentActivity.this) {
 
                         @Override
                         public void onResponse() {
