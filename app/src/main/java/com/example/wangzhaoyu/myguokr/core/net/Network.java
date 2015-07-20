@@ -34,6 +34,7 @@ public class Network {
         // 科学人article list
         public static final String MINISITE_ARTICLE = "apis.guokr.com/minisite/article.json";
         public static final String ARTICLE_REPLY = "apis.guokr.com/minisite/article_reply.json";
+        public static final String GROUP_POST = "http://apis.guokr.com/group/post.json";
     }
 
     /**
@@ -53,6 +54,7 @@ public class Network {
             public static final String BY_SUBJECT = "by_subject";
             public static final String BY_CHANNEL = "by_channel";
             public static final String BY_ARTICLE = "by_article";
+            public static final String HOT_POST = "hot_post";
         }
     }
 
