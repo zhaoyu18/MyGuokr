@@ -62,10 +62,8 @@ public class ArticlesListFragment extends Fragment {
             }
         };
         mFeedRecycler.setLayoutManager(linearLayoutManager);
-
-        mAdapter = new ArticleAdapter(getActivity(), new ArrayList<ArticleSnapShot>());
         mArticleList = new ArrayList<>();
-        mAdapter.setArticleList(mArticleList);
+        mAdapter = new ArticleAdapter(getActivity(), mArticleList);
         mFeedRecycler.setAdapter(mAdapter);
 
         //init load more

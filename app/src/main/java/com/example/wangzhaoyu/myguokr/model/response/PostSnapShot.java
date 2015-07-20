@@ -3,7 +3,7 @@ package com.example.wangzhaoyu.myguokr.model.response;
 /**
  * @author wangzhaoyu
  */
-public class Post {
+public class PostSnapShot {
     /**
      * topic : null
      * summary : 嗷嗷~各位guokrer好哇！欢迎来到2015围海造填仲夏版的活动现场！今夜，属于智者！\
@@ -30,7 +30,7 @@ public class Post {
      * group : {"icon":{"normal":"http://3.im.guokr.com/71NYAqshvSPPBSlqxQ035lBKZ1tkKpoDUF4BMxV3bXagAAAAoAAAAFBO.png?imageView2/1/w/48/h/48","small":"http://3.im.guokr.com/71NYAqshvSPPBSlqxQ035lBKZ1tkKpoDUF4BMxV3bXagAAAAoAAAAFBO.png?imageView2/1/w/24/h/24","large":"http://3.im.guokr.com/71NYAqshvSPPBSlqxQ035lBKZ1tkKpoDUF4BMxV3bXagAAAAoAAAAFBO.png?imageView2/1/w/160/h/160"},"members_count":397044,"posts_count":1391,"is_membership_applied":false,"introduction_summary":"小组简介\\\nGeek爱分享致力于打造一个精华文章分享社区。用户就是\u201c网络信息的过滤器\u201d，每个用户在阅读完一篇帖子后自会有他的评价，我们支持和鼓励用户将他们心目中的优质文章分享到这里来，让其他用户更快更高效的阅读到一篇真正优秀的文章，我们同时欢迎用户在这里发布原创文章。\\\n\\\n\\\n组务信息\\\n【用户公约】【新手...","url":"http://www.guokr.com/group/335/","is_application_required":false,"id":335,"is_indexable":true,"level":"active","is_publicly_readable":true,"is_member":false,"name":"Geek爱分享","resource_url":"/fakeurl"}
      * is_stick : false
      */
-    private String topic;
+//    private String topic;
     private String summary;
     private boolean is_digest;
     private boolean is_virgin;
@@ -48,9 +48,9 @@ public class Post {
     private Group group;
     private boolean is_stick;
 
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
+//    public void setTopic(String topic) {
+//        this.topic = topic;
+//    }
 
     public void setSummary(String summary) {
         this.summary = summary;
@@ -116,9 +116,9 @@ public class Post {
         this.is_stick = is_stick;
     }
 
-    public String getTopic() {
-        return topic;
-    }
+//    public String getTopic() {
+//        return topic;
+//    }
 
     public String getSummary() {
         return summary;

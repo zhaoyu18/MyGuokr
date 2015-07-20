@@ -3,10 +3,8 @@ package com.example.wangzhaoyu.myguokr.server;
 import com.example.wangzhaoyu.myguokr.core.net.NetManager;
 import com.example.wangzhaoyu.myguokr.core.net.Network;
 import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
-import com.example.wangzhaoyu.myguokr.model.response.ArticleList;
-import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPosts;
-import com.example.wangzhaoyu.myguokr.model.response.Post;
+import com.example.wangzhaoyu.myguokr.model.response.PostSnapShot;
 import com.example.wangzhaoyu.myguokr.server.handler.ServerHandler;
 
 import java.util.ArrayList;
@@ -34,7 +32,7 @@ public class GroupServer {
      *
      * @param serverHandler
      */
-    public void refreshPostList(final ServerHandler<ArrayList<Post>> serverHandler) {
+    public void refreshPostList(final ServerHandler<ArrayList<PostSnapShot>> serverHandler) {
         Map<String, String> params = new HashMap<>();
         params.put(Network.Parameters.RETRIEVE_TYPE, Network.Parameters.RetrieveType.HOT_POST);
         params.put(Network.Parameters.LIMIT, LOAD_LIMIT + "");
@@ -48,7 +46,32 @@ public class GroupServer {
 
                     @Override
                     public void onRequestError() {
+                        serverHandler.onRequestError();
+                    }
+                });
+    }
 
+    /**
+     * load more
+     *
+     * @param offset
+     * @param serverHandler
+     */
+    public void loadMorePostList(int offset, final ServerHandler<ArrayList<PostSnapShot>> serverHandler) {
+        Map<String, String> params = new HashMap<>();
+        params.put(Network.Parameters.RETRIEVE_TYPE, Network.Parameters.RetrieveType.HOT_POST);
+        params.put(Network.Parameters.LIMIT, LOAD_LIMIT + "");
+        params.put(Network.Parameters.OFFSET, offset + "");
+        NetManager.getInstance().request(Network.HttpMethod.GET, Network.API.GROUP_POST,
+                params, new DataListener<GroupPosts>() {
+                    @Override
+                    public void onRequestSuccess(GroupPosts data) {
+                        serverHandler.onRequestSuccess(data.getResult());
+                    }
+
+                    @Override
+                    public void onRequestError() {
+                        serverHandler.onRequestError();
                     }
                 });
     }

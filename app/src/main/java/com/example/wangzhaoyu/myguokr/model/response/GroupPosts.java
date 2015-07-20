@@ -1,7 +1,6 @@
 package com.example.wangzhaoyu.myguokr.model.response;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author wangzhaoyu
@@ -18,7 +17,7 @@ public class GroupPosts {
      */
     private int total;
     private int limit;
-    private ArrayList<Post> result;
+    private ArrayList<PostSnapShot> result;
     private String now;
     private boolean ok;
     private int offset;
@@ -31,7 +30,7 @@ public class GroupPosts {
         this.limit = limit;
     }
 
-    public void setResult(ArrayList<Post> result) {
+    public void setResult(ArrayList<PostSnapShot> result) {
         this.result = result;
     }
 
@@ -55,7 +54,7 @@ public class GroupPosts {
         return limit;
     }
 
-    public ArrayList<Post> getResult() {
+    public ArrayList<PostSnapShot> getResult() {
         return result;
     }
 

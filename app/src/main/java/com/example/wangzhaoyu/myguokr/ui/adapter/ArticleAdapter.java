@@ -108,25 +108,6 @@ public class ArticleAdapter extends LoadmoreFooterViewAdapter {
         }
     }
 
-    /**
-     * footer view holder
-     */
-    public static class FooterHolder extends RecyclerView.ViewHolder {
-        private ViewListFooterBinding mBinding;
-
-        FooterHolder(View itemView) {
-            super(itemView);
-        }
-
-        public ViewListFooterBinding getBinding() {
-            return mBinding;
-        }
-
-        public void setBinding(ViewListFooterBinding binding) {
-            this.mBinding = binding;
-        }
-    }
-
     @BindingAdapter({"bind:imageUrl", "bind:imageOption"})
     public static void loadImage(ImageView view, String url, DisplayImageOptions options) {
         ImageLoader.getInstance().displayImage(url, view, options);
