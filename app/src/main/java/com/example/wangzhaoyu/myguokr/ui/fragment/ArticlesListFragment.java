@@ -46,7 +46,7 @@ public class ArticlesListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mRootView == null) {
-            mRootView = inflater.inflate(R.layout.fragment_scientific, container, false);
+            mRootView = inflater.inflate(R.layout.fragment_article_list, container, false);
             ButterKnife.inject(this, mRootView);
             initView();
         }

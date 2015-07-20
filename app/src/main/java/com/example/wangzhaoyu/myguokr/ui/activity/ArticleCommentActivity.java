@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.databinding.ActivityArticleReplyBinding;
+import com.example.wangzhaoyu.myguokr.databinding.ActivityArticleCommentsBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleReply;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSendComment;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class ArticleCommentActivity extends AppCompatActivity implements SendCommentButton.OnSendClickListener {
     private static final String TAG = ArticleCommentActivity.class.getSimpleName();
     public static final String ARTICLE_SNAPSHOT_KEY = "article_snapshot_key";
-    private ActivityArticleReplyBinding mBinding;
+    private ActivityArticleCommentsBinding mBinding;
     private ArticleSnapShot mSnapShot;
     private ArrayList<ArticleReply> mReplies;
     private ArticleCommentAdapter mAdapter;
@@ -42,7 +42,7 @@ public class ArticleCommentActivity extends AppCompatActivity implements SendCom
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_article_reply);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_article_comments);
         mSnapShot = (ArticleSnapShot) getIntent().getSerializableExtra(ARTICLE_SNAPSHOT_KEY);
 
         //init tool bar

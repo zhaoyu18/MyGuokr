@@ -3,6 +3,7 @@ package com.example.wangzhaoyu.myguokr.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ import com.example.wangzhaoyu.myguokr.server.ImageServer;
 import com.example.wangzhaoyu.myguokr.server.UserServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ArticlesListFragment;
+import com.example.wangzhaoyu.myguokr.ui.fragment.GroupHotPostFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.ButterKnife;
@@ -61,12 +64,13 @@ public class MainActivity extends AppCompatActivity {
         mNaviView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
+                mDrawerLayout.closeDrawers();
                 switch (menuItem.getItemId()) {
                     case R.id.menu_scientific:
-                        Toast.makeText(MainActivity.this, "scientific clicked", Toast.LENGTH_SHORT)
-                                .show();
+                        replaceFragment(new ArticlesListFragment());
                         break;
                     case R.id.menu_group:
+                        replaceFragment(new GroupHotPostFragment());
                         break;
                     case R.id.menu_ask:
                         break;
@@ -157,32 +161,42 @@ public class MainActivity extends AppCompatActivity {
     private void setUpMainFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, new ArticlesListFragment()).commit();
+        fragmentTransaction
+                .add(R.id.fragment_container, new ArticlesListFragment())
+                .commit();
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 
     private void updateUserDisplay() {
         UserServer.getInstance().getUserInfo(
                 UserServer.getInstance().getUserUkey(),
                 new DefaultServerHandler<User>(this) {
-            @Override
-            public void onRequestSuccess(User user) {
-                //set up navigation drawer
-                ImageLoader.getInstance().displayImage(
-                        user.getResult().getAvatar().getLarge(),
-                        mNavAvatarImage,
-                        ImageServer.getAvatarDisplayOptions(
-                                getResources().getDimensionPixelSize(R.dimen.nav_avatar_size)));
-                mNavUserName.setText(user.getResult().getNickname());
-            }
+                    @Override
+                    public void onRequestSuccess(User user) {
+                        //set up navigation drawer
+                        ImageLoader.getInstance().displayImage(
+                                user.getResult().getAvatar().getLarge(),
+                                mNavAvatarImage,
+                                ImageServer.getAvatarDisplayOptions(
+                                        getResources().getDimensionPixelSize(R.dimen.nav_avatar_size)));
+                        mNavUserName.setText(user.getResult().getNickname());
+                    }
 
-            @Override
-            public void onRequestError() {
-                //set up navigation drawer
-                ImageLoader.getInstance().displayImage(
-                        "http://images.17173.com/2011/wow/2011/02/24/nanshengqi17.jpg",
-                        mNavAvatarImage,
-                        ImageServer.getAvatarDisplayOptions(getResources().getDimensionPixelSize(R.dimen.nav_avatar_size)));
-            }
-        });
+                    @Override
+                    public void onRequestError() {
+                        //set up navigation drawer
+                        ImageLoader.getInstance().displayImage(
+                                "http://images.17173.com/2011/wow/2011/02/24/nanshengqi17.jpg",
+                                mNavAvatarImage,
+                                ImageServer.getAvatarDisplayOptions(getResources().getDimensionPixelSize(R.dimen.nav_avatar_size)));
+                    }
+                });
     }
 }
