@@ -15,6 +15,7 @@ import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ViewPostCommentItemBinding;
 import com.example.wangzhaoyu.myguokr.databinding.ViewPostDetailItemBinding;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPostComment;
+import com.example.wangzhaoyu.myguokr.model.response.PostDetail;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
 import com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -30,19 +31,19 @@ public class GroupPostDetailAdapter extends LoadmoreFooterViewAdapter {
 
     private Context mContext;
     private ArrayList<GroupPostComment> mComments;
-    private String mPostContent;
+    private PostDetail mPost;
     private DisplayImageOptions mDisplayImageOptions;
 
-    public GroupPostDetailAdapter(Context context, String postContent, ArrayList<GroupPostComment> comments) {
+    public GroupPostDetailAdapter(Context context, PostDetail post, ArrayList<GroupPostComment> comments) {
         mContext = context;
-        mPostContent = postContent;
+        mPost = post;
         mComments = comments;
         mDisplayImageOptions = ImageServer.getAvatarDisplayOptions(
                 mContext.getResources().getDimensionPixelSize(R.dimen.article_avatar_size));
     }
 
-    public void setPostContent(String content) {
-        mPostContent = content;
+    public void setPost(PostDetail post) {
+        mPost = post;
     }
 
     public void setComments(ArrayList<GroupPostComment> comments) {
@@ -51,7 +52,7 @@ public class GroupPostDetailAdapter extends LoadmoreFooterViewAdapter {
 
     @Override
     protected int getHeaderItemCount() {
-        return (TextUtils.isEmpty(mPostContent) ? 0 : 1);
+        return (mPost == null ? 0 : 1);
     }
 
     @Override
@@ -88,7 +89,7 @@ public class GroupPostDetailAdapter extends LoadmoreFooterViewAdapter {
     @Override
     protected void onBindHeaderItemViewHolder(RecyclerView.ViewHolder headerViewHolder, int position) {
         ContentViewHolder holder = (ContentViewHolder) headerViewHolder;
-        holder.getBinding().setVariable(BR.html, mPostContent);
+        holder.getBinding().setVariable(BR.post, mPost);
         holder.getBinding().executePendingBindings();
     }
 

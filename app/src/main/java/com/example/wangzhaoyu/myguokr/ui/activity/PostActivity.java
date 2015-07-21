@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.core.net.NetUtils;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityPostDetailBinding;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPostComment;
 import com.example.wangzhaoyu.myguokr.model.response.PostDetail;
@@ -45,8 +44,7 @@ public class PostActivity extends AppCompatActivity {
                     @Override
                     public void onRequestSuccess(PostDetail detail) {
                         super.onRequestSuccess(detail);
-                        String html = detail.getResult().getHtml();
-                        mAdapter.setPostContent(html);
+                        mAdapter.setPost(detail);
                         mAdapter.notifyHeaderItemInserted(0);
                     }
                 });

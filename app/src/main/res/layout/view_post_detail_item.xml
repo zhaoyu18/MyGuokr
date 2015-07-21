@@ -6,8 +6,8 @@
         <import type="com.example.wangzhaoyu.myguokr.core.net.NetUtils"/>
 
         <variable
-            name="html"
-            type="String"/>
+            name="post"
+            type="com.example.wangzhaoyu.myguokr.model.response.PostDetail"/>
     </data>
 
     <com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
-        app:html="@{NetUtils.getPostHtml(html)}">
+        app:html="@{NetUtils.getPostHtml(post.result.html)}">
 
     </com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView>
 </layout>
