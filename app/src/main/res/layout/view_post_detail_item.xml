@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.example.wangzhaoyu.myguokr.core.net.NetUtils"/>
+
+        <variable
+            name="html"
+            type="String"/>
+    </data>
+
+    <com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView
+        android:id="@+id/post_detail_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        app:html="@{NetUtils.getPostHtml(html)}">
+
+    </com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView>
+</layout>

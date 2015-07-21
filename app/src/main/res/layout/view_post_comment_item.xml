@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="comment"
+            type="com.example.wangzhaoyu.myguokr.model.response.GroupPostComment"/>
+
+        <variable
+            name="option"
+            type="com.nostra13.universalimageloader.core.DisplayImageOptions"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/reply_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/reply_item_avatar"
+                android:layout_width="@dimen/article_avatar_size"
+                android:layout_height="@dimen/article_avatar_size"
+                android:layout_centerVertical="true"
+                app:imageOption="@{option}"
+                app:imageUrl="@{comment.author.avatar.large}"/>
+
+            <TextView
+                android:id="@+id/reply_item_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/reply_item_avatar"
+                android:layout_toRightOf="@+id/reply_item_avatar"
+                android:gravity="center_vertical"
+                android:text="@{comment.author.nickname}"
+                android:textColor="@color/style_color_primary"
+                android:textSize="15sp"/>
+
+            <ImageButton
+                android:id="@+id/reply_like_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/btn_feed_action"
+                android:src="@drawable/ic_heart_outline_grey"/>
+        </RelativeLayout>
+
+        <com.example.wangzhaoyu.myguokr.ui.view.ReplyTextView
+            android:id="@+id/reply_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textColorLink="@color/style_color_primary"
+            app:html="@{comment.html}"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#bbbbbb"/>
+
+    </LinearLayout>
+</layout>

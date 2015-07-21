@@ -30,6 +30,9 @@ public class NetUtils {
     }
 
     public static String getPostHtml(String content) {
+        content = "<div id=\"postContent\" class=\"html-text-mixin gbbcode-content\">" +
+                content + "</div>";
+
         String style =
                 "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/755794f4.m.css\" /> \n" +
                 "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/group/styles/e8ff5a9c.gbbcode.css\" type=\"text/css\" /> \n" ;

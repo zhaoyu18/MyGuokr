@@ -110,7 +110,7 @@ public class GroupServer {
         params.put(Network.Parameters.RETRIEVE_TYPE, Network.Parameters.RetrieveType.BY_POST);
         params.put(Network.Parameters.LIMIT, LOAD_LIMIT + "");
         params.put(Network.Parameters.POST_ID, postId + "");
-        NetManager.getInstance().request(Network.HttpMethod.GET, Network.API.GROUP_POST,
+        NetManager.getInstance().request(Network.HttpMethod.GET, Network.API.GROUP_POST_COMMENT,
                 params, new DataListener<GroupPostComments>() {
                     @Override
                     public void onRequestSuccess(GroupPostComments data) {
@@ -137,7 +137,7 @@ public class GroupServer {
         params.put(Network.Parameters.LIMIT, LOAD_LIMIT + "");
         params.put(Network.Parameters.POST_ID, postId + "");
         params.put(Network.Parameters.OFFSET, offset + "");
-        NetManager.getInstance().request(Network.HttpMethod.GET, Network.API.GROUP_POST,
+        NetManager.getInstance().request(Network.HttpMethod.GET, Network.API.GROUP_POST_COMMENT,
                 params, new DataListener<GroupPostComments>() {
                     @Override
                     public void onRequestSuccess(GroupPostComments data) {
