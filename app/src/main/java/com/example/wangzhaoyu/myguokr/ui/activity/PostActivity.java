@@ -2,8 +2,10 @@ package com.example.wangzhaoyu.myguokr.ui.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.MenuItem;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityPostDetailBinding;
@@ -30,6 +32,15 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_post_detail);
 
+        //init tool bar
+        mBinding.toolbar.setTitle("小组热帖");
+        setSupportActionBar(mBinding.toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         //init recycler view
         mComments = new ArrayList<>();
         mAdapter = new GroupPostDetailAdapter(this, null, mComments);
@@ -37,7 +48,7 @@ public class PostActivity extends AppCompatActivity {
         mBinding.postDetailRecycler.setLayoutManager(new LinearLayoutManager(this));
         mBinding.postDetailRecycler.setAdapter(mAdapter);
 
-        int postId = getIntent().getIntExtra(POST_ID_KEY, 0);
+        final int postId = getIntent().getIntExtra(POST_ID_KEY, 0);
         GroupServer.getInstance().getPostDetail(
                 postId,
                 new DefaultServerHandler<PostDetail>(this) {
@@ -46,19 +57,29 @@ public class PostActivity extends AppCompatActivity {
                         super.onRequestSuccess(detail);
                         mAdapter.setPost(detail);
                         mAdapter.notifyHeaderItemInserted(0);
+                        //load comments after post detail
+                        GroupServer.getInstance().getPostComments(
+                                postId,
+                                new DefaultServerHandler<ArrayList<GroupPostComment>>(PostActivity.this) {
+                                    @Override
+                                    public void onRequestSuccess(ArrayList<GroupPostComment> comments) {
+                                        super.onRequestSuccess(comments);
+                                        mComments.clear();
+                                        mComments.addAll(comments);
+                                        mAdapter.notifyContentItemRangeInserted(0, comments.size());
+                                    }
+                                });
                     }
                 });
+    }
 
-        GroupServer.getInstance().getPostComments(
-                postId,
-                new DefaultServerHandler<ArrayList<GroupPostComment>>(this) {
-                    @Override
-                    public void onRequestSuccess(ArrayList<GroupPostComment> comments) {
-                        super.onRequestSuccess(comments);
-                        mComments.clear();
-                        mComments.addAll(comments);
-                        mAdapter.notifyContentItemRangeInserted(0, comments.size());
-                    }
-                });
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

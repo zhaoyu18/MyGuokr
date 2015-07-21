@@ -90,6 +90,7 @@ public class GroupPostDetailAdapter extends LoadmoreFooterViewAdapter {
     protected void onBindHeaderItemViewHolder(RecyclerView.ViewHolder headerViewHolder, int position) {
         ContentViewHolder holder = (ContentViewHolder) headerViewHolder;
         holder.getBinding().setVariable(BR.post, mPost);
+        holder.getBinding().setVariable(BR.option, mDisplayImageOptions);
         holder.getBinding().executePendingBindings();
     }
 

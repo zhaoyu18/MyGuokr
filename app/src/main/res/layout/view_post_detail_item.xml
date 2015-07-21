@@ -3,19 +3,99 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="com.example.wangzhaoyu.myguokr.core.net.NetUtils"/>
 
         <variable
             name="post"
             type="com.example.wangzhaoyu.myguokr.model.response.PostDetail"/>
+
+        <variable
+            name="option"
+            type="com.nostra13.universalimageloader.core.DisplayImageOptions"/>
     </data>
 
-    <com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView
-        android:id="@+id/post_detail_webview"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
-        app:html="@{NetUtils.getPostHtml(post.result.html)}">
+        android:orientation="vertical"
+        android:paddingBottom="16dp">
 
-    </com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="@{post.result.title}"
+            android:textColor="#000000"
+            android:textSize="@dimen/abc_text_size_title_material_toolbar"/>
+
+        <LinearLayout
+            android:id="@+id/post_author"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/post_author_avatar"
+                android:layout_width="@dimen/article_avatar_size"
+                android:layout_height="@dimen/article_avatar_size"
+                android:layout_gravity="center_vertical"
+                app:imageOption="@{option}"
+                app:imageUrl="@{post.result.author.avatar.large}"/>
+
+            <TextView
+                android:id="@+id/post_author_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:text="@{post.result.author.nickname}"
+                android:textColor="@color/style_color_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView
+            android:id="@+id/post_detail_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            app:html="@{NetUtils.getPostHtml(post.result.html)}">
+
+        </com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/post_comment"
+                android:textColor="#5f9a27"
+                android:textSize="17sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@{@string/user_statistics(post.result.replies_count)}"
+                android:textColor="#bbbbbb"
+                android:textSize="17sp"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#bbbbbb"/>
+
+    </LinearLayout>
+
 </layout>
