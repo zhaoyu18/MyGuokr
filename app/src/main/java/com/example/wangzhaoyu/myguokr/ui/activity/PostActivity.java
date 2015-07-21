@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.example.wangzhaoyu.myguokr.R;
@@ -26,6 +27,7 @@ public class PostActivity extends AppCompatActivity {
     private ActivityPostDetailBinding mBinding;
     private ArrayList<GroupPostComment> mComments;
     private GroupPostDetailAdapter mAdapter;
+    private PostDetail mPostDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,20 @@ public class PostActivity extends AppCompatActivity {
         mBinding.postDetailRecycler.setHasFixedSize(true);
         mBinding.postDetailRecycler.setLayoutManager(new LinearLayoutManager(this));
         mBinding.postDetailRecycler.setAdapter(mAdapter);
+        mBinding.postDetailRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (newState == RecyclerView.SCROLL_STATE_IDLE
+                        && manager.findFirstCompletelyVisibleItemPosition() > 0
+                        && manager.findLastVisibleItemPosition() == mAdapter.getItemCount() - 1) {
+                    loadMore();
+                }
+            }
+        });
 
+        //request data
         final int postId = getIntent().getIntExtra(POST_ID_KEY, 0);
         GroupServer.getInstance().getPostDetail(
                 postId,
@@ -55,6 +70,7 @@ public class PostActivity extends AppCompatActivity {
                     @Override
                     public void onRequestSuccess(PostDetail detail) {
                         super.onRequestSuccess(detail);
+                        mPostDetail = detail;
                         mAdapter.setPost(detail);
                         mAdapter.notifyHeaderItemInserted(0);
                         //load comments after post detail
@@ -81,5 +97,27 @@ public class PostActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadMore() {
+        mAdapter.setFooterText("正在加载...");
+        GroupServer.getInstance().loadMorePostComments(
+                mPostDetail.getResult().getId(),
+                mComments.size(),
+                new DefaultServerHandler<ArrayList<GroupPostComment>>(PostActivity.this) {
+                    @Override
+                    public void onRequestSuccess(ArrayList<GroupPostComment> comments) {
+                        super.onRequestSuccess(comments);
+                        int beforeSize = mComments.size();
+                        mComments.addAll(comments);
+                        mAdapter.notifyContentItemRangeInserted(beforeSize, comments.size());
+                    }
+
+                    @Override
+                    public void onResponse() {
+                        super.onResponse();
+                        mAdapter.setFooterText("");
+                    }
+                });
     }
 }
