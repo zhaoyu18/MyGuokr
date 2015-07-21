@@ -3,6 +3,8 @@ package com.example.wangzhaoyu.myguokr.server;
 import com.example.wangzhaoyu.myguokr.core.net.NetManager;
 import com.example.wangzhaoyu.myguokr.core.net.Network;
 import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
+import com.example.wangzhaoyu.myguokr.model.response.GroupPostComment;
+import com.example.wangzhaoyu.myguokr.model.response.GroupPostComments;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPosts;
 import com.example.wangzhaoyu.myguokr.model.response.PostDetail;
 import com.example.wangzhaoyu.myguokr.model.response.PostSnapShot;
@@ -93,6 +95,58 @@ public class GroupServer {
                     @Override
                     public void onRequestError() {
 
+                    }
+                });
+    }
+
+    /**
+     * request post comments
+     *
+     * @param postId
+     * @param serverHandler
+     */
+    public void getPostComments(int postId, final ServerHandler<ArrayList<GroupPostComment>> serverHandler) {
+        Map<String, String> params = new HashMap<>();
+        params.put(Network.Parameters.RETRIEVE_TYPE, Network.Parameters.RetrieveType.BY_POST);
+        params.put(Network.Parameters.LIMIT, LOAD_LIMIT + "");
+        params.put(Network.Parameters.POST_ID, postId + "");
+        NetManager.getInstance().request(Network.HttpMethod.GET, Network.API.GROUP_POST,
+                params, new DataListener<GroupPostComments>() {
+                    @Override
+                    public void onRequestSuccess(GroupPostComments data) {
+                        serverHandler.onRequestSuccess(data.getResult());
+                    }
+
+                    @Override
+                    public void onRequestError() {
+                        serverHandler.onRequestError();
+                    }
+                });
+    }
+
+    /**
+     * load more post comments
+     *
+     * @param postId
+     * @param offset
+     * @param serverHandler
+     */
+    public void loadMorePostComments(int postId, int offset, final ServerHandler<ArrayList<GroupPostComment>> serverHandler) {
+        Map<String, String> params = new HashMap<>();
+        params.put(Network.Parameters.RETRIEVE_TYPE, Network.Parameters.RetrieveType.BY_POST);
+        params.put(Network.Parameters.LIMIT, LOAD_LIMIT + "");
+        params.put(Network.Parameters.POST_ID, postId + "");
+        params.put(Network.Parameters.OFFSET, offset + "");
+        NetManager.getInstance().request(Network.HttpMethod.GET, Network.API.GROUP_POST,
+                params, new DataListener<GroupPostComments>() {
+                    @Override
+                    public void onRequestSuccess(GroupPostComments data) {
+                        serverHandler.onRequestSuccess(data.getResult());
+                    }
+
+                    @Override
+                    public void onRequestError() {
+                        serverHandler.onRequestError();
                     }
                 });
     }

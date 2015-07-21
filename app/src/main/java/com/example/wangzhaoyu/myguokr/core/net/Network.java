@@ -36,6 +36,7 @@ public class Network {
         public static final String ARTICLE_REPLY = "apis.guokr.com/minisite/article_reply.json";
         public static final String GROUP_POST = "apis.guokr.com/group/post.json";
         public static final String GROUP_POST_DETAIL = "apis.guokr.com/group/post/{id}.json";
+        public static final String GROUP_POST_COMMENT = "apis.guokr.com/group/post_reply.json";
     }
 
     /**
@@ -50,12 +51,14 @@ public class Network {
         public static final String ARTICLE_ID = "article_id";
         public static final String ACCESS_TOKEN = "access_token";
         public static final String CONTENT = "content";
+        public static final String POST_ID = "post_id";
 
         public final class RetrieveType {
             public static final String BY_SUBJECT = "by_subject";
             public static final String BY_CHANNEL = "by_channel";
             public static final String BY_ARTICLE = "by_article";
             public static final String HOT_POST = "hot_post";
+            public static final String BY_POST = "by_post";
         }
     }
 
