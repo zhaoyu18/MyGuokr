@@ -100,6 +100,7 @@ public class GroupPostDetailAdapter extends LoadmoreFooterViewAdapter {
         CommentViewHolder holder = (CommentViewHolder) contentViewHolder;
         holder.getBinding().setVariable(BR.comment, comment);
         holder.getBinding().setVariable(BR.option, mDisplayImageOptions);
+        holder.getBinding().setVariable(BR.floor, position + 1);
         holder.getBinding().executePendingBindings();
     }
 

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityPostDetailBinding;
@@ -23,11 +24,14 @@ import java.util.ArrayList;
  */
 public class PostActivity extends AppCompatActivity {
     private final static String TAG = PostActivity.class.getSimpleName();
+    private static final int ANIM_DURATION_BOTTOMBAR = 100;
+
     public final static String POST_ID_KEY = "post_id_key";
     private ActivityPostDetailBinding mBinding;
     private ArrayList<GroupPostComment> mComments;
     private GroupPostDetailAdapter mAdapter;
     private PostDetail mPostDetail;
+    private boolean mIsBottombarShow = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,19 @@ public class PostActivity extends AppCompatActivity {
                     loadMore();
                 }
             }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy < -24 && !mIsBottombarShow) {
+                    //显示
+                    bottomBarAnimation();
+                } else if (dy > 24 && mIsBottombarShow) {
+                    //隐藏
+                    bottomBarAnimation();
+                }
+            }
         });
 
         //request data
@@ -87,6 +104,7 @@ public class PostActivity extends AppCompatActivity {
                                 });
                     }
                 });
+
     }
 
     @Override
@@ -119,5 +137,32 @@ public class PostActivity extends AppCompatActivity {
                         mAdapter.setFooterText("");
                     }
                 });
+    }
+
+    public void onLikeBtnClicked(View view) {
+
+    }
+
+    public void onCommentBtnClicked(View view) {
+
+    }
+
+    private void bottomBarAnimation() {
+        int startPos;
+        int destPos;
+        if (mIsBottombarShow) {
+            startPos = 0;
+            destPos = mBinding.postBottomBar.getHeight();
+        } else {
+            startPos = mBinding.postBottomBar.getHeight();
+            destPos = 0;
+        }
+
+        mIsBottombarShow = !mIsBottombarShow;
+        mBinding.postBottomBar.setTranslationY(startPos);
+        mBinding.postBottomBar.animate()
+                .translationY(destPos)
+                .setDuration(ANIM_DURATION_BOTTOMBAR)
+                .start();
     }
 }

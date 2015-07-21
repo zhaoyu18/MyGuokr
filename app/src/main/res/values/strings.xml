@@ -4,5 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="user_statistics">(%d)</string>
+    <string name="floor_num">%d楼</string>
     <string name="post_comment">评论</string>
 </resources>
