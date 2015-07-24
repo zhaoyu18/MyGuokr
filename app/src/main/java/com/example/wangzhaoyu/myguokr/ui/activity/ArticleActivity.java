@@ -65,6 +65,7 @@ public class ArticleActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         mBinding.collapsingToolbar.setTitle(mSnapShot.getTitle());
+        mBinding.collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
 
         //init tool bar image
         ImageLoader.getInstance().displayImage(
@@ -99,17 +100,19 @@ public class ArticleActivity extends AppCompatActivity {
         mBinding.articleAuthorName.setText(mSnapShot.getAuthor().getNickname());
 
         //init web content
+        mBinding.progressWheel.spin();
         ArticleServer.getInstance().getArticleDetail(mSnapShot.getUrl(), new HtmlDataListener() {
             @Override
             public void onRequestSuccess(String html) {
                 mBinding.articleWeb.loadDataWithBaseURL("http://www.guokr.com/", html, "text/html",
                         "charset=UTF-8", null);
                 startWebViewAnimation();
+                mBinding.progressWheel.stopSpinning();
             }
 
             @Override
             public void onRequestError() {
-
+//                mBinding.progressWheel.stopSpinning();
             }
         });
 

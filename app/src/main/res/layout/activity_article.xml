@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:wheel="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -64,12 +65,11 @@
                 android:paddingRight="16dp"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/article_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:minHeight="700dp"
-                    android:orientation="vertical">
+                    android:minHeight="700dp">
 
                     <LinearLayout
                         android:id="@+id/article_author"
@@ -101,12 +101,13 @@
                         android:id="@+id/article_web"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_below="@+id/article_author"
                         android:fitsSystemWindows="true"
                         android:scrollbars="none">
 
                     </com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView>
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </android.support.v4.widget.NestedScrollView>
 
@@ -163,5 +164,14 @@
 
             </LinearLayout>
         </LinearLayout>
+
+        <com.example.wangzhaoyu.myguokr.ui.widget.ProgressWheel
+            android:id="@+id/progress_wheel"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            wheel:matProg_barColor="#bbbbbb"
+            wheel:matProg_barWidth="4dp"
+            wheel:matProg_progressIndeterminate="true"/>
     </FrameLayout>
 </layout>

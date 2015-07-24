@@ -393,10 +393,12 @@ public class ProgressWheel extends View {
      * Turn off spin mode
      */
     public void stopSpinning() {
-        isSpinning = false;
-        mProgress = 0.0f;
-        mTargetProgress = 0.0f;
-        invalidate();
+        if (isSpinning) {
+            isSpinning = false;
+            mProgress = 0.0f;
+            mTargetProgress = 0.0f;
+            invalidate();
+        }
     }
 
     /**

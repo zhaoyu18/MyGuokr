@@ -14,6 +14,7 @@ import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleAdapter;
+import com.example.wangzhaoyu.myguokr.ui.widget.ProgressWheel;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrHandler;
@@ -33,6 +34,9 @@ public class ArticlesListFragment extends Fragment {
 
     @InjectView(R.id.rv_feed)
     RecyclerView mFeedRecycler;
+
+    @InjectView(R.id.progress_wheel)
+    ProgressWheel mProgressWheel;
 
     @InjectView(R.id.refeshlayout)
     PtrFrameLayout mRefreshLayout;
@@ -104,6 +108,7 @@ public class ArticlesListFragment extends Fragment {
             @Override
             public void run() {
                 refresh();
+                mProgressWheel.spin();
             }
         }, 500);
 
@@ -139,6 +144,7 @@ public class ArticlesListFragment extends Fragment {
                     @Override
                     public void onResponse() {
                         mRefreshLayout.refreshComplete();
+                        mProgressWheel.stopSpinning();
                     }
                 });
     }
@@ -166,5 +172,11 @@ public class ArticlesListFragment extends Fragment {
                     }
                 }
         );
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
     }
 }
