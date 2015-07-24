@@ -118,7 +118,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void loadMore() {
-        mAdapter.setFooterText("正在加载...");
+        mAdapter.loadStart();
         GroupServer.getInstance().loadMorePostComments(
                 mPostDetail.getResult().getId(),
                 mComments.size(),
@@ -134,7 +134,7 @@ public class PostActivity extends AppCompatActivity {
                     @Override
                     public void onResponse() {
                         super.onResponse();
-                        mAdapter.setFooterText("");
+                        mAdapter.loadComplete();
                     }
                 });
     }

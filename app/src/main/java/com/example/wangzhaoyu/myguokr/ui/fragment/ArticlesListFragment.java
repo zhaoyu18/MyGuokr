@@ -148,7 +148,7 @@ public class ArticlesListFragment extends Fragment {
      * TODO 如何防止重复
      */
     private void loadMore() {
-        mAdapter.setFooterText("正在加载...");
+        mAdapter.loadStart();
         ArticleServer.getInstance().loadMoreArticleList(mArticleList.size(),
                 new DefaultServerHandler<ArrayList<ArticleSnapShot>>(getActivity()) {
                     @Override
@@ -162,7 +162,7 @@ public class ArticlesListFragment extends Fragment {
                     @Override
                     public void onResponse() {
                         mRefreshLayout.refreshComplete();
-                        mAdapter.setFooterText("");
+                        mAdapter.loadComplete();
                     }
                 }
         );

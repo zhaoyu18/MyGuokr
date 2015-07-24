@@ -115,14 +115,14 @@ public class GroupHotPostFragment extends Fragment {
     }
 
     private void loadMore() {
-        mAdapter.setFooterText("正在加载...");
+        mAdapter.loadStart();
         GroupServer.getInstance().loadMorePostList(
                 mPostSnapShots.size(),
                 new DefaultServerHandler<ArrayList<PostSnapShot>>(getActivity()) {
                     @Override
                     public void onResponse() {
                         super.onResponse();
-                        mAdapter.setFooterText("");
+                        mAdapter.loadComplete();
                     }
 
                     @Override

@@ -15,6 +15,7 @@ import com.example.wangzhaoyu.myguokr.databinding.ViewListFooterBinding;
  */
 public abstract class LoadmoreFooterViewAdapter extends HeaderFooterRecyclerViewAdapter {
     private FooterModel mFooterModel = new FooterModel();
+    private ViewListFooterBinding mFooterBinding;
 
     @Override
     protected int getHeaderItemCount() {
@@ -41,6 +42,7 @@ public abstract class LoadmoreFooterViewAdapter extends HeaderFooterRecyclerView
 
         FooterHolder holder = new FooterHolder(binding.getRoot());
         holder.setBinding(binding);
+        mFooterBinding = binding;
         return holder;
     }
 
@@ -82,5 +84,15 @@ public abstract class LoadmoreFooterViewAdapter extends HeaderFooterRecyclerView
      */
     public void setFooterText(String text) {
         mFooterModel.setText(text);
+    }
+
+    public void loadStart() {
+        mFooterModel.setText("");
+        mFooterBinding.progressWheel.spin();
+    }
+
+    public void loadComplete() {
+        mFooterModel.setText("");
+        mFooterBinding.progressWheel.stopSpinning();
     }
 }

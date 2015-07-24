@@ -127,7 +127,7 @@ public class ArticleCommentActivity extends AppCompatActivity implements SendCom
 
     //TODO 上拉加载更多
     private void loadMore() {
-        mAdapter.setFooterText("正在加载...");
+        mAdapter.loadStart();
         ArticleServer.getInstance().loadMoreArticleReplies(mSnapShot.getId(), mReplies.size(),
                 new DefaultServerHandler<ArrayList<ArticleReply>>(this) {
                     @Override
@@ -141,7 +141,7 @@ public class ArticleCommentActivity extends AppCompatActivity implements SendCom
                     @Override
                     public void onResponse() {
                         mBinding.refeshLayout.refreshComplete();
-                        mAdapter.setFooterText("");
+                        mAdapter.loadComplete();
                     }
                 }
         );
