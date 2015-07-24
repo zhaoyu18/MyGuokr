@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import com.example.wangzhaoyu.myguokr.BR;
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.databinding.ArticleReplyItemBinding;
+import com.example.wangzhaoyu.myguokr.databinding.ViewArticleCommentItemBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleReply;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
 import com.example.wangzhaoyu.myguokr.ui.activity.UserInfoActivity;
@@ -45,9 +45,9 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter {
 
     @Override
     protected RecyclerView.ViewHolder onCreateContentItemViewHolder(ViewGroup parent, int contentViewType) {
-        ArticleReplyItemBinding binding = DataBindingUtil.inflate(
+        ViewArticleCommentItemBinding binding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()),
-                R.layout.article_reply_item,
+                R.layout.view_article_comment_item,
                 parent,
                 false);
 
@@ -56,7 +56,7 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter {
         binding.replyItemAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String ukey = ((ArticleReply)v.getTag()).getAuthor().getUkey();
+                String ukey = ((ArticleReply) v.getTag()).getAuthor().getUkey();
                 Intent intent = new Intent(mContext, UserInfoActivity.class);
                 intent.putExtra(UserInfoActivity.ARG_UKEY, ukey);
                 mContext.startActivity(intent);
@@ -71,6 +71,7 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter {
         ReplyViewHolder viewHolder = (ReplyViewHolder) contentViewHolder;
         viewHolder.getBinding().setVariable(BR.comment, comment);
         viewHolder.getBinding().setVariable(BR.option, mDisplayImageOptions);
+        viewHolder.getBinding().setVariable(BR.floor, position + 1);
         viewHolder.getBinding().executePendingBindings();
         viewHolder.getBinding().replyItemAvatar.setTag(comment);
     }
@@ -79,17 +80,17 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter {
      * content view holder
      */
     public static class ReplyViewHolder extends RecyclerView.ViewHolder {
-        private ArticleReplyItemBinding mBinding;
+        private ViewArticleCommentItemBinding mBinding;
 
         ReplyViewHolder(View view) {
             super(view);
         }
 
-        public ArticleReplyItemBinding getBinding() {
+        public ViewArticleCommentItemBinding getBinding() {
             return mBinding;
         }
 
-        public void setBinding(ArticleReplyItemBinding binding) {
+        public void setBinding(ViewArticleCommentItemBinding binding) {
             this.mBinding = binding;
         }
     }

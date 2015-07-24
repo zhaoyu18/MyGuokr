@@ -60,8 +60,6 @@ public class ArticleCommentActivity extends AppCompatActivity implements SendCom
         mBinding.replyRecycler.setHasFixedSize(true);
         mBinding.replyRecycler.setLayoutManager(
                 new LinearLayoutManager(this));
-        mBinding.replyRecycler.addItemDecoration(
-                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
         mBinding.replyRecycler.setAdapter(mAdapter);
 
         //init pull to refresh
