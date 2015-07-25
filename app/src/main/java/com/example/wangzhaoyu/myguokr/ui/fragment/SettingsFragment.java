@@ -12,6 +12,9 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.FragmentSetttingsBinding;
+import com.example.wangzhaoyu.myguokr.model.response.NotificationCount;
+import com.example.wangzhaoyu.myguokr.server.UserServer;
+import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 
 /**
  * @author wangzhaoyu
@@ -50,6 +53,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                             }
                         })
                         .show();
+
+                UserServer.getInstance().getNotifCount(new DefaultServerHandler<NotificationCount>(getActivity()) {
+                    @Override
+                    public void onRequestSuccess(NotificationCount count) {
+                        super.onRequestSuccess(count);
+                        Toast.makeText(getActivity(), count.getResult().getN() + "", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 break;
 
             default:

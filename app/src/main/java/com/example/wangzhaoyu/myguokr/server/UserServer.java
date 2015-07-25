@@ -6,9 +6,14 @@ import com.android.volley.Request;
 import com.example.wangzhaoyu.myguokr.core.SPUtils;
 import com.example.wangzhaoyu.myguokr.core.net.GuokrJsonRequest;
 import com.example.wangzhaoyu.myguokr.core.net.NetManager;
+import com.example.wangzhaoyu.myguokr.core.net.Network;
 import com.example.wangzhaoyu.myguokr.core.net.callback.DataListener;
+import com.example.wangzhaoyu.myguokr.model.response.NotificationCount;
 import com.example.wangzhaoyu.myguokr.model.response.User;
 import com.example.wangzhaoyu.myguokr.server.handler.ServerHandler;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author wangzhaoyu
@@ -57,5 +62,28 @@ public class UserServer {
 
     public User getUser() {
         return mUser;
+    }
+
+    /**
+     * get user notification count
+     *
+     * @param serverHandler
+     */
+    public void getNotifCount(final ServerHandler<NotificationCount> serverHandler) {
+        Map<String, String> params = new HashMap<>();
+        params.put(Network.Parameters.CURRENT_TIME, System.currentTimeMillis() + "");
+        params.put(Network.Parameters.ACCESS_TOKEN, getAccessToken());
+        NetManager.getInstance().request(Network.HttpMethod.GET, Network.API.NOTIFICATION_COUNT,
+                params, new DataListener<NotificationCount>() {
+                    @Override
+                    public void onRequestSuccess(NotificationCount data) {
+                        serverHandler.onRequestSuccess(data);
+                    }
+
+                    @Override
+                    public void onRequestError() {
+
+                    }
+                });
     }
 }
