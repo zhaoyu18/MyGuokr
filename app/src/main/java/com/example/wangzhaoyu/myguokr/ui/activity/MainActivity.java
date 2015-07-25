@@ -29,6 +29,7 @@ import com.example.wangzhaoyu.myguokr.server.UserServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ArticlesListFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.GroupHotPostFragment;
+import com.example.wangzhaoyu.myguokr.ui.fragment.SettingsFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.ButterKnife;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.menu_view_mode:
                         break;
                     case R.id.menu_settings:
+                        replaceFragment(new SettingsFragment());
                         break;
                     case R.id.menu_about:
                         break;
