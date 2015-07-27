@@ -10,8 +10,10 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
+import com.example.wangzhaoyu.myguokr.core.net.KeyBoardUtils;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityArticleCommentsBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleReply;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSendComment;
@@ -19,7 +21,6 @@ import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleCommentAdapter;
-import com.example.wangzhaoyu.myguokr.ui.adapter.DividerItemDecoration;
 import com.example.wangzhaoyu.myguokr.ui.view.SendCommentButton;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
@@ -31,13 +32,15 @@ import java.util.ArrayList;
 /**
  * @author wangzhaoyu
  */
-public class ArticleCommentActivity extends AppCompatActivity implements SendCommentButton.OnSendClickListener {
+public class ArticleCommentActivity extends AppCompatActivity
+        implements SendCommentButton.OnSendClickListener, ArticleCommentAdapter.ReplyCallback {
     private static final String TAG = ArticleCommentActivity.class.getSimpleName();
     public static final String ARTICLE_SNAPSHOT_KEY = "article_snapshot_key";
     private ActivityArticleCommentsBinding mBinding;
     private ArticleSnapShot mSnapShot;
     private ArrayList<ArticleReply> mReplies;
     private ArticleCommentAdapter mAdapter;
+    private ArticleReply mReply;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class ArticleCommentActivity extends AppCompatActivity implements SendCom
 
         //init recycler view
         mReplies = new ArrayList<>();
-        mAdapter = new ArticleCommentAdapter(this, mReplies);
+        mAdapter = new ArticleCommentAdapter(this, mReplies, this);
         mBinding.replyRecycler.setHasFixedSize(true);
         mBinding.replyRecycler.setLayoutManager(
                 new LinearLayoutManager(this));
@@ -145,6 +148,51 @@ public class ArticleCommentActivity extends AppCompatActivity implements SendCom
         );
     }
 
+    @Override
+    public void onSendClickListener(View v) {
+        if (validateComment()) {
+//            commentsAdapter.addItem();
+//            commentsAdapter.setAnimationsLocked(false);
+//            commentsAdapter.setDelayEnterAnimation(false);
+//            rvComments.smoothScrollBy(0, rvComments.getChildAt(0).getHeight() * commentsAdapter.getItemCount());
+
+            String content = mBinding.editComment.getText().toString();
+            //set reply
+            if (mReply != null) {
+                String replyContent = mReply.getContent();
+                replyContent = replyContent.replaceAll("\\[blockquote\\].+\\[/blockquote\\]", "");
+                replyContent = replyContent.replaceAll("\n", "");
+                content = "[blockquote]" + "引用@" + mReply.getAuthor().getNickname() + " 的话：" + replyContent + "[/blockquote]"
+                        + "\n" + content;
+                Toast.makeText(ArticleCommentActivity.this, content, Toast.LENGTH_LONG).show();
+            }
+            ArticleServer.getInstance().sendArticleComment(mSnapShot.getId(),
+                    content,
+                    new DefaultServerHandler<ArticleSendComment>(ArticleCommentActivity.this) {
+
+                        @Override
+                        public void onResponse() {
+                            super.onResponse();
+                            mBinding.editComment.setText(null);
+                            mBinding.btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onReplyClicked(ArticleReply reply) {
+        mReply = reply;
+        mBinding.editComment.setHint("回复" + mReply.getAuthor().getNickname() + ":");
+        //wait edit text is ok
+        mBinding.editComment.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                KeyBoardUtils.showSoftKeyboard(mBinding.editComment, ArticleCommentActivity.this);
+            }
+        }, 150);
+    }
+
     private void refresh() {
         ArticleServer.getInstance().getArticleReplies(mSnapShot.getId(),
                 new DefaultServerHandler<ArrayList<ArticleReply>>(this) {
@@ -161,27 +209,6 @@ public class ArticleCommentActivity extends AppCompatActivity implements SendCom
                         mBinding.refeshLayout.refreshComplete();
                     }
                 });
-    }
-
-    @Override
-    public void onSendClickListener(View v) {
-        if (validateComment()) {
-//            commentsAdapter.addItem();
-//            commentsAdapter.setAnimationsLocked(false);
-//            commentsAdapter.setDelayEnterAnimation(false);
-//            rvComments.smoothScrollBy(0, rvComments.getChildAt(0).getHeight() * commentsAdapter.getItemCount());
-            ArticleServer.getInstance().sendArticleComment(mSnapShot.getId(),
-                    mBinding.editComment.getText().toString(),
-                    new DefaultServerHandler<ArticleSendComment>(ArticleCommentActivity.this) {
-
-                        @Override
-                        public void onResponse() {
-                            super.onResponse();
-                            mBinding.editComment.setText(null);
-                            mBinding.btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
-                        }
-                    });
-        }
     }
 
     private boolean validateComment() {

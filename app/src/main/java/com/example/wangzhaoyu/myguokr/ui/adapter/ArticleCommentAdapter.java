@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.wangzhaoyu.myguokr.BR;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ViewArticleCommentItemBinding;
@@ -25,17 +27,19 @@ import java.util.ArrayList;
 /**
  * @author wangzhaoyu
  */
-public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter {
+public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter implements View.OnClickListener {
     private static final String TAG = ArticleCommentAdapter.class.getSimpleName();
     private DisplayImageOptions mDisplayImageOptions;
     private Context mContext;
     private ArrayList<ArticleReply> mComments;
+    private ReplyCallback mCallback;
 
-    public ArticleCommentAdapter(Context context, ArrayList<ArticleReply> comments) {
+    public ArticleCommentAdapter(Context context, ArrayList<ArticleReply> comments, ReplyCallback callback) {
         mContext = context;
         mComments = comments;
         mDisplayImageOptions = ImageServer.getAvatarDisplayOptions(
                 mContext.getResources().getDimensionPixelSize(R.dimen.article_avatar_size));
+        mCallback = callback;
     }
 
     @Override
@@ -62,6 +66,9 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter {
                 mContext.startActivity(intent);
             }
         });
+
+        //onclick
+        binding.getRoot().setOnClickListener(this);
         return holder;
     }
 
@@ -74,6 +81,28 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter {
         viewHolder.getBinding().setVariable(BR.floor, position + 1);
         viewHolder.getBinding().executePendingBindings();
         viewHolder.getBinding().replyItemAvatar.setTag(comment);
+        viewHolder.getBinding().getRoot().setTag(position);
+    }
+
+    @Override
+    public void onClick(View v) {
+        final int pos = (int) v.getTag();
+        new MaterialDialog.Builder(mContext)
+//                .title(R.string.title)
+                .items(R.array.comment_operation)
+                .itemColor(Color.parseColor("#000000"))
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which) {
+                            //reply comment
+                            case 0:
+                                mCallback.onReplyClicked(mComments.get(pos));
+                                break;
+                        }
+                    }
+                })
+                .show();
     }
 
     /**
@@ -103,5 +132,9 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter {
     @BindingAdapter({"bind:html"})
     public static void loadHtml(ReplyTextView textView, String html) {
         textView.loadHtml(html);
+    }
+
+    public interface ReplyCallback {
+        public void onReplyClicked(ArticleReply reply);
     }
 }
