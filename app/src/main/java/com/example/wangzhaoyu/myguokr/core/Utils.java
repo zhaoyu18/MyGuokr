@@ -3,6 +3,8 @@ package com.example.wangzhaoyu.myguokr.core;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.view.Display;
 import android.view.WindowManager;
@@ -44,5 +46,14 @@ public class Utils {
 
     public static boolean isAndroid5() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    // added as an instance method to an Activity
+    public static boolean isNetworkConnectionAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if (info == null) return false;
+        NetworkInfo.State network = info.getState();
+        return (network == NetworkInfo.State.CONNECTED || network == NetworkInfo.State.CONNECTING);
     }
 }

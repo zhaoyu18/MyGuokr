@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
                         replaceFragment(new SettingsFragment());
                         break;
                     case R.id.menu_about:
+                        Intent intent = new Intent(MainActivity.this, PhotoPickerActivity.class);
+                        startActivity(intent);
                         break;
                     default:
                         break;

@@ -164,7 +164,6 @@ public class ArticleCommentActivity extends AppCompatActivity
                 replyContent = replyContent.replaceAll("\n", "");
                 content = "[blockquote]" + "引用@" + mReply.getAuthor().getNickname() + " 的话：" + replyContent + "[/blockquote]"
                         + "\n" + content;
-                Toast.makeText(ArticleCommentActivity.this, content, Toast.LENGTH_LONG).show();
             }
             ArticleServer.getInstance().sendArticleComment(mSnapShot.getId(),
                     content,
