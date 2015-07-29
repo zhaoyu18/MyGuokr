@@ -12,12 +12,20 @@ import android.view.View;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityPostDetailBinding;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPostComment;
+import com.example.wangzhaoyu.myguokr.model.response.GroupPostComments;
 import com.example.wangzhaoyu.myguokr.model.response.PostDetail;
+import com.example.wangzhaoyu.myguokr.network.HttpService;
+import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
+import com.example.wangzhaoyu.myguokr.network.api.GroupService;
 import com.example.wangzhaoyu.myguokr.server.GroupServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.adapter.GroupPostDetailAdapter;
 
 import java.util.ArrayList;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * @author wangzhaoyu
@@ -32,11 +40,14 @@ public class PostActivity extends AppCompatActivity {
     private GroupPostDetailAdapter mAdapter;
     private PostDetail mPostDetail;
     private boolean mIsBottombarShow = true;
+    private GroupService mGroupService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_post_detail);
+
+        mGroupService = HttpService.getInstance().getGroupService();
 
         //init tool bar
         mBinding.toolbar.setTitle("小组热帖");
@@ -81,27 +92,40 @@ public class PostActivity extends AppCompatActivity {
 
         //request data
         final int postId = getIntent().getIntExtra(POST_ID_KEY, 0);
-        GroupServer.getInstance().getPostDetail(
+        mGroupService.getGroupPost(
                 postId,
-                new DefaultServerHandler<PostDetail>(this) {
+                new Callback<PostDetail>() {
                     @Override
-                    public void onRequestSuccess(PostDetail detail) {
-                        super.onRequestSuccess(detail);
+                    public void success(PostDetail detail, Response response) {
                         mPostDetail = detail;
                         mAdapter.setPost(detail);
                         mAdapter.notifyHeaderItemInserted(0);
                         //load comments after post detail
-                        GroupServer.getInstance().getPostComments(
+                        mGroupService.getGroupPostCommentList(
+                                ApiConfig.Query.RetrieveType.BY_POST,
+                                20,
+                                0,
                                 postId,
-                                new DefaultServerHandler<ArrayList<GroupPostComment>>(PostActivity.this) {
+                                new Callback<GroupPostComments>() {
                                     @Override
-                                    public void onRequestSuccess(ArrayList<GroupPostComment> comments) {
-                                        super.onRequestSuccess(comments);
+                                    public void success(GroupPostComments comments, Response response) {
                                         mComments.clear();
-                                        mComments.addAll(comments);
-                                        mAdapter.notifyContentItemRangeInserted(0, comments.size());
+                                        mComments.addAll(comments.getResult());
+                                        mAdapter.notifyContentItemRangeInserted(0, comments.getResult().size());
                                     }
-                                });
+
+                                    @Override
+                                    public void failure(RetrofitError error) {
+
+                                    }
+                                }
+
+                        );
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
                     }
                 });
 
@@ -119,24 +143,27 @@ public class PostActivity extends AppCompatActivity {
 
     private void loadMore() {
         mAdapter.loadStart();
-        GroupServer.getInstance().loadMorePostComments(
-                mPostDetail.getResult().getId(),
+
+        mGroupService.getGroupPostCommentList(
+                ApiConfig.Query.RetrieveType.BY_POST,
+                20,
                 mComments.size(),
-                new DefaultServerHandler<ArrayList<GroupPostComment>>(PostActivity.this) {
+                mPostDetail.getResult().getId(),
+                new Callback<GroupPostComments>() {
                     @Override
-                    public void onRequestSuccess(ArrayList<GroupPostComment> comments) {
-                        super.onRequestSuccess(comments);
+                    public void success(GroupPostComments comments, Response response) {
                         int beforeSize = mComments.size();
-                        mComments.addAll(comments);
-                        mAdapter.notifyContentItemRangeInserted(beforeSize, comments.size());
+                        mComments.addAll(comments.getResult());
+                        mAdapter.notifyContentItemRangeInserted(beforeSize, comments.getResult().size());
+                        mAdapter.loadComplete();
                     }
 
                     @Override
-                    public void onResponse() {
-                        super.onResponse();
+                    public void failure(RetrofitError error) {
                         mAdapter.loadComplete();
                     }
-                });
+                }
+        );
     }
 
     public void onLikeBtnClicked(View view) {

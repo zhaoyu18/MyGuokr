@@ -5,7 +5,8 @@ package com.example.wangzhaoyu.myguokr.network.api;
  */
 public class ApiConfig {
     //根节点
-    public static final String GUOKR_ROOT_URL = "http://apis.guokr.com";
+    public static final String GUOKR_APIS_URL = "http://apis.guokr.com";
+    public static final String GUOKR_ROOT_URL = "http://www.guokr.com";
 
     /**
      * 变量命名规则：
@@ -14,16 +15,26 @@ public class ApiConfig {
         // 科学人article list
         public static final String MINISITE_ARTICLE = "/minisite/article.json";
         public static final String ARTICLE_REPLY = "/minisite/article_reply.json";
+
         public static final String GROUP_POST = "/group/post.json";
         public static final String GROUP_POST_DETAIL = "/group/post/{id}.json";
         public static final String GROUP_POST_COMMENT = "/group/post_reply.json";
+
         public static final String NOTIFICATION_COUNT = "/community/rn_num.json";
+        public static final String COMMUNITY_USER = "/community/user/{ukey}.json";
+    }
+
+    /**
+     *
+     */
+    public final class HtmlAPI {
+        public static final String ARTICLE_CONTENT = "/article/{id}/";
     }
 
     /**
      * 参数
      */
-    public final class Parameters {
+    public final class Query {
         public static final String RETRIEVE_TYPE = "retrieve_type";
         public static final String LIMIT = "limit";
         public static final String OFFSET = "offset";
@@ -42,5 +53,13 @@ public class ApiConfig {
             public static final String HOT_POST = "hot_post";
             public static final String BY_POST = "by_post";
         }
+    }
+
+    /**
+     *
+     */
+    public final class Path {
+        public static final String ID = "id";
+        public static final String UKEY = "ukey";
     }
 }

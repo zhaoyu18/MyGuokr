@@ -16,17 +16,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.model.response.User;
+import com.example.wangzhaoyu.myguokr.network.HttpService;
+import com.example.wangzhaoyu.myguokr.network.api.UserService;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
 import com.example.wangzhaoyu.myguokr.server.UserServer;
-import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ArticlesListFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.GroupHotPostFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.SettingsFragment;
@@ -35,6 +34,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -54,12 +56,15 @@ public class MainActivity extends AppCompatActivity {
     ImageView mNavAvatarImage;
     @InjectView(R.id.nav_header_name)
     TextView mNavUserName;
+    private UserService mUserService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+
+        mUserService = HttpService.getInstance().getUserService();
 
         //set up navigation view
         mNaviView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -179,11 +184,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUserDisplay() {
-        UserServer.getInstance().getUserInfo(
+        mUserService.getUserInfo(
                 UserServer.getInstance().getUserUkey(),
-                new DefaultServerHandler<User>(this) {
+                new Callback<User>() {
                     @Override
-                    public void onRequestSuccess(User user) {
+                    public void success(User user, Response response) {
                         //set up navigation drawer
                         ImageLoader.getInstance().displayImage(
                                 user.getResult().getAvatar().getLarge(),
@@ -194,13 +199,10 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onRequestError() {
-                        //set up navigation drawer
-                        ImageLoader.getInstance().displayImage(
-                                "http://images.17173.com/2011/wow/2011/02/24/nanshengqi17.jpg",
-                                mNavAvatarImage,
-                                ImageServer.getAvatarDisplayOptions(getResources().getDimensionPixelSize(R.dimen.nav_avatar_size)));
+                    public void failure(RetrofitError error) {
+
                     }
-                });
+                }
+        );
     }
 }

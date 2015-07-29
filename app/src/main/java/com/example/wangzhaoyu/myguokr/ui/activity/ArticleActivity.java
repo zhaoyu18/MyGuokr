@@ -18,15 +18,23 @@ import android.webkit.WebView;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.Utils;
-import com.example.wangzhaoyu.myguokr.core.net.callback.HtmlDataListener;
+import com.example.wangzhaoyu.myguokr.core.net.NetUtils;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityArticleBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
-import com.example.wangzhaoyu.myguokr.server.ArticleServer;
+import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.server.ImageServer;
 import com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 /**
  * 文章详情页面
@@ -100,21 +108,27 @@ public class ArticleActivity extends AppCompatActivity {
         mBinding.articleAuthorName.setText(mSnapShot.getAuthor().getNickname());
 
         //init web content
-        mBinding.progressWheel.spin();
-        ArticleServer.getInstance().getArticleDetail(mSnapShot.getUrl(), new HtmlDataListener() {
-            @Override
-            public void onRequestSuccess(String html) {
-                mBinding.articleWeb.loadDataWithBaseURL("http://www.guokr.com/", html, "text/html",
-                        "charset=UTF-8", null);
-                startWebViewAnimation();
-                mBinding.progressWheel.stopSpinning();
-            }
+        HttpService.getInstance().getArticleContentService().getArticleContent(
+                mSnapShot.getId(),
+                new Callback<Response>() {
+                    @Override
+                    public void success(Response response, Response response2) {
+                        Document doc = Jsoup.parse(new String(((TypedByteArray) response.getBody()).getBytes()));
+                        String articleContent = doc.getElementById("articleContent").outerHtml();
+                        String copyright = doc.getElementsByClass("copyright").outerHtml();
+                        String content = articleContent + copyright;
+                        String html = NetUtils.getArticleHtml(content);
+                        mBinding.articleWeb.loadDataWithBaseURL("http://www.guokr.com/", html, "text/html",
+                                "charset=UTF-8", null);
+                        startWebViewAnimation();
+                        mBinding.progressWheel.stopSpinning();
+                    }
 
-            @Override
-            public void onRequestError() {
-//                mBinding.progressWheel.stopSpinning();
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
 
     }
 

@@ -10,14 +10,17 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.net.KeyBoardUtils;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityArticleCommentsBinding;
+import com.example.wangzhaoyu.myguokr.model.response.ArticleReplies;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleReply;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSendComment;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
+import com.example.wangzhaoyu.myguokr.network.HttpService;
+import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
+import com.example.wangzhaoyu.myguokr.network.api.ArticleService;
 import com.example.wangzhaoyu.myguokr.server.ArticleServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleCommentAdapter;
@@ -28,6 +31,10 @@ import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.StoreHouseHeader;
 
 import java.util.ArrayList;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * @author wangzhaoyu
@@ -41,12 +48,15 @@ public class ArticleCommentActivity extends AppCompatActivity
     private ArrayList<ArticleReply> mReplies;
     private ArticleCommentAdapter mAdapter;
     private ArticleReply mReply;
+    private ArticleService mArticleService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_article_comments);
         mSnapShot = (ArticleSnapShot) getIntent().getSerializableExtra(ARTICLE_SNAPSHOT_KEY);
+
+        mArticleService = HttpService.getInstance().getArticleService();
 
         //init tool bar
         setSupportActionBar(mBinding.toolbar);
@@ -66,11 +76,6 @@ public class ArticleCommentActivity extends AppCompatActivity
         mBinding.replyRecycler.setAdapter(mAdapter);
 
         //init pull to refresh
-//        MoocGlassesHeaderView header = new MoocGlassesHeaderView(this);
-//        header.setLayoutParams(new PtrFrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT));
-//        header.setPadding(0, PtrLocalDisplay.dp2px(15), 0, PtrLocalDisplay.dp2px(10));
-//        header.setUp(mBinding.refeshLayout);
         StoreHouseHeader header = new StoreHouseHeader(this);
         header.initWithString("Guokr");
 
@@ -126,28 +131,6 @@ public class ArticleCommentActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    //TODO 上拉加载更多
-    private void loadMore() {
-        mAdapter.loadStart();
-        ArticleServer.getInstance().loadMoreArticleReplies(mSnapShot.getId(), mReplies.size(),
-                new DefaultServerHandler<ArrayList<ArticleReply>>(this) {
-                    @Override
-                    public void onRequestSuccess(ArrayList<ArticleReply> articleReplies) {
-                        super.onRequestSuccess(articleReplies);
-                        int beforeSize = mReplies.size();
-                        mReplies.addAll(articleReplies);
-                        mAdapter.notifyContentItemRangeInserted(beforeSize, articleReplies.size());
-                    }
-
-                    @Override
-                    public void onResponse() {
-                        mBinding.refeshLayout.refreshComplete();
-                        mAdapter.loadComplete();
-                    }
-                }
-        );
-    }
-
     @Override
     public void onSendClickListener(View v) {
         if (validateComment()) {
@@ -193,21 +176,50 @@ public class ArticleCommentActivity extends AppCompatActivity
     }
 
     private void refresh() {
-        ArticleServer.getInstance().getArticleReplies(mSnapShot.getId(),
-                new DefaultServerHandler<ArrayList<ArticleReply>>(this) {
+        mArticleService.getArticleCommentList(
+                ApiConfig.Query.RetrieveType.BY_ARTICLE,
+                mSnapShot.getId(),
+                0,
+                new Callback<ArticleReplies>() {
                     @Override
-                    public void onRequestSuccess(ArrayList<ArticleReply> replies) {
-                        super.onRequestSuccess(replies);
+                    public void success(ArticleReplies replies, Response response) {
                         mReplies.clear();
-                        mReplies.addAll(replies);
+                        mReplies.addAll(replies.getResult());
                         mAdapter.notifyDataSetChanged();
+                        mBinding.refeshLayout.refreshComplete();
                     }
 
                     @Override
-                    public void onResponse() {
+                    public void failure(RetrofitError error) {
                         mBinding.refeshLayout.refreshComplete();
                     }
                 });
+
+    }
+
+    private void loadMore() {
+        mAdapter.loadStart();
+        mArticleService.getArticleCommentList(
+                ApiConfig.Query.RetrieveType.BY_ARTICLE,
+                mSnapShot.getId(),
+                mReplies.size(),
+                new Callback<ArticleReplies>() {
+                    @Override
+                    public void success(ArticleReplies replies, Response response) {
+                        int beforeSize = mReplies.size();
+                        mReplies.addAll(replies.getResult());
+                        mAdapter.notifyContentItemRangeInserted(beforeSize, replies.getResult().size());
+                        mBinding.refeshLayout.refreshComplete();
+                        mAdapter.loadComplete();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        mBinding.refeshLayout.refreshComplete();
+                        mAdapter.loadComplete();
+                    }
+                });
+
     }
 
     private boolean validateComment() {

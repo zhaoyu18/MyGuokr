@@ -12,9 +12,12 @@ import android.view.MenuItem;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ActivitySingleFragmentBinding;
 import com.example.wangzhaoyu.myguokr.model.response.User;
-import com.example.wangzhaoyu.myguokr.server.UserServer;
-import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
+import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.ui.fragment.UserInfoFragment;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * @author wangzhaoyu
@@ -41,12 +44,16 @@ public class UserInfoActivity extends AppCompatActivity {
 
         mUkey = getIntent().getStringExtra(ARG_UKEY);
 
-        UserServer.getInstance().getUserInfo(mUkey, new DefaultServerHandler<User>(this) {
+        HttpService.getInstance().getUserService().getUserInfo(mUkey, new Callback<User>() {
             @Override
-            public void onRequestSuccess(User user) {
-                super.onRequestSuccess(user);
+            public void success(User user, Response response) {
                 mUser = user;
                 addMainFragment(new UserInfoFragment());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
             }
         });
     }

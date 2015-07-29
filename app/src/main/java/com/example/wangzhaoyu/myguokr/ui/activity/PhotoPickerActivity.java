@@ -10,7 +10,7 @@ import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.net.Network;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityPhotoPickerBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleList;
-import com.example.wangzhaoyu.myguokr.network.HttpClient;
+import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.network.api.ArticleService;
 
 import retrofit.Callback;
@@ -30,7 +30,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_photo_picker);
         Glide.with(this).load("http://goo.gl/gEgYUd").into(mBinding.testImage);
 
-        ArticleService articleService = HttpClient.getInstance().getArticleService();
+        ArticleService articleService = HttpService.getInstance().getArticleService();
         articleService.getArticleList(
                 Network.Parameters.RetrieveType.BY_SUBJECT,
                 20,

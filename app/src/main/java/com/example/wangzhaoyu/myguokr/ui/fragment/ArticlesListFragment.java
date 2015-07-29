@@ -13,7 +13,7 @@ import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.net.Network;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleList;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
-import com.example.wangzhaoyu.myguokr.network.HttpClient;
+import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.network.api.ArticleService;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleAdapter;
 import com.example.wangzhaoyu.myguokr.ui.widget.ProgressWheel;
@@ -64,7 +64,7 @@ public class ArticlesListFragment extends Fragment {
     }
 
     private void initView() {
-        mArticleService = HttpClient.getInstance().getArticleService();
+        mArticleService = HttpService.getInstance().getArticleService();
         //init recycler view
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()) {
             @Override
@@ -137,24 +137,6 @@ public class ArticlesListFragment extends Fragment {
      * 刷新列表
      */
     private void refresh() {
-//        ArticleServer.getInstance().refreshArticleList(
-//                new DefaultServerHandler<ArrayList<ArticleSnapShot>>(getActivity()) {
-//
-//                    @Override
-//                    public void onRequestSuccess(ArrayList<ArticleSnapShot> articleList) {
-//                        super.onRequestSuccess(articleList);
-//                        mArticleList.clear();
-//                        mArticleList.addAll(articleList);
-//                        mAdapter.notifyDataSetChanged();
-//                    }
-//
-//                    @Override
-//                    public void onResponse() {
-//                        mRefreshLayout.refreshComplete();
-//                        mProgressWheel.stopSpinning();
-//                    }
-//                });
-
         mArticleService.getArticleList(
                 Network.Parameters.RetrieveType.BY_SUBJECT,
                 20,
@@ -183,23 +165,6 @@ public class ArticlesListFragment extends Fragment {
      */
     private void loadMore() {
         mAdapter.loadStart();
-//        ArticleServer.getInstance().loadMoreArticleList(mArticleList.size(),
-//                new DefaultServerHandler<ArrayList<ArticleSnapShot>>(getActivity()) {
-//                    @Override
-//                    public void onRequestSuccess(ArrayList<ArticleSnapShot> articleSnapShots) {
-//                        super.onRequestSuccess(articleSnapShots);
-//                        int beforeSize = mArticleList.size();
-//                        mArticleList.addAll(articleSnapShots);
-//                        mAdapter.notifyContentItemRangeInserted(beforeSize, articleSnapShots.size());
-//                    }
-//
-//                    @Override
-//                    public void onResponse() {
-//                        mRefreshLayout.refreshComplete();
-//                        mAdapter.loadComplete();
-//                    }
-//                }
-//        );
 
         mArticleService.getArticleList(
                 Network.Parameters.RetrieveType.BY_SUBJECT,

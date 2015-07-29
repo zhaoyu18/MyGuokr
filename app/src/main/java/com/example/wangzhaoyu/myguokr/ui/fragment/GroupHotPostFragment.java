@@ -12,7 +12,11 @@ import android.view.ViewGroup;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.FragmentGroupPostListBinding;
+import com.example.wangzhaoyu.myguokr.model.response.GroupPosts;
 import com.example.wangzhaoyu.myguokr.model.response.PostSnapShot;
+import com.example.wangzhaoyu.myguokr.network.HttpService;
+import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
+import com.example.wangzhaoyu.myguokr.network.api.GroupService;
 import com.example.wangzhaoyu.myguokr.server.GroupServer;
 import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
 import com.example.wangzhaoyu.myguokr.ui.adapter.GroupPostAdapter;
@@ -23,6 +27,10 @@ import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.StoreHouseH
 
 import java.util.ArrayList;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 /**
  * @author wangzhaoyu
  */
@@ -31,12 +39,15 @@ public class GroupHotPostFragment extends Fragment {
     private FragmentGroupPostListBinding mBinding;
     private GroupPostAdapter mAdapter;
     private ArrayList<PostSnapShot> mPostSnapShots;
+    private GroupService mGroupService;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_group_post_list, container, false);
         mBinding = DataBindingUtil.bind(rootView);
+
+        mGroupService = HttpService.getInstance().getGroupService();
 
         //init recycler view
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -97,40 +108,78 @@ public class GroupHotPostFragment extends Fragment {
 
     private void refresh() {
         //request data
-        GroupServer.getInstance().refreshPostList(new DefaultServerHandler<ArrayList<PostSnapShot>>(getActivity()) {
-            @Override
-            public void onRequestSuccess(ArrayList<PostSnapShot> postSnapShots) {
-                super.onRequestSuccess(postSnapShots);
-                mPostSnapShots.clear();
-                mPostSnapShots.addAll(postSnapShots);
-                mAdapter.notifyDataSetChanged();
-            }
+//        GroupServer.getInstance().refreshPostList(new DefaultServerHandler<ArrayList<PostSnapShot>>(getActivity()) {
+//            @Override
+//            public void onRequestSuccess(ArrayList<PostSnapShot> postSnapShots) {
+//                super.onRequestSuccess(postSnapShots);
+//                mPostSnapShots.clear();
+//                mPostSnapShots.addAll(postSnapShots);
+//                mAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onResponse() {
+//                super.onResponse();
+//                mBinding.refreshLayout.refreshComplete();
+//            }
+//        });
 
-            @Override
-            public void onResponse() {
-                super.onResponse();
-                mBinding.refreshLayout.refreshComplete();
-            }
-        });
+        mGroupService.getGroupPostList(
+                ApiConfig.Query.RetrieveType.HOT_POST,
+                20,
+                0,
+                new Callback<GroupPosts>() {
+                    @Override
+                    public void success(GroupPosts posts, Response response) {
+                        mPostSnapShots.clear();
+                        mPostSnapShots.addAll(posts.getResult());
+                        mAdapter.notifyDataSetChanged();
+                        mBinding.refreshLayout.refreshComplete();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        mBinding.refreshLayout.refreshComplete();
+                    }
+                });
     }
 
     private void loadMore() {
         mAdapter.loadStart();
-        GroupServer.getInstance().loadMorePostList(
+//        GroupServer.getInstance().loadMorePostList(
+//                mPostSnapShots.size(),
+//                new DefaultServerHandler<ArrayList<PostSnapShot>>(getActivity()) {
+//                    @Override
+//                    public void onResponse() {
+//                        super.onResponse();
+//                        mAdapter.loadComplete();
+//                    }
+//
+//                    @Override
+//                    public void onRequestSuccess(ArrayList<PostSnapShot> shots) {
+//                        super.onRequestSuccess(shots);
+//                        int beforeSize = mPostSnapShots.size();
+//                        mPostSnapShots.addAll(shots);
+//                        mAdapter.notifyContentItemRangeInserted(beforeSize, shots.size());
+//                    }
+//                });
+
+        mGroupService.getGroupPostList(
+                ApiConfig.Query.RetrieveType.HOT_POST,
+                20,
                 mPostSnapShots.size(),
-                new DefaultServerHandler<ArrayList<PostSnapShot>>(getActivity()) {
+                new Callback<GroupPosts>() {
                     @Override
-                    public void onResponse() {
-                        super.onResponse();
+                    public void success(GroupPosts posts, Response response) {
+                        int beforeSize = mPostSnapShots.size();
+                        mPostSnapShots.addAll(posts.getResult());
+                        mAdapter.notifyContentItemRangeInserted(beforeSize, posts.getResult().size());
                         mAdapter.loadComplete();
                     }
 
                     @Override
-                    public void onRequestSuccess(ArrayList<PostSnapShot> shots) {
-                        super.onRequestSuccess(shots);
-                        int beforeSize = mPostSnapShots.size();
-                        mPostSnapShots.addAll(shots);
-                        mAdapter.notifyContentItemRangeInserted(beforeSize, shots.size());
+                    public void failure(RetrofitError error) {
+                        mAdapter.loadComplete();
                     }
                 });
     }
