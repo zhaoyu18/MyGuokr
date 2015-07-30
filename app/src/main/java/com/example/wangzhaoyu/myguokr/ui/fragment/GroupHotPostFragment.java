@@ -15,10 +15,7 @@ import com.example.wangzhaoyu.myguokr.databinding.FragmentGroupPostListBinding;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPosts;
 import com.example.wangzhaoyu.myguokr.model.response.PostSnapShot;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
-import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
-import com.example.wangzhaoyu.myguokr.network.api.GroupService;
-import com.example.wangzhaoyu.myguokr.server.GroupServer;
-import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
+import com.example.wangzhaoyu.myguokr.network.service.GroupService;
 import com.example.wangzhaoyu.myguokr.ui.adapter.GroupPostAdapter;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
@@ -108,25 +105,7 @@ public class GroupHotPostFragment extends Fragment {
 
     private void refresh() {
         //request data
-//        GroupServer.getInstance().refreshPostList(new DefaultServerHandler<ArrayList<PostSnapShot>>(getActivity()) {
-//            @Override
-//            public void onRequestSuccess(ArrayList<PostSnapShot> postSnapShots) {
-//                super.onRequestSuccess(postSnapShots);
-//                mPostSnapShots.clear();
-//                mPostSnapShots.addAll(postSnapShots);
-//                mAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onResponse() {
-//                super.onResponse();
-//                mBinding.refreshLayout.refreshComplete();
-//            }
-//        });
-
         mGroupService.getGroupPostList(
-                ApiConfig.Query.RetrieveType.HOT_POST,
-                20,
                 0,
                 new Callback<GroupPosts>() {
                     @Override
@@ -146,27 +125,8 @@ public class GroupHotPostFragment extends Fragment {
 
     private void loadMore() {
         mAdapter.loadStart();
-//        GroupServer.getInstance().loadMorePostList(
-//                mPostSnapShots.size(),
-//                new DefaultServerHandler<ArrayList<PostSnapShot>>(getActivity()) {
-//                    @Override
-//                    public void onResponse() {
-//                        super.onResponse();
-//                        mAdapter.loadComplete();
-//                    }
-//
-//                    @Override
-//                    public void onRequestSuccess(ArrayList<PostSnapShot> shots) {
-//                        super.onRequestSuccess(shots);
-//                        int beforeSize = mPostSnapShots.size();
-//                        mPostSnapShots.addAll(shots);
-//                        mAdapter.notifyContentItemRangeInserted(beforeSize, shots.size());
-//                    }
-//                });
 
         mGroupService.getGroupPostList(
-                ApiConfig.Query.RetrieveType.HOT_POST,
-                20,
                 mPostSnapShots.size(),
                 new Callback<GroupPosts>() {
                     @Override

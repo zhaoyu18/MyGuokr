@@ -12,17 +12,14 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.core.net.KeyBoardUtils;
+import com.example.wangzhaoyu.myguokr.core.KeyBoardUtils;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityArticleCommentsBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleReplies;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleReply;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSendComment;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
-import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
-import com.example.wangzhaoyu.myguokr.network.api.ArticleService;
-import com.example.wangzhaoyu.myguokr.server.ArticleServer;
-import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
+import com.example.wangzhaoyu.myguokr.network.service.ArticleService;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleCommentAdapter;
 import com.example.wangzhaoyu.myguokr.ui.view.SendCommentButton;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
@@ -148,15 +145,18 @@ public class ArticleCommentActivity extends AppCompatActivity
                 content = "[blockquote]" + "引用@" + mReply.getAuthor().getNickname() + " 的话：" + replyContent + "[/blockquote]"
                         + "\n" + content;
             }
-            ArticleServer.getInstance().sendArticleComment(mSnapShot.getId(),
+            mArticleService.postArticleComment(mSnapShot.getId(),
                     content,
-                    new DefaultServerHandler<ArticleSendComment>(ArticleCommentActivity.this) {
-
+                    new Callback<ArticleSendComment>() {
                         @Override
-                        public void onResponse() {
-                            super.onResponse();
+                        public void success(ArticleSendComment comment, Response response) {
                             mBinding.editComment.setText(null);
                             mBinding.btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+
                         }
                     });
         }
@@ -177,7 +177,6 @@ public class ArticleCommentActivity extends AppCompatActivity
 
     private void refresh() {
         mArticleService.getArticleCommentList(
-                ApiConfig.Query.RetrieveType.BY_ARTICLE,
                 mSnapShot.getId(),
                 0,
                 new Callback<ArticleReplies>() {
@@ -200,7 +199,6 @@ public class ArticleCommentActivity extends AppCompatActivity
     private void loadMore() {
         mAdapter.loadStart();
         mArticleService.getArticleCommentList(
-                ApiConfig.Query.RetrieveType.BY_ARTICLE,
                 mSnapShot.getId(),
                 mReplies.size(),
                 new Callback<ArticleReplies>() {

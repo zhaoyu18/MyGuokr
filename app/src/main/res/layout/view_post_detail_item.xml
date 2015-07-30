@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.example.wangzhaoyu.myguokr.core.net.NetUtils"/>
+        <import type="com.example.wangzhaoyu.myguokr.core.NetUtils"/>
 
         <variable
             name="post"

@@ -10,11 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.core.net.Network;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleList;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
-import com.example.wangzhaoyu.myguokr.network.api.ArticleService;
+import com.example.wangzhaoyu.myguokr.network.service.ArticleService;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleAdapter;
 import com.example.wangzhaoyu.myguokr.ui.widget.ProgressWheel;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
@@ -138,8 +137,6 @@ public class ArticlesListFragment extends Fragment {
      */
     private void refresh() {
         mArticleService.getArticleList(
-                Network.Parameters.RetrieveType.BY_SUBJECT,
-                20,
                 0,
                 new Callback<ArticleList>() {
                     @Override
@@ -167,8 +164,6 @@ public class ArticlesListFragment extends Fragment {
         mAdapter.loadStart();
 
         mArticleService.getArticleList(
-                Network.Parameters.RetrieveType.BY_SUBJECT,
-                20,
                 mArticleList.size(),
                 new Callback<ArticleList>() {
                     @Override

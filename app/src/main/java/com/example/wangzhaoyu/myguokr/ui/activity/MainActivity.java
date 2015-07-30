@@ -23,9 +23,8 @@ import android.widget.TextView;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.model.response.User;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
-import com.example.wangzhaoyu.myguokr.network.api.UserService;
-import com.example.wangzhaoyu.myguokr.server.ImageServer;
-import com.example.wangzhaoyu.myguokr.server.UserServer;
+import com.example.wangzhaoyu.myguokr.network.service.UserService;
+import com.example.wangzhaoyu.myguokr.core.ImageUtils;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ArticlesListFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.GroupHotPostFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.SettingsFragment;
@@ -134,12 +133,12 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.nav_header)
     public void OnNavHeaderClicked(View view) {
-        if (TextUtils.isEmpty(UserServer.getInstance().getAccessToken())) {
+        if (TextUtils.isEmpty(mUserService.getAccessToken())) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, START_LOGIN_ACTIVITY_CODE);
         } else {
             Intent intent = new Intent(this, UserInfoActivity.class);
-            intent.putExtra(UserInfoActivity.ARG_UKEY, UserServer.getInstance().getUserUkey());
+            intent.putExtra(UserInfoActivity.ARG_UKEY, mUserService.getUserUkey());
             startActivity(intent);
         }
     }
@@ -148,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == START_LOGIN_ACTIVITY_CODE && resultCode == RESULT_OK) {
-            Log.i(TAG, "access token: " + UserServer.getInstance().getAccessToken());
-            Log.i(TAG, "ukey: " + UserServer.getInstance().getUserUkey());
+            Log.i(TAG, "access token: " + mUserService.getAccessToken());
+            Log.i(TAG, "ukey: " + mUserService.getUserUkey());
             updateUserDisplay();
         }
     }
@@ -185,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUserDisplay() {
         mUserService.getUserInfo(
-                UserServer.getInstance().getUserUkey(),
+                mUserService.getUserUkey(),
                 new Callback<User>() {
                     @Override
                     public void success(User user, Response response) {
@@ -193,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                         ImageLoader.getInstance().displayImage(
                                 user.getResult().getAvatar().getLarge(),
                                 mNavAvatarImage,
-                                ImageServer.getAvatarDisplayOptions(
+                                ImageUtils.getAvatarDisplayOptions(
                                         getResources().getDimensionPixelSize(R.dimen.nav_avatar_size)));
                         mNavUserName.setText(user.getResult().getNickname());
                     }

@@ -16,7 +16,7 @@ import com.example.wangzhaoyu.myguokr.BR;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ViewArticleCommentItemBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleReply;
-import com.example.wangzhaoyu.myguokr.server.ImageServer;
+import com.example.wangzhaoyu.myguokr.core.ImageUtils;
 import com.example.wangzhaoyu.myguokr.ui.activity.UserInfoActivity;
 import com.example.wangzhaoyu.myguokr.ui.view.ReplyTextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -37,7 +37,7 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter implements 
     public ArticleCommentAdapter(Context context, ArrayList<ArticleReply> comments, ReplyCallback callback) {
         mContext = context;
         mComments = comments;
-        mDisplayImageOptions = ImageServer.getAvatarDisplayOptions(
+        mDisplayImageOptions = ImageUtils.getAvatarDisplayOptions(
                 mContext.getResources().getDimensionPixelSize(R.dimen.article_avatar_size));
         mCallback = callback;
     }

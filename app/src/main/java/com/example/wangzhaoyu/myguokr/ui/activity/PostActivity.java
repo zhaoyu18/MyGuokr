@@ -16,9 +16,7 @@ import com.example.wangzhaoyu.myguokr.model.response.GroupPostComments;
 import com.example.wangzhaoyu.myguokr.model.response.PostDetail;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
-import com.example.wangzhaoyu.myguokr.network.api.GroupService;
-import com.example.wangzhaoyu.myguokr.server.GroupServer;
-import com.example.wangzhaoyu.myguokr.server.handler.DefaultServerHandler;
+import com.example.wangzhaoyu.myguokr.network.service.GroupService;
 import com.example.wangzhaoyu.myguokr.ui.adapter.GroupPostDetailAdapter;
 
 import java.util.ArrayList;
@@ -102,8 +100,6 @@ public class PostActivity extends AppCompatActivity {
                         mAdapter.notifyHeaderItemInserted(0);
                         //load comments after post detail
                         mGroupService.getGroupPostCommentList(
-                                ApiConfig.Query.RetrieveType.BY_POST,
-                                20,
                                 0,
                                 postId,
                                 new Callback<GroupPostComments>() {
@@ -145,8 +141,6 @@ public class PostActivity extends AppCompatActivity {
         mAdapter.loadStart();
 
         mGroupService.getGroupPostCommentList(
-                ApiConfig.Query.RetrieveType.BY_POST,
-                20,
                 mComments.size(),
                 mPostDetail.getResult().getId(),
                 new Callback<GroupPostComments>() {

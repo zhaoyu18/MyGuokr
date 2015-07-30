@@ -1,20 +1,19 @@
-package com.example.wangzhaoyu.myguokr.server;
+package com.example.wangzhaoyu.myguokr.core;
 
-import com.example.wangzhaoyu.myguokr.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 /**
  * @author wangzhaoyu
  */
-public class ImageServer {
-    private static final String TAG = ImageServer.class.getSimpleName();
+public class ImageUtils {
+    private static final String TAG = ImageUtils.class.getSimpleName();
 
     private static class InstanceHolder {
-        public static ImageServer holder = new ImageServer();
+        public static ImageUtils holder = new ImageUtils();
     }
 
-    public static ImageServer getInstance() {
+    public static ImageUtils getInstance() {
         return InstanceHolder.holder;
     }
 

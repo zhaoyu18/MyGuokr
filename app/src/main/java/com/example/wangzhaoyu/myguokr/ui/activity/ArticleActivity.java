@@ -18,11 +18,11 @@ import android.webkit.WebView;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.Utils;
-import com.example.wangzhaoyu.myguokr.core.net.NetUtils;
+import com.example.wangzhaoyu.myguokr.core.NetUtils;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityArticleBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
-import com.example.wangzhaoyu.myguokr.server.ImageServer;
+import com.example.wangzhaoyu.myguokr.core.ImageUtils;
 import com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -103,12 +103,12 @@ public class ArticleActivity extends AppCompatActivity {
         ImageLoader.getInstance().displayImage(
                 mSnapShot.getAuthor().getAvatar().getNormal(),
                 mBinding.articleAuthorAvatar,
-                ImageServer.getAvatarDisplayOptions(
+                ImageUtils.getAvatarDisplayOptions(
                         getResources().getDimensionPixelSize(R.dimen.article_avatar_size)));
         mBinding.articleAuthorName.setText(mSnapShot.getAuthor().getNickname());
 
         //init web content
-        HttpService.getInstance().getArticleContentService().getArticleContent(
+        HttpService.getInstance().getArticleService().getArticleContent(
                 mSnapShot.getId(),
                 new Callback<Response>() {
                     @Override

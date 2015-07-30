@@ -8,8 +8,9 @@ import retrofit.http.Path;
 /**
  * @author wangzhaoyu
  */
-public interface ArticleContentService {
+public interface GuokrHtmlAPI {
 
+    //article content
     @GET(ApiConfig.HtmlAPI.ARTICLE_CONTENT)
     public void getArticleContent(
             @Path(ApiConfig.Path.ID) int articleId,

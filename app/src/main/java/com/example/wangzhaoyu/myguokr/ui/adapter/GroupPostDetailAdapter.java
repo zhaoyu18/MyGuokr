@@ -4,7 +4,6 @@ import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import com.example.wangzhaoyu.myguokr.databinding.ViewPostCommentItemBinding;
 import com.example.wangzhaoyu.myguokr.databinding.ViewPostDetailItemBinding;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPostComment;
 import com.example.wangzhaoyu.myguokr.model.response.PostDetail;
-import com.example.wangzhaoyu.myguokr.server.ImageServer;
+import com.example.wangzhaoyu.myguokr.core.ImageUtils;
 import com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -38,7 +37,7 @@ public class GroupPostDetailAdapter extends LoadmoreFooterViewAdapter {
         mContext = context;
         mPost = post;
         mComments = comments;
-        mDisplayImageOptions = ImageServer.getAvatarDisplayOptions(
+        mDisplayImageOptions = ImageUtils.getAvatarDisplayOptions(
                 mContext.getResources().getDimensionPixelSize(R.dimen.article_avatar_size));
     }
 

@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.FragmentUserProfileMainBinding;
 import com.example.wangzhaoyu.myguokr.model.response.User;
-import com.example.wangzhaoyu.myguokr.server.ImageServer;
+import com.example.wangzhaoyu.myguokr.core.ImageUtils;
 import com.example.wangzhaoyu.myguokr.ui.activity.UserInfoActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -33,7 +33,7 @@ public class UserInfoFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_user_profile_main, container, false);
         mBinding = DataBindingUtil.bind(rootView);
         mUser = ((UserInfoActivity) getActivity()).getUser();
-        mDisplayImageOptions = ImageServer.getAvatarDisplayOptions(
+        mDisplayImageOptions = ImageUtils.getAvatarDisplayOptions(
                 getActivity().getResources().getDimensionPixelSize(R.dimen.user_profile_avatar_size));
         mBinding.setUser(mUser);
         mBinding.setOption(mDisplayImageOptions);

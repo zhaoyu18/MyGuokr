@@ -1,4 +1,4 @@
-package com.example.wangzhaoyu.myguokr.core.net;
+package com.example.wangzhaoyu.myguokr.core;
 
 /**
  * @author wangzhaoyu

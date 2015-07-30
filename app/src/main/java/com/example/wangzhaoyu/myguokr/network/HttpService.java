@@ -3,10 +3,12 @@ package com.example.wangzhaoyu.myguokr.network;
 import com.example.wangzhaoyu.myguokr.AppController;
 import com.example.wangzhaoyu.myguokr.core.Utils;
 import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
-import com.example.wangzhaoyu.myguokr.network.api.ArticleContentService;
-import com.example.wangzhaoyu.myguokr.network.api.ArticleService;
-import com.example.wangzhaoyu.myguokr.network.api.GroupService;
-import com.example.wangzhaoyu.myguokr.network.api.UserService;
+import com.example.wangzhaoyu.myguokr.network.api.GuokrAPI;
+import com.example.wangzhaoyu.myguokr.network.api.GuokrHtmlAPI;
+import com.example.wangzhaoyu.myguokr.network.service.ArticleContentService;
+import com.example.wangzhaoyu.myguokr.network.service.ArticleService;
+import com.example.wangzhaoyu.myguokr.network.service.GroupService;
+import com.example.wangzhaoyu.myguokr.network.service.UserService;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -21,12 +23,11 @@ import retrofit.client.OkClient;
  */
 public class HttpService {
     private final ArticleService mArticleService;
-
-    private final ArticleContentService mArticleContentService;
-
     private static HttpService ourInstance = new HttpService();
     private final UserService mUserService;
     private final GroupService mGroupService;
+    private final GuokrAPI mGuokrAPI;
+    private final GuokrHtmlAPI mGuokrHtmlAPI;
 
     public static HttpService getInstance() {
         return ourInstance;
@@ -57,11 +58,7 @@ public class HttpService {
                     }
                 })
                 .build();
-        mArticleService = restAdapter.create(ArticleService.class);
-
-        mUserService = restAdapter.create(UserService.class);
-
-        mGroupService = restAdapter.create(GroupService.class);
+        mGuokrAPI = restAdapter.create(GuokrAPI.class);
 
         RestAdapter rootUrlAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -82,16 +79,16 @@ public class HttpService {
                     }
                 })
                 .build();
-        mArticleContentService = rootUrlAdapter.create(ArticleContentService.class);
+        mGuokrHtmlAPI = rootUrlAdapter.create(GuokrHtmlAPI.class);
 
+        //init service
+        mArticleService = new ArticleService(mGuokrAPI, mGuokrHtmlAPI);
+        mUserService = new UserService(mGuokrAPI);
+        mGroupService = new GroupService(mGuokrAPI);
     }
 
     public ArticleService getArticleService() {
         return mArticleService;
-    }
-
-    public ArticleContentService getArticleContentService() {
-        return mArticleContentService;
     }
 
     public UserService getUserService() {

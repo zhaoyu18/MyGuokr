@@ -1,14 +1,8 @@
 package com.example.wangzhaoyu.myguokr;
 
 import android.app.Application;
-import android.text.TextUtils;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.example.wangzhaoyu.myguokr.core.SPUtils;
-import com.example.wangzhaoyu.myguokr.core.net.NetManager;
-import com.google.gson.Gson;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -50,8 +44,5 @@ public class AppController extends Application {
                 .build();
 
         ImageLoader.getInstance().init(config);
-
-        //init net manager
-        NetManager.getInstance().init(getApplicationContext());
     }
 }

@@ -1,4 +1,4 @@
-package com.example.wangzhaoyu.myguokr.core.net;
+package com.example.wangzhaoyu.myguokr.core;
 
 import android.app.Activity;
 import android.content.Context;

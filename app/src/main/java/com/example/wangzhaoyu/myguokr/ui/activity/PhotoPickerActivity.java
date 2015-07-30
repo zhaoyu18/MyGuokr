@@ -7,11 +7,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.core.net.Network;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityPhotoPickerBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleList;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
-import com.example.wangzhaoyu.myguokr.network.api.ArticleService;
+import com.example.wangzhaoyu.myguokr.network.service.ArticleService;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -32,8 +31,6 @@ public class PhotoPickerActivity extends AppCompatActivity {
 
         ArticleService articleService = HttpService.getInstance().getArticleService();
         articleService.getArticleList(
-                Network.Parameters.RetrieveType.BY_SUBJECT,
-                20,
                 0,
                 new Callback<ArticleList>() {
                     @Override
