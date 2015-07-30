@@ -52,6 +52,10 @@
         <activity
             android:name=".ui.activity.PhotoPickerActivity"
             android:screenOrientation="portrait"/>
+
+        <meta-data
+            android:name="com.bumptech.glide.integration.okhttp.OkHttpGlideModule"
+            android:value="GlideModule" />
     </application>
 
 </manifest>
