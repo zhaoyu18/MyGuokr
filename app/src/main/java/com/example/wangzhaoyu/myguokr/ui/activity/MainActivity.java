@@ -20,15 +20,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.model.response.User;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.network.service.UserService;
-import com.example.wangzhaoyu.myguokr.core.ImageUtils;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ArticlesListFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.GroupHotPostFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.SettingsFragment;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.example.wangzhaoyu.myguokr.ui.widget.GlideCircleTransform;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -189,11 +189,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void success(User user, Response response) {
                         //set up navigation drawer
-                        ImageLoader.getInstance().displayImage(
-                                user.getResult().getAvatar().getLarge(),
-                                mNavAvatarImage,
-                                ImageUtils.getAvatarDisplayOptions(
-                                        getResources().getDimensionPixelSize(R.dimen.nav_avatar_size)));
+                        Glide.with(MainActivity.this)
+                                .load(user.getResult().getAvatar().getLarge())
+                                .asBitmap()
+                                .transform(new GlideCircleTransform(MainActivity.this))
+                                .animate(android.R.anim.fade_in)
+                                .into(mNavAvatarImage);
+
                         mNavUserName.setText(user.getResult().getNickname());
                     }
 
