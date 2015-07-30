@@ -11,8 +11,8 @@
             type="com.example.wangzhaoyu.myguokr.model.response.PostDetail"/>
 
         <variable
-            name="option"
-            type="com.nostra13.universalimageloader.core.DisplayImageOptions"/>
+            name="context"
+            type="android.content.Context"/>
     </data>
 
     <LinearLayout
@@ -41,8 +41,8 @@
                 android:layout_width="@dimen/article_avatar_size"
                 android:layout_height="@dimen/article_avatar_size"
                 android:layout_gravity="center_vertical"
-                app:imageOption="@{option}"
-                app:imageUrl="@{post.result.author.avatar.large}"/>
+                app:context="@{context}"
+                app:avatarUrl="@{post.result.author.avatar.large}"/>
 
             <TextView
                 android:id="@+id/post_author_name"

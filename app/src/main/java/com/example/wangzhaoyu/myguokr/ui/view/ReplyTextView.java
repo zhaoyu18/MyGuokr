@@ -1,9 +1,7 @@
 package com.example.wangzhaoyu.myguokr.ui.view;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,7 +13,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Selection;
@@ -30,18 +27,11 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.wangzhaoyu.myguokr.AppController;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.DisplayUtil;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -209,9 +199,12 @@ public class ReplyTextView extends TextView {
             Drawable drawable = null;
             try {
                 if (source.startsWith("http")) {
-                    Bitmap bitmap = ImageLoader.getInstance().loadImageSync(
-                            source,
-                            new ImageSize((int)mMaxImageWidth, (int)mMaxImageWidth));
+                    Bitmap bitmap = Glide.with(getContext())
+                            .load(source)
+                            .asBitmap()
+                            .centerCrop()
+                            .into((int) mMaxImageWidth, (int) mMaxImageWidth)
+                            .get();
                     if (bitmap != null) {
                         String reg = ".+/w/(\\d+)/h/(\\d+)";
                         Matcher matcher = Pattern.compile(reg).matcher(source);

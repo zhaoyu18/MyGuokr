@@ -9,8 +9,8 @@
             type="com.example.wangzhaoyu.myguokr.model.response.ArticleReply"/>
 
         <variable
-            name="option"
-            type="com.nostra13.universalimageloader.core.DisplayImageOptions"/>
+            name="context"
+            type="android.content.Context"/>
 
         <variable
             name="floor"
@@ -33,8 +33,8 @@
                 android:id="@+id/reply_item_avatar"
                 android:layout_width="@dimen/article_avatar_size"
                 android:layout_height="@dimen/article_avatar_size"
-                app:imageOption="@{option}"
-                app:imageUrl="@{comment.author.avatar.large}"/>
+                app:context="@{context}"
+                app:avatarUrl="@{comment.author.avatar.large}"/>
 
             <TextView
                 android:id="@+id/reply_item_nickname"

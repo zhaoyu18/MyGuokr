@@ -9,8 +9,8 @@
             type="com.example.wangzhaoyu.myguokr.model.response.User"/>
 
         <variable
-            name="option"
-            type="com.nostra13.universalimageloader.core.DisplayImageOptions"/>
+            name="context"
+            type="android.content.Context"/>
     </data>
 
     <ScrollView
@@ -40,8 +40,8 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        app:imageOption="@{option}"
-                        app:imageUrl="@{user.result.avatar.large}"
+                        app:context="@{context}"
+                        app:avatarUrl="@{user.result.avatar.large}"
                         android:layout_width="@dimen/user_profile_avatar_size"
                         android:layout_height="@dimen/user_profile_avatar_size"
                         android:layout_marginEnd="16dp"

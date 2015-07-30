@@ -12,15 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.example.wangzhaoyu.myguokr.BR;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ViewArticleCommentItemBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleReply;
-import com.example.wangzhaoyu.myguokr.core.ImageUtils;
 import com.example.wangzhaoyu.myguokr.ui.activity.UserInfoActivity;
 import com.example.wangzhaoyu.myguokr.ui.view.ReplyTextView;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.example.wangzhaoyu.myguokr.ui.widget.GlideCircleTransform;
 
 import java.util.ArrayList;
 
@@ -29,7 +28,6 @@ import java.util.ArrayList;
  */
 public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter implements View.OnClickListener {
     private static final String TAG = ArticleCommentAdapter.class.getSimpleName();
-    private DisplayImageOptions mDisplayImageOptions;
     private Context mContext;
     private ArrayList<ArticleReply> mComments;
     private ReplyCallback mCallback;
@@ -37,8 +35,6 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter implements 
     public ArticleCommentAdapter(Context context, ArrayList<ArticleReply> comments, ReplyCallback callback) {
         mContext = context;
         mComments = comments;
-        mDisplayImageOptions = ImageUtils.getAvatarDisplayOptions(
-                mContext.getResources().getDimensionPixelSize(R.dimen.article_avatar_size));
         mCallback = callback;
     }
 
@@ -60,7 +56,7 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter implements 
         binding.replyItemAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String ukey = ((ArticleReply) v.getTag()).getAuthor().getUkey();
+                String ukey = ((ArticleReply) v.getTag(R.id.reply_item_avatar)).getAuthor().getUkey();
                 Intent intent = new Intent(mContext, UserInfoActivity.class);
                 intent.putExtra(UserInfoActivity.ARG_UKEY, ukey);
                 mContext.startActivity(intent);
@@ -77,10 +73,10 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter implements 
         ArticleReply comment = mComments.get(position);
         ReplyViewHolder viewHolder = (ReplyViewHolder) contentViewHolder;
         viewHolder.getBinding().setVariable(BR.comment, comment);
-        viewHolder.getBinding().setVariable(BR.option, mDisplayImageOptions);
         viewHolder.getBinding().setVariable(BR.floor, position + 1);
+        viewHolder.getBinding().setVariable(BR.context, mContext);
         viewHolder.getBinding().executePendingBindings();
-        viewHolder.getBinding().replyItemAvatar.setTag(comment);
+        viewHolder.getBinding().replyItemAvatar.setTag(R.id.reply_item_avatar, comment);
         viewHolder.getBinding().getRoot().setTag(position);
     }
 
@@ -122,16 +118,6 @@ public class ArticleCommentAdapter extends LoadmoreFooterViewAdapter implements 
         public void setBinding(ViewArticleCommentItemBinding binding) {
             this.mBinding = binding;
         }
-    }
-
-    @BindingAdapter({"bind:imageUrl", "bind:imageOption"})
-    public static void loadAvatar(ImageView view, String url, DisplayImageOptions options) {
-        ImageLoader.getInstance().displayImage(url, view, options);
-    }
-
-    @BindingAdapter({"bind:html"})
-    public static void loadHtml(ReplyTextView textView, String html) {
-        textView.loadHtml(html);
     }
 
     public interface ReplyCallback {

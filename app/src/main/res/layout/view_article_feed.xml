@@ -10,8 +10,8 @@
             type="com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot"/>
 
         <variable
-            name="option"
-            type="com.nostra13.universalimageloader.core.DisplayImageOptions"/>
+            name="context"
+            type="android.content.Context"/>
     </data>
 
     <android.support.v7.widget.CardView
@@ -48,8 +48,8 @@
                 android:layout_margin="16dp"
                 android:background="@color/primary_material_light"
                 android:scaleType="centerCrop"
-                app:imageOption="@{option}"
-                app:imageUrl="@{snapshot.image_info.url}"/>
+                app:imageUrl="@{snapshot.image_info.url}"
+                app:context="@{context}"/>
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

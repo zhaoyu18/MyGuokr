@@ -1,5 +1,6 @@
 package com.example.wangzhaoyu.myguokr.ui.fragment;
 
+import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -10,13 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.FragmentUserProfileMainBinding;
 import com.example.wangzhaoyu.myguokr.model.response.User;
-import com.example.wangzhaoyu.myguokr.core.ImageUtils;
 import com.example.wangzhaoyu.myguokr.ui.activity.UserInfoActivity;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.example.wangzhaoyu.myguokr.ui.widget.GlideCircleTransform;
 
 /**
  * @author wangzhaoyu
@@ -25,7 +25,6 @@ public class UserInfoFragment extends Fragment {
     private static final String TAG = UserInfoFragment.class.getSimpleName();
     private FragmentUserProfileMainBinding mBinding;
     private User mUser;
-    private DisplayImageOptions mDisplayImageOptions;
 
     @Nullable
     @Override
@@ -33,15 +32,8 @@ public class UserInfoFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_user_profile_main, container, false);
         mBinding = DataBindingUtil.bind(rootView);
         mUser = ((UserInfoActivity) getActivity()).getUser();
-        mDisplayImageOptions = ImageUtils.getAvatarDisplayOptions(
-                getActivity().getResources().getDimensionPixelSize(R.dimen.user_profile_avatar_size));
         mBinding.setUser(mUser);
-        mBinding.setOption(mDisplayImageOptions);
+        mBinding.setContext(getActivity());
         return rootView;
-    }
-
-    @BindingAdapter({"bind:imageUrl", "bind:imageOption"})
-    public static void loadAvatar(ImageView view, String url, DisplayImageOptions options) {
-        ImageLoader.getInstance().displayImage(url, view, options);
     }
 }

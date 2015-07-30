@@ -1,10 +1,15 @@
 package com.example.wangzhaoyu.myguokr.core;
 
+import android.content.Context;
+import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.example.wangzhaoyu.myguokr.ui.widget.GlideCircleTransform;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
@@ -56,5 +61,23 @@ public class ImageUtils {
         canvas.drawCircle(r, r, r, paint);
         squaredBitmap.recycle();
         return bitmap;
+    }
+
+    @BindingAdapter({"bind:avatarUrl", "bind:context"})
+    public static void loadAvatar(ImageView view, String url, Context context) {
+        Glide.with(context)
+                .load(url)
+                .asBitmap()
+                .transform(new GlideCircleTransform(context))
+                .into(view);
+    }
+
+    @BindingAdapter({"bind:imageUrl", "bind:context"})
+    public static void loadImage(ImageView view, String url, Context context) {
+        Glide.with(context)
+                .load(url)
+                .asBitmap()
+                .animate(android.R.anim.fade_in)
+                .into(view);
     }
 }

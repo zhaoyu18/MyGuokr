@@ -16,17 +16,15 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.webkit.WebView;
 
+import com.bumptech.glide.Glide;
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.core.Utils;
 import com.example.wangzhaoyu.myguokr.core.NetUtils;
+import com.example.wangzhaoyu.myguokr.core.Utils;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityArticleBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
-import com.example.wangzhaoyu.myguokr.core.ImageUtils;
 import com.example.wangzhaoyu.myguokr.ui.view.GuokrWebView;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.example.wangzhaoyu.myguokr.ui.widget.GlideCircleTransform;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -53,11 +51,6 @@ public class ArticleActivity extends AppCompatActivity {
     private ArticleSnapShot mSnapShot;
     private ActivityArticleBinding mBinding;
 
-    private DisplayImageOptions mDisImageOptions = new DisplayImageOptions.Builder()
-            .displayer(new FadeInBitmapDisplayer(300))
-            .cacheOnDisk(true)
-            .build();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,10 +69,9 @@ public class ArticleActivity extends AppCompatActivity {
         mBinding.collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
 
         //init tool bar image
-        ImageLoader.getInstance().displayImage(
-                mSnapShot.getImage_info().getUrl(),
-                mBinding.articleImage,
-                mDisImageOptions);
+        Glide.with(this)
+                .load(mSnapShot.getImage_info().getUrl())
+                .into(mBinding.articleImage);
 
         //on scroll
         mBinding.articleScollView.getViewTreeObserver().addOnScrollChangedListener(
@@ -100,11 +92,12 @@ public class ArticleActivity extends AppCompatActivity {
                 });
 
         //init author
-        ImageLoader.getInstance().displayImage(
-                mSnapShot.getAuthor().getAvatar().getNormal(),
-                mBinding.articleAuthorAvatar,
-                ImageUtils.getAvatarDisplayOptions(
-                        getResources().getDimensionPixelSize(R.dimen.article_avatar_size)));
+        Glide.with(this)
+                .load(mSnapShot.getAuthor().getAvatar().getLarge())
+                .transform(new GlideCircleTransform(this))
+                .animate(android.R.anim.fade_in)
+                .into(mBinding.articleAuthorAvatar);
+
         mBinding.articleAuthorName.setText(mSnapShot.getAuthor().getNickname());
 
         //init web content

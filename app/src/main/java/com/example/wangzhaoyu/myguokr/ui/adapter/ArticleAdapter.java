@@ -11,15 +11,14 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.wangzhaoyu.myguokr.BR;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.Utils;
 import com.example.wangzhaoyu.myguokr.databinding.ViewArticleFeedBinding;
-import com.example.wangzhaoyu.myguokr.databinding.ViewListFooterBinding;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.ui.activity.ArticleActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public class ArticleAdapter extends LoadmoreFooterViewAdapter {
         ArticleSnapShot snapShot = mSnapShots.get(position);
         SnapShotViewHolder viewHolder = (SnapShotViewHolder) contentViewHolder;
         viewHolder.getBinding().setVariable(BR.snapshot, snapShot);
-        viewHolder.getBinding().setVariable(BR.option, mDisImageOptions);
+        viewHolder.getBinding().setVariable(BR.context, mContext);
         viewHolder.getBinding().executePendingBindings();
         viewHolder.getBinding().cardView.setTag(snapShot);
     }
@@ -106,11 +105,6 @@ public class ArticleAdapter extends LoadmoreFooterViewAdapter {
         public void setBinding(ViewArticleFeedBinding binding) {
             this.mBinding = binding;
         }
-    }
-
-    @BindingAdapter({"bind:imageUrl", "bind:imageOption"})
-    public static void loadImage(ImageView view, String url, DisplayImageOptions options) {
-        ImageLoader.getInstance().displayImage(url, view, options);
     }
 
     private void runEnterAnimation(View view, int position) {
