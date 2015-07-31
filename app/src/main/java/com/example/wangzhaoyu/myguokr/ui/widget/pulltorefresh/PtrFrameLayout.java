@@ -583,6 +583,10 @@ public class PtrFrameLayout extends ViewGroup {
      * The UI will perform complete at once or after a delay, depends on the time elapsed is greater then {@link #mLoadingMinTime} or not.
      */
     final public void refreshComplete() {
+        if (!isRefreshing()) {
+            return;
+        }
+
         if (DEBUG) {
             PtrCLog.i(LOG_TAG, "refreshComplete");
         }

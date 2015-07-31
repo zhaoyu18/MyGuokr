@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleList;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -38,9 +40,6 @@ public class ArticlesListFragment extends Fragment {
 
     @InjectView(R.id.rv_feed)
     RecyclerView mFeedRecycler;
-
-    @InjectView(R.id.progress_wheel)
-    ProgressWheel mProgressWheel;
 
     @InjectView(R.id.refeshlayout)
     PtrFrameLayout mRefreshLayout;
@@ -114,7 +113,6 @@ public class ArticlesListFragment extends Fragment {
             @Override
             public void run() {
                 refresh();
-                mProgressWheel.spin();
             }
         }, 500);
 
@@ -136,24 +134,7 @@ public class ArticlesListFragment extends Fragment {
      * 刷新列表
      */
     private void refresh() {
-        mArticleService.getArticleList(
-                0,
-                new Callback<ArticleList>() {
-                    @Override
-                    public void success(ArticleList list, Response response) {
-                        mArticleList.clear();
-                        mArticleList.addAll(list.getResult());
-                        mAdapter.notifyDataSetChanged();
-                        mRefreshLayout.refreshComplete();
-                        mProgressWheel.stopSpinning();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        mRefreshLayout.refreshComplete();
-                        mProgressWheel.stopSpinning();
-                    }
-                });
+        mArticleService.getArticleList(0);
     }
 
     /**
@@ -162,30 +143,44 @@ public class ArticlesListFragment extends Fragment {
      */
     private void loadMore() {
         mAdapter.loadStart();
-
-        mArticleService.getArticleList(
-                mArticleList.size(),
-                new Callback<ArticleList>() {
-                    @Override
-                    public void success(ArticleList list, Response response) {
-                        int beforeSize = mArticleList.size();
-                        mArticleList.addAll(list.getResult());
-                        mAdapter.notifyContentItemRangeInserted(beforeSize, list.getResult().size());
-                        mRefreshLayout.refreshComplete();
-                        mProgressWheel.stopSpinning();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        mRefreshLayout.refreshComplete();
-                        mProgressWheel.stopSpinning();
-                    }
-                });
+        mArticleService.getArticleList(mArticleList.size());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.reset(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public void onEvent(ArticleList list) {
+        if (list.getOffset() == 0) {
+            mArticleList.clear();
+            mArticleList.addAll(list.getResult());
+            mAdapter.notifyDataSetChanged();
+            mRefreshLayout.refreshComplete();
+
+        } else {
+            int beforeSize = mArticleList.size();
+            mArticleList.addAll(list.getResult());
+            mAdapter.notifyContentItemRangeInserted(beforeSize, list.getResult().size());
+            mAdapter.loadComplete();
+        }
+    }
+
+    public void onEvent(RetrofitError error) {
+        mAdapter.loadComplete();
+        mRefreshLayout.refreshComplete();
     }
 }

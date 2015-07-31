@@ -8,7 +8,9 @@ import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
 import com.example.wangzhaoyu.myguokr.network.api.GuokrAPI;
 import com.example.wangzhaoyu.myguokr.network.api.GuokrHtmlAPI;
 
+import de.greenrobot.event.EventBus;
 import retrofit.Callback;
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
@@ -24,12 +26,22 @@ public class ArticleService {
         mGuokrAPI = guokrAPI;
     }
 
-    public void getArticleList(int offset, Callback<ArticleList> callback) {
+    public void getArticleList(int offset) {
         mGuokrAPI.getArticleList(
                 ApiConfig.Query.RetrieveType.BY_SUBJECT,
                 LIMIT,
                 offset,
-                callback
+                new Callback<ArticleList>() {
+                    @Override
+                    public void success(ArticleList list, Response response) {
+                        EventBus.getDefault().post(list);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        EventBus.getDefault().post(error);
+                    }
+                }
         );
     }
 

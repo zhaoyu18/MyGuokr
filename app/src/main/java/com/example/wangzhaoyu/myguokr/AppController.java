@@ -6,6 +6,7 @@ import com.example.wangzhaoyu.myguokr.core.SPUtils;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.leakcanary.LeakCanary;
 
 /**
  * @author wangzhaoyu
@@ -44,5 +45,8 @@ public class AppController extends Application {
                 .build();
 
         ImageLoader.getInstance().init(config);
+
+        //init leakcanary
+        LeakCanary.install(this);
     }
 }
