@@ -24,6 +24,7 @@ import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.StoreHouseH
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -105,42 +106,42 @@ public class GroupHotPostFragment extends Fragment {
 
     private void refresh() {
         //request data
-        mGroupService.getGroupPostList(
-                0,
-                new Callback<GroupPosts>() {
-                    @Override
-                    public void success(GroupPosts posts, Response response) {
-                        mPostSnapShots.clear();
-                        mPostSnapShots.addAll(posts.getResult());
-                        mAdapter.notifyDataSetChanged();
-                        mBinding.refreshLayout.refreshComplete();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        mBinding.refreshLayout.refreshComplete();
-                    }
-                });
+        mGroupService.getGroupPostList(0);
     }
 
     private void loadMore() {
         mAdapter.loadStart();
+        mGroupService.getGroupPostList(mPostSnapShots.size());
+    }
 
-        mGroupService.getGroupPostList(
-                mPostSnapShots.size(),
-                new Callback<GroupPosts>() {
-                    @Override
-                    public void success(GroupPosts posts, Response response) {
-                        int beforeSize = mPostSnapShots.size();
-                        mPostSnapShots.addAll(posts.getResult());
-                        mAdapter.notifyContentItemRangeInserted(beforeSize, posts.getResult().size());
-                        mAdapter.loadComplete();
-                    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        mAdapter.loadComplete();
-                    }
-                });
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public void onEvent(GroupPosts posts) {
+        if (posts.getOffset() == 0) {
+            mPostSnapShots.clear();
+            mPostSnapShots.addAll(posts.getResult());
+            mAdapter.notifyDataSetChanged();
+            mBinding.refreshLayout.refreshComplete();
+        } else {
+            int beforeSize = mPostSnapShots.size();
+            mPostSnapShots.addAll(posts.getResult());
+            mAdapter.notifyContentItemRangeInserted(beforeSize, posts.getResult().size());
+            mAdapter.loadComplete();
+        }
+    }
+
+    public void onEvent(RetrofitError error) {
+        mAdapter.loadComplete();
+        mBinding.refreshLayout.refreshComplete();
     }
 }

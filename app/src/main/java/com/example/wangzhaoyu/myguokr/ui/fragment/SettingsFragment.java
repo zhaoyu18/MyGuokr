@@ -15,9 +15,8 @@ import com.example.wangzhaoyu.myguokr.databinding.FragmentSetttingsBinding;
 import com.example.wangzhaoyu.myguokr.model.response.NotificationCount;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
 
-import retrofit.Callback;
+import de.greenrobot.event.EventBus;
 import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * @author wangzhaoyu
@@ -57,21 +56,31 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                         })
                         .show();
 
-                HttpService.getInstance().getUserService().getNotifiCount(new Callback<NotificationCount>() {
-                    @Override
-                    public void success(NotificationCount count, Response response) {
-                        Toast.makeText(getActivity(), count.getResult().getN() + "", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-
-                    }
-                });
+                HttpService.getInstance().getUserService().getNotifiCount();
                 break;
 
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public void onEvent(NotificationCount count) {
+        Toast.makeText(getActivity(), count.getResult().getN() + "", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onEvent(RetrofitError error) {
+
     }
 }

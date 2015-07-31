@@ -45,29 +45,59 @@ public class ArticleService {
         );
     }
 
-    public void getArticleCommentList(int articleId, int offset, Callback<ArticleReplies> callback) {
+    public void getArticleCommentList(int articleId, int offset) {
         mGuokrAPI.getArticleCommentList(
                 ApiConfig.Query.RetrieveType.BY_ARTICLE,
                 articleId,
                 offset,
-                callback
+                new Callback<ArticleReplies>() {
+                    @Override
+                    public void success(ArticleReplies replies, Response response) {
+                        EventBus.getDefault().post(replies);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        EventBus.getDefault().post(error);
+                    }
+                }
         );
     }
 
-    public void postArticleComment(int articleId, String content, Callback<ArticleSendComment> callback) {
+    public void postArticleComment(int articleId, String content) {
         mGuokrAPI.postArticleComment(
                 articleId,
                 content,
                 HttpService.getInstance().getUserService().getAccessToken(),
                 "", //body required..
-                callback
+                new Callback<ArticleSendComment>() {
+                    @Override
+                    public void success(ArticleSendComment comment, Response response) {
+                        EventBus.getDefault().post(comment);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        EventBus.getDefault().post(error);
+                    }
+                }
         );
     }
 
-    public void getArticleContent(int articleId, Callback<Response> callback) {
+    public void getArticleContent(int articleId) {
         mGuokrHtmlAPI.getArticleContent(
                 articleId,
-                callback
+                new Callback<Response>() {
+                    @Override
+                    public void success(Response response, Response response2) {
+                        EventBus.getDefault().post(response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                }
         );
     }
 }

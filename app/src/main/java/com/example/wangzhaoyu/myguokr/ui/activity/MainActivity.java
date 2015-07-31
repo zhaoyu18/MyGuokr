@@ -33,6 +33,7 @@ import com.example.wangzhaoyu.myguokr.ui.widget.GlideCircleTransform;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -110,8 +111,7 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        updateUserDisplay();
-
+        mUserService.getUserInfo(mUserService.getUserUkey());
         setUpMainFragment();
     }
 
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == START_LOGIN_ACTIVITY_CODE && resultCode == RESULT_OK) {
             Log.i(TAG, "access token: " + mUserService.getAccessToken());
             Log.i(TAG, "ukey: " + mUserService.getUserUkey());
-            updateUserDisplay();
+            mUserService.getUserInfo(mUserService.getUserUkey());
         }
     }
 
@@ -182,28 +182,30 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    private void updateUserDisplay() {
-        mUserService.getUserInfo(
-                mUserService.getUserUkey(),
-                new Callback<User>() {
-                    @Override
-                    public void success(User user, Response response) {
-                        //set up navigation drawer
-                        Glide.with(MainActivity.this)
-                                .load(user.getResult().getAvatar().getLarge())
-                                .asBitmap()
-                                .transform(new GlideCircleTransform(MainActivity.this))
-                                .animate(android.R.anim.fade_in)
-                                .into(mNavAvatarImage);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
-                        mNavUserName.setText(user.getResult().getNickname());
-                    }
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 
-                    @Override
-                    public void failure(RetrofitError error) {
+    public void onEvent(User user) {
+        //set up navigation drawer
+        Glide.with(MainActivity.this)
+                .load(user.getResult().getAvatar().getLarge())
+                .asBitmap()
+                .transform(new GlideCircleTransform(MainActivity.this))
+                .animate(android.R.anim.fade_in)
+                .into(mNavAvatarImage);
+        mNavUserName.setText(user.getResult().getNickname());
+    }
 
-                    }
-                }
-        );
+    public void onEvent(RetrofitError error) {
+
     }
 }

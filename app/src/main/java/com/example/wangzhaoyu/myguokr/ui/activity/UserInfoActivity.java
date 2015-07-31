@@ -15,6 +15,7 @@ import com.example.wangzhaoyu.myguokr.model.response.User;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.ui.fragment.UserInfoFragment;
 
+import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -44,18 +45,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
         mUkey = getIntent().getStringExtra(ARG_UKEY);
 
-        HttpService.getInstance().getUserService().getUserInfo(mUkey, new Callback<User>() {
-            @Override
-            public void success(User user, Response response) {
-                mUser = user;
-                addMainFragment(new UserInfoFragment());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
+        HttpService.getInstance().getUserService().getUserInfo(mUkey);
     }
 
     @Override
@@ -78,5 +68,26 @@ public class UserInfoActivity extends AppCompatActivity {
         fragmentTransaction
                 .add(R.id.fragment_container, fragment)
                 .commit();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public void onEvent(User user) {
+        mUser = user;
+        addMainFragment(new UserInfoFragment());
+    }
+
+    public void onEvent(RetrofitError error) {
+
     }
 }

@@ -7,9 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.core.KeyBoardUtils;
@@ -29,6 +31,7 @@ import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.StoreHouseH
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -145,20 +148,7 @@ public class ArticleCommentActivity extends AppCompatActivity
                 content = "[blockquote]" + "引用@" + mReply.getAuthor().getNickname() + " 的话：" + replyContent + "[/blockquote]"
                         + "\n" + content;
             }
-            mArticleService.postArticleComment(mSnapShot.getId(),
-                    content,
-                    new Callback<ArticleSendComment>() {
-                        @Override
-                        public void success(ArticleSendComment comment, Response response) {
-                            mBinding.editComment.setText(null);
-                            mBinding.btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-
-                        }
-                    });
+            mArticleService.postArticleComment(mSnapShot.getId(), content);
         }
     }
 
@@ -176,47 +166,13 @@ public class ArticleCommentActivity extends AppCompatActivity
     }
 
     private void refresh() {
-        mArticleService.getArticleCommentList(
-                mSnapShot.getId(),
-                0,
-                new Callback<ArticleReplies>() {
-                    @Override
-                    public void success(ArticleReplies replies, Response response) {
-                        mReplies.clear();
-                        mReplies.addAll(replies.getResult());
-                        mAdapter.notifyDataSetChanged();
-                        mBinding.refeshLayout.refreshComplete();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        mBinding.refeshLayout.refreshComplete();
-                    }
-                });
+        mArticleService.getArticleCommentList(mSnapShot.getId(), 0);
 
     }
 
     private void loadMore() {
         mAdapter.loadStart();
-        mArticleService.getArticleCommentList(
-                mSnapShot.getId(),
-                mReplies.size(),
-                new Callback<ArticleReplies>() {
-                    @Override
-                    public void success(ArticleReplies replies, Response response) {
-                        int beforeSize = mReplies.size();
-                        mReplies.addAll(replies.getResult());
-                        mAdapter.notifyContentItemRangeInserted(beforeSize, replies.getResult().size());
-                        mBinding.refeshLayout.refreshComplete();
-                        mAdapter.loadComplete();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        mBinding.refeshLayout.refreshComplete();
-                        mAdapter.loadComplete();
-                    }
-                });
+        mArticleService.getArticleCommentList(mSnapShot.getId(), mReplies.size());
 
     }
 
@@ -227,5 +183,45 @@ public class ArticleCommentActivity extends AppCompatActivity
         }
 
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public void onEvent(ArticleReplies replies) {
+        if (replies.getOffset() == 0) {
+            mReplies.clear();
+            mReplies.addAll(replies.getResult());
+            mAdapter.notifyDataSetChanged();
+            mBinding.refeshLayout.refreshComplete();
+        } else {
+            int beforeSize = mReplies.size();
+            mReplies.addAll(replies.getResult());
+            mAdapter.notifyContentItemRangeInserted(beforeSize, replies.getResult().size());
+            mAdapter.loadComplete();
+        }
+    }
+
+    public void onEvent(RetrofitError error) {
+        if (error.getSuccessType() == ArticleReplies.class) {
+            mAdapter.loadComplete();
+            mBinding.refeshLayout.refreshComplete();
+        } else if (error.getSuccessType() == ArticleSendComment.class) {
+
+        }
+    }
+
+    public void onEvent(ArticleSendComment comment) {
+        mBinding.editComment.setText(null);
+        mBinding.btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
     }
 }

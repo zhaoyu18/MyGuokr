@@ -29,8 +29,7 @@ import com.example.wangzhaoyu.myguokr.ui.widget.GlideCircleTransform;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
+import de.greenrobot.event.EventBus;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
@@ -101,27 +100,7 @@ public class ArticleActivity extends AppCompatActivity {
         mBinding.articleAuthorName.setText(mSnapShot.getAuthor().getNickname());
 
         //init web content
-        HttpService.getInstance().getArticleService().getArticleContent(
-                mSnapShot.getId(),
-                new Callback<Response>() {
-                    @Override
-                    public void success(Response response, Response response2) {
-                        Document doc = Jsoup.parse(new String(((TypedByteArray) response.getBody()).getBytes()));
-                        String articleContent = doc.getElementById("articleContent").outerHtml();
-                        String copyright = doc.getElementsByClass("copyright").outerHtml();
-                        String content = articleContent + copyright;
-                        String html = NetUtils.getArticleHtml(content);
-                        mBinding.articleWeb.loadDataWithBaseURL("http://www.guokr.com/", html, "text/html",
-                                "charset=UTF-8", null);
-                        startWebViewAnimation();
-                        mBinding.progressWheel.stopSpinning();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-
-                    }
-                });
+        HttpService.getInstance().getArticleService().getArticleContent(mSnapShot.getId());
 
     }
 
@@ -224,5 +203,28 @@ public class ArticleActivity extends AppCompatActivity {
             intent.putExtra(UserInfoActivity.ARG_UKEY, ukey);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEvent(Response response) {
+        Document doc = Jsoup.parse(new String(((TypedByteArray) response.getBody()).getBytes()));
+        String articleContent = doc.getElementById("articleContent").outerHtml();
+        String copyright = doc.getElementsByClass("copyright").outerHtml();
+        String content = articleContent + copyright;
+        String html = NetUtils.getArticleHtml(content);
+        mBinding.articleWeb.loadDataWithBaseURL("http://www.guokr.com/", html, "text/html",
+                "charset=UTF-8", null);
+        startWebViewAnimation();
     }
 }

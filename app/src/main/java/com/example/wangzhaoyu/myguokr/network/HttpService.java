@@ -5,7 +5,6 @@ import com.example.wangzhaoyu.myguokr.core.Utils;
 import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
 import com.example.wangzhaoyu.myguokr.network.api.GuokrAPI;
 import com.example.wangzhaoyu.myguokr.network.api.GuokrHtmlAPI;
-import com.example.wangzhaoyu.myguokr.network.service.ArticleContentService;
 import com.example.wangzhaoyu.myguokr.network.service.ArticleService;
 import com.example.wangzhaoyu.myguokr.network.service.GroupService;
 import com.example.wangzhaoyu.myguokr.network.service.UserService;
@@ -23,11 +22,11 @@ import retrofit.client.OkClient;
  */
 public class HttpService {
     private final ArticleService mArticleService;
-    private static HttpService ourInstance = new HttpService();
     private final UserService mUserService;
     private final GroupService mGroupService;
     private final GuokrAPI mGuokrAPI;
     private final GuokrHtmlAPI mGuokrHtmlAPI;
+    private static HttpService ourInstance = new HttpService();
 
     public static HttpService getInstance() {
         return ourInstance;

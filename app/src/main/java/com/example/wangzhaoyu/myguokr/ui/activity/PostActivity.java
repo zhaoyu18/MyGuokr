@@ -15,12 +15,12 @@ import com.example.wangzhaoyu.myguokr.model.response.GroupPostComment;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPostComments;
 import com.example.wangzhaoyu.myguokr.model.response.PostDetail;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
-import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
 import com.example.wangzhaoyu.myguokr.network.service.GroupService;
 import com.example.wangzhaoyu.myguokr.ui.adapter.GroupPostDetailAdapter;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -39,6 +39,7 @@ public class PostActivity extends AppCompatActivity {
     private PostDetail mPostDetail;
     private boolean mIsBottombarShow = true;
     private GroupService mGroupService;
+    private int mPostId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,42 +90,8 @@ public class PostActivity extends AppCompatActivity {
         });
 
         //request data
-        final int postId = getIntent().getIntExtra(POST_ID_KEY, 0);
-        mGroupService.getGroupPost(
-                postId,
-                new Callback<PostDetail>() {
-                    @Override
-                    public void success(PostDetail detail, Response response) {
-                        mPostDetail = detail;
-                        mAdapter.setPost(detail);
-                        mAdapter.notifyHeaderItemInserted(0);
-                        //load comments after post detail
-                        mGroupService.getGroupPostCommentList(
-                                0,
-                                postId,
-                                new Callback<GroupPostComments>() {
-                                    @Override
-                                    public void success(GroupPostComments comments, Response response) {
-                                        mComments.clear();
-                                        mComments.addAll(comments.getResult());
-                                        mAdapter.notifyContentItemRangeInserted(0, comments.getResult().size());
-                                    }
-
-                                    @Override
-                                    public void failure(RetrofitError error) {
-
-                                    }
-                                }
-
-                        );
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-
-                    }
-                });
-
+        mPostId = getIntent().getIntExtra(POST_ID_KEY, 0);
+        mGroupService.getGroupPost(mPostId);
     }
 
     @Override
@@ -139,25 +106,7 @@ public class PostActivity extends AppCompatActivity {
 
     private void loadMore() {
         mAdapter.loadStart();
-
-        mGroupService.getGroupPostCommentList(
-                mComments.size(),
-                mPostDetail.getResult().getId(),
-                new Callback<GroupPostComments>() {
-                    @Override
-                    public void success(GroupPostComments comments, Response response) {
-                        int beforeSize = mComments.size();
-                        mComments.addAll(comments.getResult());
-                        mAdapter.notifyContentItemRangeInserted(beforeSize, comments.getResult().size());
-                        mAdapter.loadComplete();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        mAdapter.loadComplete();
-                    }
-                }
-        );
+        mGroupService.getGroupPostCommentList(mComments.size(), mPostId);
     }
 
     public void onLikeBtnClicked(View view) {
@@ -185,5 +134,41 @@ public class PostActivity extends AppCompatActivity {
                 .translationY(destPos)
                 .setDuration(ANIM_DURATION_BOTTOMBAR)
                 .start();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public void onEvent(PostDetail post) {
+        mPostDetail = post;
+        mAdapter.setPost(post);
+        mAdapter.notifyHeaderItemInserted(0);
+        mGroupService.getGroupPostCommentList(0, mPostId);
+    }
+
+    public void onEvent(GroupPostComments comments) {
+        if (comments.getOffset() == 0) {
+            mComments.clear();
+            mComments.addAll(comments.getResult());
+            mAdapter.notifyContentItemRangeInserted(0, comments.getResult().size());
+        } else {
+            int beforeSize = mComments.size();
+            mComments.addAll(comments.getResult());
+            mAdapter.notifyContentItemRangeInserted(beforeSize, comments.getResult().size());
+            mAdapter.loadComplete();
+        }
+    }
+
+    public void onEvent(RetrofitError error) {
+        mAdapter.loadComplete();
     }
 }
