@@ -1,15 +1,20 @@
 package com.example.wangzhaoyu.myguokr.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 import com.example.wangzhaoyu.myguokr.R;
+import com.example.wangzhaoyu.myguokr.core.Utils;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityPostDetailBinding;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPostComment;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPostComments;
@@ -60,7 +65,7 @@ public class PostActivity extends AppCompatActivity {
         //init recycler view
         mComments = new ArrayList<>();
         mAdapter = new GroupPostDetailAdapter(this, null, mComments);
-        mBinding.postDetailRecycler.setHasFixedSize(true);
+//        mBinding.postDetailRecycler.setHasFixedSize(true);
         mBinding.postDetailRecycler.setLayoutManager(new LinearLayoutManager(this));
         mBinding.postDetailRecycler.setAdapter(mAdapter);
         mBinding.postDetailRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -170,5 +175,30 @@ public class PostActivity extends AppCompatActivity {
 
     public void onEvent(RetrofitError error) {
         mAdapter.loadComplete();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        startIntroAnimation();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void startIntroAnimation() {
+        int barSize = mBinding.appbar.getHeight();
+        mBinding.appbar.setTranslationY(-barSize);
+        mBinding.postBottomBar.setTranslationY(mBinding.postBottomBar.getHeight());
+        mBinding.appbar.animate()
+                .translationY(0)
+                .setDuration(500)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mBinding.postBottomBar.animate()
+                                .translationY(0)
+                                .setDuration(200)
+                                .start();
+                    }
+                })
+                .start();
     }
 }

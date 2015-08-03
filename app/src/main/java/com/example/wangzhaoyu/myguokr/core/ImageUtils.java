@@ -69,6 +69,7 @@ public class ImageUtils {
                 .load(url)
                 .asBitmap()
                 .transform(new GlideCircleTransform(context))
+                .animate(android.R.anim.fade_in)
                 .into(view);
     }
 
