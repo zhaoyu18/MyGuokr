@@ -11,10 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 
 import com.example.wangzhaoyu.myguokr.R;
-import com.example.wangzhaoyu.myguokr.core.Utils;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityPostDetailBinding;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPostComment;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPostComments;
@@ -26,9 +24,7 @@ import com.example.wangzhaoyu.myguokr.ui.adapter.GroupPostDetailAdapter;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
-import retrofit.Callback;
 import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * @author wangzhaoyu
@@ -65,7 +61,7 @@ public class PostActivity extends AppCompatActivity {
         //init recycler view
         mComments = new ArrayList<>();
         mAdapter = new GroupPostDetailAdapter(this, null, mComments);
-//        mBinding.postDetailRecycler.setHasFixedSize(true);
+        mBinding.postDetailRecycler.setHasFixedSize(true);
         mBinding.postDetailRecycler.setLayoutManager(new LinearLayoutManager(this));
         mBinding.postDetailRecycler.setAdapter(mAdapter);
         mBinding.postDetailRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -96,7 +92,7 @@ public class PostActivity extends AppCompatActivity {
 
         //request data
         mPostId = getIntent().getIntExtra(POST_ID_KEY, 0);
-        mGroupService.getGroupPost(mPostId);
+        mGroupService.getGroupPost(mPostId, TAG);
     }
 
     @Override
@@ -111,7 +107,7 @@ public class PostActivity extends AppCompatActivity {
 
     private void loadMore() {
         mAdapter.loadStart();
-        mGroupService.getGroupPostCommentList(mComments.size(), mPostId);
+        mGroupService.getGroupPostCommentList(mComments.size(), mPostId, TAG);
     }
 
     public void onLikeBtnClicked(View view) {
@@ -150,6 +146,7 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         EventBus.getDefault().unregister(this);
+        mGroupService.cancelRequest(TAG);
         super.onStop();
     }
 
@@ -157,7 +154,7 @@ public class PostActivity extends AppCompatActivity {
         mPostDetail = post;
         mAdapter.setPost(post);
         mAdapter.notifyHeaderItemInserted(0);
-        mGroupService.getGroupPostCommentList(0, mPostId);
+        mGroupService.getGroupPostCommentList(0, mPostId, TAG);
     }
 
     public void onEvent(GroupPostComments comments) {

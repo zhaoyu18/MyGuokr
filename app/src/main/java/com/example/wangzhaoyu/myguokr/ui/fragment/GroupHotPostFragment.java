@@ -106,12 +106,12 @@ public class GroupHotPostFragment extends Fragment {
 
     private void refresh() {
         //request data
-        mGroupService.getGroupPostList(0);
+        mGroupService.getGroupPostList(0, TAG);
     }
 
     private void loadMore() {
         mAdapter.loadStart();
-        mGroupService.getGroupPostList(mPostSnapShots.size());
+        mGroupService.getGroupPostList(mPostSnapShots.size(), TAG);
     }
 
     @Override
