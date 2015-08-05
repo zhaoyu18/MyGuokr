@@ -37,6 +37,7 @@ public class HttpService {
         Cache cache = new Cache(httpCacheDir, 10 * 1024 * 1024);
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setCache(cache);
+        okHttpClient.setRetryOnConnectionFailure(true);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)

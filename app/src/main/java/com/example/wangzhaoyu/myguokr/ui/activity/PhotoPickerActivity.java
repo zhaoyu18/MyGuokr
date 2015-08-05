@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.wangzhaoyu.myguokr.AppController;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityPhotoPickerBinding;
 import com.example.wangzhaoyu.myguokr.model.response.FavoriteGroup;
@@ -19,6 +20,10 @@ import de.greenrobot.event.EventBus;
 public class PhotoPickerActivity extends AppCompatActivity {
     private static final String TAG = PhotoPickerActivity.class.getSimpleName();
     private ActivityPhotoPickerBinding mBinding;
+    private EventBus mEventBus = EventBus.builder()
+            .logNoSubscriberMessages(true)
+            .sendNoSubscriberEvent(false)
+            .build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +38,25 @@ public class PhotoPickerActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
-        HttpService.getInstance().getGroupService().getGroupFavorite(TAG);
+        mEventBus.register(this);
+        HttpService.getInstance().getGroupService().getGroupFavorite(mEventBus);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
     protected void onStop() {
-        EventBus.getDefault().unregister(this);
+        mEventBus.unregister(this);
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppController.getInstance().getRefWatcher().watch(mEventBus);
     }
 
     // This method will be called when a MessageEvent is posted

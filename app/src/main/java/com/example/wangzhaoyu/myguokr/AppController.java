@@ -7,6 +7,7 @@ import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 /**
  * @author wangzhaoyu
@@ -14,6 +15,7 @@ import com.squareup.leakcanary.LeakCanary;
 public class AppController extends Application {
     public static final String TAG = AppController.class.getSimpleName();
     private static AppController sInstance;
+    private RefWatcher mRefWatcher;
 
     /**
      * 返回单例
@@ -47,6 +49,10 @@ public class AppController extends Application {
         ImageLoader.getInstance().init(config);
 
         //init leakcanary
-        LeakCanary.install(this);
+        mRefWatcher = LeakCanary.install(this);
+    }
+
+    public RefWatcher getRefWatcher() {
+        return mRefWatcher;
     }
 }

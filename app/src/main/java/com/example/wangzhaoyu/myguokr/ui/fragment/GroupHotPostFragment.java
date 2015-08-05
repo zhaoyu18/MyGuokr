@@ -25,9 +25,7 @@ import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.StoreHouseH
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
-import retrofit.Callback;
 import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * @author wangzhaoyu
@@ -38,6 +36,7 @@ public class GroupHotPostFragment extends Fragment {
     private GroupPostAdapter mAdapter;
     private ArrayList<PostSnapShot> mPostSnapShots;
     private GroupService mGroupService;
+    private EventBus mEventBus = new EventBus();
 
     @Nullable
     @Override
@@ -106,23 +105,23 @@ public class GroupHotPostFragment extends Fragment {
 
     private void refresh() {
         //request data
-        mGroupService.getGroupPostList(0, TAG);
+        mGroupService.getGroupPostList(0, mEventBus);
     }
 
     private void loadMore() {
         mAdapter.loadStart();
-        mGroupService.getGroupPostList(mPostSnapShots.size(), TAG);
+        mGroupService.getGroupPostList(mPostSnapShots.size(), mEventBus);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        mEventBus.register(this);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
+        mEventBus.unregister(this);
         super.onStop();
     }
 

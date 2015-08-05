@@ -7,9 +7,6 @@ import com.example.wangzhaoyu.myguokr.model.response.PostDetail;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
 import com.example.wangzhaoyu.myguokr.network.api.GuokrAPI;
-import com.example.wangzhaoyu.myguokr.network.callback.GuokrCallback;
-
-import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 import retrofit.Callback;
@@ -22,7 +19,6 @@ import retrofit.client.Response;
 public class GroupService {
     private static final int LIMIT = 20;
     private GuokrAPI mGuokrAPI;
-    private ArrayList<GuokrCallback> mCallbacks = new ArrayList<>();
 
     public GroupService(GuokrAPI guokrAPI) {
         mGuokrAPI = guokrAPI;
@@ -32,24 +28,17 @@ public class GroupService {
      * get post list
      *
      * @param offset
-     * @param tag
      */
-    public void getGroupPostList(int offset, String tag) {
-        GuokrCallback<GroupPosts> callback = new GuokrCallback<GroupPosts>(tag, new Callback<GroupPosts>() {
+    public void getGroupPostList(int offset, final EventBus eventBus) {
+        Callback<GroupPosts> callback = new Callback<GroupPosts>() {
             @Override
             public void success(GroupPosts posts, Response response) {
-                EventBus.getDefault().post(posts);
+                eventBus.post(posts);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                EventBus.getDefault().post(error);
-            }
-        }) {
-            @Override
-            public void response() {
-                //remove callback from list, when response
-                mCallbacks.remove(this);
+                eventBus.post(error);
             }
         };
 
@@ -65,24 +54,17 @@ public class GroupService {
      *
      * @param offset
      * @param postId
-     * @param tag
      */
-    public void getGroupPostCommentList(int offset, int postId, String tag) {
-        GuokrCallback<GroupPostComments> callback = new GuokrCallback<GroupPostComments>(tag, new Callback<GroupPostComments>() {
+    public void getGroupPostCommentList(int offset, int postId, final EventBus eventBus) {
+        Callback<GroupPostComments> callback = new Callback<GroupPostComments>() {
             @Override
             public void success(GroupPostComments comment, Response response) {
-                EventBus.getDefault().post(comment);
+                eventBus.post(comment);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                EventBus.getDefault().post(error);
-            }
-        }) {
-            @Override
-            public void response() {
-                //remove callback from list, when response
-                mCallbacks.remove(this);
+                eventBus.post(error);
             }
         };
 
@@ -98,73 +80,45 @@ public class GroupService {
      * get group post
      *
      * @param postId
-     * @param tag
      */
-    public void getGroupPost(int postId, String tag) {
-        GuokrCallback<PostDetail> callback = new GuokrCallback<PostDetail>(tag, new Callback<PostDetail>() {
+    public void getGroupPost(int postId, final EventBus eventBus) {
+        Callback<PostDetail> callback = new Callback<PostDetail>() {
             @Override
             public void success(PostDetail detail, Response response) {
-                EventBus.getDefault().post(detail);
+                eventBus.post(detail);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                EventBus.getDefault().post(error);
-            }
-        }) {
-            @Override
-            public void response() {
-                //remove callback from list, when response
-                mCallbacks.remove(this);
+                eventBus.post(error);
             }
         };
 
-        mCallbacks.add(callback);
         mGuokrAPI.getGroupPost(postId, callback);
     }
 
     /**
      * get user favorite groups, 100 groups at most
      *
-     * @param tag
+     * @param eventBus
      */
-    public void getGroupFavorite(String tag) {
-        GuokrCallback<FavoriteGroup> callback = new GuokrCallback<FavoriteGroup>(tag, new Callback<FavoriteGroup>() {
+    public void getGroupFavorite(final EventBus eventBus) {
+        Callback<FavoriteGroup> callback = new Callback<FavoriteGroup>() {
             @Override
             public void success(FavoriteGroup group, Response response) {
-                EventBus.getDefault().post(group);
+                eventBus.post(group);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                EventBus.getDefault().post(error);
-            }
-        }) {
-            @Override
-            public void response() {
-                //remove callback from list, when response
-                mCallbacks.remove(this);
+                eventBus.post(error);
             }
         };
 
-        mCallbacks.add(callback);
         mGuokrAPI.getGroupFavorite(
                 HttpService.getInstance().getUserService().getAccessToken(),
                 100,
                 callback
         );
-    }
-
-    /**
-     * cancel request by blocking callback -- temp solution because retrofit not support cancel
-     *
-     * @param tag
-     */
-    public void cancelRequest(String tag) {
-        for (GuokrCallback callback : mCallbacks) {
-            if (callback.getTag().equals(tag)) {
-                callback.cancel();
-            }
-        }
     }
 }

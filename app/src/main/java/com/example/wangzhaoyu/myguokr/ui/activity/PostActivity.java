@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.wangzhaoyu.myguokr.AppController;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityPostDetailBinding;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPostComment;
@@ -41,6 +42,7 @@ public class PostActivity extends AppCompatActivity {
     private boolean mIsBottombarShow = true;
     private GroupService mGroupService;
     private int mPostId;
+    private EventBus mEventBus = new EventBus();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +94,7 @@ public class PostActivity extends AppCompatActivity {
 
         //request data
         mPostId = getIntent().getIntExtra(POST_ID_KEY, 0);
-        mGroupService.getGroupPost(mPostId, TAG);
+        mGroupService.getGroupPost(mPostId, mEventBus);
     }
 
     @Override
@@ -107,7 +109,7 @@ public class PostActivity extends AppCompatActivity {
 
     private void loadMore() {
         mAdapter.loadStart();
-        mGroupService.getGroupPostCommentList(mComments.size(), mPostId, TAG);
+        mGroupService.getGroupPostCommentList(mComments.size(), mPostId, mEventBus);
     }
 
     public void onLikeBtnClicked(View view) {
@@ -140,13 +142,12 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        mEventBus.register(this);
     }
 
     @Override
     protected void onStop() {
-        EventBus.getDefault().unregister(this);
-        mGroupService.cancelRequest(TAG);
+        mEventBus.unregister(this);
         super.onStop();
     }
 
@@ -154,7 +155,7 @@ public class PostActivity extends AppCompatActivity {
         mPostDetail = post;
         mAdapter.setPost(post);
         mAdapter.notifyHeaderItemInserted(0);
-        mGroupService.getGroupPostCommentList(0, mPostId, TAG);
+        mGroupService.getGroupPostCommentList(0, mPostId, mEventBus);
     }
 
     public void onEvent(GroupPostComments comments) {
