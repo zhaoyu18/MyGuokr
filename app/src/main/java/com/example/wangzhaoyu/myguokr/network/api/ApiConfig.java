@@ -19,6 +19,7 @@ public class ApiConfig {
         public static final String GROUP_POST = "/group/post.json";
         public static final String GROUP_POST_DETAIL = "/group/post/{id}.json";
         public static final String GROUP_POST_COMMENT = "/group/post_reply.json";
+        public static final String GROUP_FAVORITE = "/group/favorite.json";
 
         public static final String NOTIFICATION_COUNT = "/community/rn_num.json";
         public static final String COMMUNITY_USER = "/community/user/{ukey}.json";

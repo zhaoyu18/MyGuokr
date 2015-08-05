@@ -3,6 +3,7 @@ package com.example.wangzhaoyu.myguokr.network.api;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleList;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleReplies;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleSendComment;
+import com.example.wangzhaoyu.myguokr.model.response.FavoriteGroup;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPostComments;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPosts;
 import com.example.wangzhaoyu.myguokr.model.response.NotificationCount;
@@ -64,6 +65,12 @@ public interface GuokrAPI {
             @Query(ApiConfig.Query.OFFSET) int offset,
             @Query(ApiConfig.Query.POST_ID) int postId,
             Callback<GroupPostComments> callback);
+
+    @GET(ApiConfig.API.GROUP_FAVORITE)
+    public void getGroupFavorite(
+            @Query(ApiConfig.Query.ACCESS_TOKEN) String accessToken,
+            @Query(ApiConfig.Query.LIMIT) int offset,
+            Callback<FavoriteGroup> callback);
 
     //user
     @GET(ApiConfig.API.COMMUNITY_USER)
