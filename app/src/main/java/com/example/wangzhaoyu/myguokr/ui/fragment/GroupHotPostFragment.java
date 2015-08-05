@@ -1,6 +1,7 @@
 package com.example.wangzhaoyu.myguokr.ui.fragment;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -76,6 +77,8 @@ public class GroupHotPostFragment extends Fragment {
         //init pull to refresh
         StoreHouseHeader header = new StoreHouseHeader(getActivity());
         header.initWithString("Guokr");
+        header.setTextColor(Color.parseColor("#01bcd5"));
+        header.setLineWidth(6);
 
         mBinding.refreshLayout.setLoadingMinTime(750);
         mBinding.refreshLayout.setDurationToCloseHeader(1000);

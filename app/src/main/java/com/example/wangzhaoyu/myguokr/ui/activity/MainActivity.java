@@ -26,6 +26,7 @@ import com.example.wangzhaoyu.myguokr.model.response.User;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.network.service.UserService;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ArticlesListFragment;
+import com.example.wangzhaoyu.myguokr.ui.fragment.GroupTabFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.GroupHotPostFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.SettingsFragment;
 import com.example.wangzhaoyu.myguokr.ui.widget.GlideCircleTransform;
@@ -34,9 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
-import retrofit.Callback;
 import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                         replaceFragment(new ArticlesListFragment());
                         break;
                     case R.id.menu_group:
-                        replaceFragment(new GroupHotPostFragment());
+                        replaceFragment(new GroupTabFragment());
                         break;
                     case R.id.menu_ask:
                         break;
