@@ -22,6 +22,12 @@ public class TabFragmentPagerAdapter extends FragmentStatePagerAdapter {
         mTitles.add("小组热帖");
         mTitles.add("我的小组");
         mTitles.add("小组排行");
+        mTitles.add("小组热帖");
+        mTitles.add("我的小组");
+        mTitles.add("小组排行");
+        mTitles.add("小组热帖");
+        mTitles.add("我的小组");
+        mTitles.add("小组排行");
     }
 
     @Override
