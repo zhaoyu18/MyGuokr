@@ -4,7 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.example.wangzhaoyu.myguokr.ui.fragment.GroupHotPostFragment;
+import com.example.wangzhaoyu.myguokr.model.response.Group;
+import com.example.wangzhaoyu.myguokr.ui.fragment.GroupPostFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,24 +16,33 @@ import java.util.List;
 public class TabFragmentPagerAdapter extends FragmentStatePagerAdapter {
     private static final String TAG = TabFragmentPagerAdapter.class.getSimpleName();
     private List<String> mTitles;
+    private List<Group> mGroups;
 
     public TabFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
         mTitles = new ArrayList<>();
         mTitles.add("小组热帖");
         mTitles.add("我的小组");
-        mTitles.add("小组排行");
-        mTitles.add("小组热帖");
-        mTitles.add("我的小组");
-        mTitles.add("小组排行");
-        mTitles.add("小组热帖");
-        mTitles.add("我的小组");
-        mTitles.add("小组排行");
     }
 
     @Override
     public Fragment getItem(int position) {
-        return new GroupHotPostFragment();
+        Fragment fragment;
+        switch (position) {
+            case 0:
+                fragment = GroupPostFragment.newInstance(GroupPostFragment.Mode.GROUPS_HOT_POST);
+                break;
+
+            case 1:
+                fragment = GroupPostFragment.newInstance(GroupPostFragment.Mode.USER_GROUP_POST);
+                break;
+
+            default:
+                fragment = GroupPostFragment.newInstance(mGroups.get(position - 2).getId());
+                break;
+
+        }
+        return fragment;
     }
 
     @Override
@@ -43,5 +53,12 @@ public class TabFragmentPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return mTitles.get(position);
+    }
+
+    public void setGroups(List<Group> groups) {
+        mGroups = groups;
+        for (Group group : groups) {
+            mTitles.add(group.getName());
+        }
     }
 }

@@ -46,13 +46,18 @@ public class ApiConfig {
         public static final String CONTENT = "content";
         public static final String POST_ID = "post_id";
         public static final String CURRENT_TIME = "_";
+        public static final String GROUP_ID = "group_id";
+        public static final String UKEY = "ukey";
 
         public final class RetrieveType {
             public static final String BY_SUBJECT = "by_subject";
             public static final String BY_CHANNEL = "by_channel";
             public static final String BY_ARTICLE = "by_article";
             public static final String HOT_POST = "hot_post";
+            public static final String BY_GROUP = "by_group";
             public static final String BY_POST = "by_post";
+            public static final String BY_USER = "by_user";
+            public static final String RECENT_REPLIES = "recent_replies";
         }
     }
 

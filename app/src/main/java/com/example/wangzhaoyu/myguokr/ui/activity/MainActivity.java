@@ -27,7 +27,6 @@ import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.network.service.UserService;
 import com.example.wangzhaoyu.myguokr.ui.fragment.ArticlesListFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.GroupTabFragment;
-import com.example.wangzhaoyu.myguokr.ui.fragment.GroupHotPostFragment;
 import com.example.wangzhaoyu.myguokr.ui.fragment.SettingsFragment;
 import com.example.wangzhaoyu.myguokr.ui.widget.GlideCircleTransform;
 

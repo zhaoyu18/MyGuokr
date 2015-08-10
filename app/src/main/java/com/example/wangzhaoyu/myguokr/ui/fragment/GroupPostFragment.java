@@ -31,13 +31,46 @@ import retrofit.RetrofitError;
 /**
  * @author wangzhaoyu
  */
-public class GroupHotPostFragment extends Fragment {
-    private static final String TAG = GroupHotPostFragment.class.getSimpleName();
+public class GroupPostFragment extends Fragment {
+    private static final String TAG = GroupPostFragment.class.getSimpleName();
     private FragmentGroupPostListBinding mBinding;
     private GroupPostAdapter mAdapter;
     private ArrayList<PostSnapShot> mPostSnapShots;
     private GroupService mGroupService;
     private EventBus mEventBus = new EventBus();
+    private Mode mMode = Mode.GROUPS_HOT_POST;
+    private int mGroupId;
+
+    public enum Mode {
+        GROUPS_HOT_POST,
+        USER_GROUP_POST,
+        GROUP_POST,
+    }
+
+    public GroupPostFragment() {
+
+    }
+
+    public static GroupPostFragment newInstance(Mode mode) {
+        GroupPostFragment fragment = new GroupPostFragment();
+        fragment.setMode(mode);
+        return fragment;
+    }
+
+    public static GroupPostFragment newInstance(int groupId) {
+        GroupPostFragment fragment = new GroupPostFragment();
+        fragment.setMode(Mode.GROUP_POST);
+        fragment.setGroupId(groupId);
+        return fragment;
+    }
+
+    public void setMode(Mode mode) {
+        mMode = mode;
+    }
+
+    public void setGroupId(int groupId) {
+        this.mGroupId = groupId;
+    }
 
     @Nullable
     @Override
@@ -108,12 +141,38 @@ public class GroupHotPostFragment extends Fragment {
 
     private void refresh() {
         //request data
-        mGroupService.getGroupPostList(0, mEventBus);
+        switch (mMode) {
+            case GROUPS_HOT_POST:
+                mGroupService.getGroupHotPostList(0, mEventBus);
+                break;
+            case USER_GROUP_POST:
+                mGroupService.getGroupUserPostList(0, mEventBus);
+                break;
+            case GROUP_POST:
+                mGroupService.getGroupPostList(0, mGroupId, mEventBus);
+                break;
+
+            default:
+                break;
+        }
     }
 
     private void loadMore() {
         mAdapter.loadStart();
-        mGroupService.getGroupPostList(mPostSnapShots.size(), mEventBus);
+        switch (mMode) {
+            case GROUPS_HOT_POST:
+                mGroupService.getGroupHotPostList(mPostSnapShots.size(), mEventBus);
+                break;
+            case USER_GROUP_POST:
+                mGroupService.getGroupUserPostList(mPostSnapShots.size(), mEventBus);
+                break;
+            case GROUP_POST:
+                mGroupService.getGroupPostList(mPostSnapShots.size(), mGroupId, mEventBus);
+                break;
+
+            default:
+                break;
+        }
     }
 
     @Override

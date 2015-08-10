@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.FragmentGroupTabBinding;
@@ -40,6 +39,7 @@ public class GroupTabFragment extends Fragment {
     private List<Group> mGroups;
     private RecyclerView mChannelList;
     private GroupChannelAdapter mChannelAdapter;
+    private TabFragmentPagerAdapter mPagerAdapter;
 
     @Nullable
     @Override
@@ -48,10 +48,10 @@ public class GroupTabFragment extends Fragment {
         mBinding = DataBindingUtil.bind(rootView);
 
         //init tab layout
-        TabFragmentPagerAdapter adapter = new TabFragmentPagerAdapter(getActivity().getSupportFragmentManager());
-        mBinding.viewpager.setAdapter(adapter);
+        mPagerAdapter = new TabFragmentPagerAdapter(getActivity().getSupportFragmentManager());
+        mBinding.viewpager.setAdapter(mPagerAdapter);
         mBinding.tabs.setupWithViewPager(mBinding.viewpager);
-        mBinding.tabs.setTabsFromPagerAdapter(adapter);
+        mBinding.tabs.setTabsFromPagerAdapter(mPagerAdapter);
 
         //init popup channel
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.view_group_channel_popup, null);
@@ -92,10 +92,13 @@ public class GroupTabFragment extends Fragment {
     }
 
     public void onEvent(FavoriteGroup group) {
-        Toast.makeText(getActivity(), group.getNow(), Toast.LENGTH_SHORT).show();
         mGroups.clear();
         mGroups.addAll(group.getResult());
         mChannelAdapter.notifyItemRangeInserted(0, mGroups.size());
+        //update tabs
+        mPagerAdapter.setGroups(new ArrayList<>(group.getResult()));
+        mPagerAdapter.notifyDataSetChanged();
+        mBinding.tabs.setTabsFromPagerAdapter(mPagerAdapter);
     }
 
     public void onEvent(RetrofitError error) {

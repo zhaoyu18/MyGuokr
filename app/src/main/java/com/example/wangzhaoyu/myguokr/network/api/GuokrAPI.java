@@ -47,8 +47,24 @@ public interface GuokrAPI {
 
     //group
     @GET(ApiConfig.API.GROUP_POST)
+    public void getGroupHotPostList(
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset,
+            Callback<GroupPosts> callback);
+
+    @GET(ApiConfig.API.GROUP_POST)
     public void getGroupPostList(
             @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.GROUP_ID) int groupId,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset,
+            Callback<GroupPosts> callback);
+
+    @GET(ApiConfig.API.GROUP_POST)
+    public void getGroupUserPostList(
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.ACCESS_TOKEN) String accessToken,
             @Query(ApiConfig.Query.LIMIT) int limit,
             @Query(ApiConfig.Query.OFFSET) int offset,
             Callback<GroupPosts> callback);
