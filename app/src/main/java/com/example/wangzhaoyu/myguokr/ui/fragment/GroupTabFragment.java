@@ -5,8 +5,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.network.service.GroupService;
 import com.example.wangzhaoyu.myguokr.ui.adapter.GroupChannelAdapter;
 import com.example.wangzhaoyu.myguokr.ui.adapter.TabFragmentPagerAdapter;
+import com.example.wangzhaoyu.myguokr.ui.widget.touchhelper.SimpleItemTouchHelperCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,12 +73,16 @@ public class GroupTabFragment extends Fragment {
         mGroupService = HttpService.getInstance().getGroupService();
         mGroupService.getGroupFavorite(mEventBus);
 
-        //init group channel recycler view
-        mChannelList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //init popup group channel recycler view
+        mChannelList.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         mGroups = new ArrayList<>();
         mChannelAdapter = new GroupChannelAdapter(getActivity(), mGroups);
         mChannelList.setHasFixedSize(true);
         mChannelList.setAdapter(mChannelAdapter);
+        //init drag & drop touch helper
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mChannelAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(mChannelList);
         return rootView;
     }
 

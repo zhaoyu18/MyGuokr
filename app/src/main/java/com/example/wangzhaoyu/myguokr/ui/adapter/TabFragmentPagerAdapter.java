@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.wangzhaoyu.myguokr.model.response.Group;
-import com.example.wangzhaoyu.myguokr.ui.fragment.GroupPostFragment;
+import com.example.wangzhaoyu.myguokr.ui.fragment.GroupPostListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +30,15 @@ public class TabFragmentPagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment;
         switch (position) {
             case 0:
-                fragment = GroupPostFragment.newInstance(GroupPostFragment.Mode.GROUPS_HOT_POST);
+                fragment = GroupPostListFragment.newInstance(GroupPostListFragment.Mode.GROUPS_HOT_POST);
                 break;
 
             case 1:
-                fragment = GroupPostFragment.newInstance(GroupPostFragment.Mode.USER_GROUP_POST);
+                fragment = GroupPostListFragment.newInstance(GroupPostListFragment.Mode.USER_GROUP_POST);
                 break;
 
             default:
-                fragment = GroupPostFragment.newInstance(mGroups.get(position - 2).getId());
+                fragment = GroupPostListFragment.newInstance(mGroups.get(position - 2).getId());
                 break;
 
         }

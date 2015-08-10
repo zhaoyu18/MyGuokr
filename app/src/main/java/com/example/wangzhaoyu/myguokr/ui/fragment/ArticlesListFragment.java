@@ -1,5 +1,6 @@
 package com.example.wangzhaoyu.myguokr.ui.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -96,13 +97,10 @@ public class ArticlesListFragment extends Fragment {
         });
 
         //init pull to refresh
-//        MoocGlassesHeaderView header = new MoocGlassesHeaderView(getActivity());
-//        header.setLayoutParams(new PtrFrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT));
-//        header.setPadding(0, PtrLocalDisplay.dp2px(15), 0, PtrLocalDisplay.dp2px(10));
-//        header.setUp(mRefreshLayout);
         StoreHouseHeader header = new StoreHouseHeader(getActivity());
         header.initWithString("Guokr");
+        header.setTextColor(Color.parseColor("#01bcd5"));
+        header.setLineWidth(6);
 
         mRefreshLayout.setLoadingMinTime(750);
         mRefreshLayout.setDurationToCloseHeader(1000);

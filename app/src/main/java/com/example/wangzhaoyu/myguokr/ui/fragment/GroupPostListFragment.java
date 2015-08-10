@@ -31,8 +31,8 @@ import retrofit.RetrofitError;
 /**
  * @author wangzhaoyu
  */
-public class GroupPostFragment extends Fragment {
-    private static final String TAG = GroupPostFragment.class.getSimpleName();
+public class GroupPostListFragment extends Fragment {
+    private static final String TAG = GroupPostListFragment.class.getSimpleName();
     private FragmentGroupPostListBinding mBinding;
     private GroupPostAdapter mAdapter;
     private ArrayList<PostSnapShot> mPostSnapShots;
@@ -47,18 +47,18 @@ public class GroupPostFragment extends Fragment {
         GROUP_POST,
     }
 
-    public GroupPostFragment() {
+    public GroupPostListFragment() {
 
     }
 
-    public static GroupPostFragment newInstance(Mode mode) {
-        GroupPostFragment fragment = new GroupPostFragment();
+    public static GroupPostListFragment newInstance(Mode mode) {
+        GroupPostListFragment fragment = new GroupPostListFragment();
         fragment.setMode(mode);
         return fragment;
     }
 
-    public static GroupPostFragment newInstance(int groupId) {
-        GroupPostFragment fragment = new GroupPostFragment();
+    public static GroupPostListFragment newInstance(int groupId) {
+        GroupPostListFragment fragment = new GroupPostListFragment();
         fragment.setMode(Mode.GROUP_POST);
         fragment.setGroupId(groupId);
         return fragment;
