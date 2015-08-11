@@ -28,7 +28,7 @@ import java.util.ArrayList;
  */
 public class ArticleAdapter extends LoadmoreFooterViewAdapter {
     private static final String TAG = ArticleAdapter.class.getSimpleName();
-    private static final int ANIMATED_ITEMS_COUNT = 5;
+    private static final int ANIMATED_ITEMS_COUNT = 3;
 
     private Context mContext;
     private ArrayList<ArticleSnapShot> mSnapShots;

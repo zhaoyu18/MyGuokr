@@ -18,39 +18,83 @@
         android:id="@+id/card_view"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="8dp"
-        card_view:cardCornerRadius="4dp">
+        card_view:cardCornerRadius="0dp"
+        card_view:cardPreventCornerOverlap="false">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="192dp">
+
+                <ImageView
+                    android:id="@+id/iv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/primary_material_light"
+                    android:scaleType="centerCrop"
+                    app:context="@{context}"
+                    app:coverUrl="@{snapshot.image_info.url}"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="96dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/shadow_cover"/>
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="16dp"
+                    android:maxLines="2"
+                    android:text="@{snapshot.title}"
+                    android:textAppearance="?android:attr/textAppearanceLargeInverse"/>
+
+            </FrameLayout>
 
             <TextView
-                android:id="@+id/tv_title"
-                style="@style/AppTheme"
+                android:id="@+id/tv_abstract"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:layout_toLeftOf="@+id/iv_title"
-                android:layout_toStartOf="@+id/iv_title"
+                android:lineSpacingExtra="2dp"
                 android:maxLines="3"
-                android:text="@{snapshot.title}"
-                android:textSize="@dimen/abc_text_size_title_material"/>
+                android:minHeight="96dp"
+                android:padding="16dp"
+                android:text="@{snapshot.summary}"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/abc_text_size_body_2_material"/>
 
-            <ImageView
-                android:id="@+id/iv_title"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_margin="16dp"
-                android:background="@color/primary_material_light"
-                android:scaleType="centerCrop"
-                app:imageUrl="@{snapshot.image_info.url}"
-                app:context="@{context}"/>
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
 
-        </RelativeLayout>
+            <!--<TextView-->
+            <!--android:layout_width="48dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="分享"-->
+            <!--android:textColor="@color/style_color_accent"-->
+            <!--android:textSize="@dimen/abc_text_size_medium_material"/>-->
+
+            <!--<TextView-->
+            <!--android:layout_width="48dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="详情"-->
+            <!--android:textColor="@color/style_color_accent"-->
+            <!--android:textSize="@dimen/abc_text_size_medium_material"/>-->
+            <!--</LinearLayout>-->
+
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 </layout>

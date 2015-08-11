@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.wangzhaoyu.myguokr.ui.widget.GlideCircleTransform;
+import com.example.wangzhaoyu.myguokr.ui.widget.GlideTopRoundedTransform;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
@@ -75,6 +76,15 @@ public class ImageUtils {
 
     @BindingAdapter({"bind:imageUrl", "bind:context"})
     public static void loadImage(ImageView view, String url, Context context) {
+        Glide.with(context)
+                .load(url)
+                .asBitmap()
+                .animate(android.R.anim.fade_in)
+                .into(view);
+    }
+
+    @BindingAdapter({"bind:coverUrl", "bind:context"})
+    public static void loadCover(ImageView view, String url, Context context) {
         Glide.with(context)
                 .load(url)
                 .asBitmap()
