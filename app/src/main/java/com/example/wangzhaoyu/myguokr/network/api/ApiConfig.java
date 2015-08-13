@@ -68,4 +68,17 @@ public class ApiConfig {
         public static final String ID = "id";
         public static final String UKEY = "ukey";
     }
+
+    public final class Header {
+        private static final int FOUR_WEEK_SECONDS = 60 * 60 * 24 * 28;
+        private static final int ONE_HOUR_SECONDS = 60 * 60;
+        public static final String CACHE_CONTROL = "Cache-Control";
+
+        public final class CacheControl {
+            public static final String FOUR_WEEK_STALE = "public, only-if-cached, max-stale=" +
+                    FOUR_WEEK_SECONDS;
+            public static final String ONE_HOUR_STALE = "public, only-if-cached, max-stale=" +
+                    ONE_HOUR_SECONDS;
+        }
+    }
 }

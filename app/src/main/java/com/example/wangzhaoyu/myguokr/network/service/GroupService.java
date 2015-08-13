@@ -50,6 +50,32 @@ public class GroupService {
     }
 
     /**
+     * get hot post list
+     *
+     * @param offset
+     */
+    public void getGroupHotPostListCacheFirst(int offset, final EventBus eventBus) {
+        Callback<GroupPosts> callback = new Callback<GroupPosts>() {
+            @Override
+            public void success(GroupPosts posts, Response response) {
+                eventBus.post(posts);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                eventBus.post(error);
+            }
+        };
+
+        mGuokrAPI.getGroupHotPostList(
+                ApiConfig.Header.CacheControl.ONE_HOUR_STALE,
+                ApiConfig.Query.RetrieveType.HOT_POST,
+                LIMIT,
+                offset,
+                callback);
+    }
+
+    /**
      * get group post list
      *
      * @param offset
@@ -77,6 +103,34 @@ public class GroupService {
     }
 
     /**
+     * get group post list
+     *
+     * @param offset
+     * @param groupId
+     * @param eventBus
+     */
+    public void getGroupPostListCacheFirst(int offset, int groupId, final EventBus eventBus) {
+        mGuokrAPI.getGroupPostList(
+                ApiConfig.Header.CacheControl.ONE_HOUR_STALE,
+                ApiConfig.Query.RetrieveType.BY_GROUP,
+                groupId,
+                LIMIT,
+                offset,
+                new Callback<GroupPosts>() {
+                    @Override
+                    public void success(GroupPosts posts, Response response) {
+                        eventBus.post(posts);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        eventBus.post(error);
+                    }
+                }
+        );
+    }
+
+    /**
      * get group user post list
      *
      * @param offset
@@ -84,6 +138,33 @@ public class GroupService {
      */
     public void getGroupUserPostList(int offset, final EventBus eventBus) {
         mGuokrAPI.getGroupUserPostList(
+                ApiConfig.Query.RetrieveType.RECENT_REPLIES,
+                HttpService.getInstance().getUserService().getAccessToken(),
+                LIMIT,
+                offset,
+                new Callback<GroupPosts>() {
+                    @Override
+                    public void success(GroupPosts posts, Response response) {
+                        eventBus.post(posts);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        eventBus.post(error);
+                    }
+                }
+        );
+    }
+
+    /**
+     * get group user post list
+     *
+     * @param offset
+     * @param eventBus
+     */
+    public void getGroupUserPostListCacheFirst(int offset, final EventBus eventBus) {
+        mGuokrAPI.getGroupUserPostList(
+                ApiConfig.Header.CacheControl.ONE_HOUR_STALE,
                 ApiConfig.Query.RetrieveType.RECENT_REPLIES,
                 HttpService.getInstance().getUserService().getAccessToken(),
                 LIMIT,

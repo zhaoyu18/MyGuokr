@@ -13,6 +13,7 @@ import com.example.wangzhaoyu.myguokr.model.response.User;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.Header;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
@@ -54,6 +55,14 @@ public interface GuokrAPI {
             Callback<GroupPosts> callback);
 
     @GET(ApiConfig.API.GROUP_POST)
+    public void getGroupHotPostList(
+            @Header(ApiConfig.Header.CACHE_CONTROL) String cacheControl,
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset,
+            Callback<GroupPosts> callback);
+
+    @GET(ApiConfig.API.GROUP_POST)
     public void getGroupPostList(
             @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
             @Query(ApiConfig.Query.GROUP_ID) int groupId,
@@ -62,7 +71,25 @@ public interface GuokrAPI {
             Callback<GroupPosts> callback);
 
     @GET(ApiConfig.API.GROUP_POST)
+    public void getGroupPostList(
+            @Header(ApiConfig.Header.CACHE_CONTROL) String cacheControl,
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.GROUP_ID) int groupId,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset,
+            Callback<GroupPosts> callback);
+
+    @GET(ApiConfig.API.GROUP_POST)
     public void getGroupUserPostList(
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.ACCESS_TOKEN) String accessToken,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset,
+            Callback<GroupPosts> callback);
+
+    @GET(ApiConfig.API.GROUP_POST)
+    public void getGroupUserPostList(
+            @Header(ApiConfig.Header.CACHE_CONTROL) String cacheControl,
             @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
             @Query(ApiConfig.Query.ACCESS_TOKEN) String accessToken,
             @Query(ApiConfig.Query.LIMIT) int limit,

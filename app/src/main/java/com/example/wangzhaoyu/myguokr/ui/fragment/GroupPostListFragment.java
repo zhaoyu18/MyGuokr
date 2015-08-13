@@ -118,13 +118,6 @@ public class GroupPostListFragment extends Fragment {
         mBinding.refreshLayout.setHeaderView(header);
         mBinding.refreshLayout.addPtrUIHandler(header);
 
-        mBinding.refreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refresh();
-            }
-        }, 500);
-
         mBinding.refreshLayout.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
@@ -136,7 +129,28 @@ public class GroupPostListFragment extends Fragment {
                 refresh();
             }
         });
+
+        requestCacheData();
+        
         return rootView;
+    }
+
+    private void requestCacheData() {
+        //request data
+        switch (mMode) {
+            case GROUPS_HOT_POST:
+                mGroupService.getGroupHotPostListCacheFirst(0, mEventBus);
+                break;
+            case USER_GROUP_POST:
+                mGroupService.getGroupUserPostListCacheFirst(0, mEventBus);
+                break;
+            case GROUP_POST:
+                mGroupService.getGroupPostListCacheFirst(0, mGroupId, mEventBus);
+                break;
+
+            default:
+                break;
+        }
     }
 
     private void refresh() {
