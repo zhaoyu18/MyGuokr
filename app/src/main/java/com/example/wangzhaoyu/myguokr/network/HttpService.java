@@ -1,5 +1,8 @@
 package com.example.wangzhaoyu.myguokr.network;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import com.example.wangzhaoyu.myguokr.AppController;
 import com.example.wangzhaoyu.myguokr.core.Utils;
 import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
@@ -9,9 +12,13 @@ import com.example.wangzhaoyu.myguokr.network.service.ArticleService;
 import com.example.wangzhaoyu.myguokr.network.service.GroupService;
 import com.example.wangzhaoyu.myguokr.network.service.UserService;
 import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import java.io.File;
+import java.io.IOException;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -38,6 +45,25 @@ public class HttpService {
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setCache(cache);
         okHttpClient.setRetryOnConnectionFailure(true);
+        // retry
+//        okHttpClient.interceptors().add(new Interceptor() {
+//            @Override
+//            public Response intercept(Chain chain) throws IOException {
+//                Request request = chain.request();
+//
+//                // try the request
+//                Response response = chain.proceed(request);
+//
+//                int tryCount = 0;
+//                while (!response.isSuccessful() && tryCount < 3) {
+//                    tryCount++;
+//                    // retry the request
+//                    response = chain.proceed(request);
+//                }
+//
+//                return response;
+//            }
+//        });
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
