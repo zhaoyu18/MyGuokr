@@ -2,28 +2,22 @@ package com.example.wangzhaoyu.myguokr.ui.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.wangzhaoyu.myguokr.AppController;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityPhotoPickerBinding;
-import com.example.wangzhaoyu.myguokr.model.response.FavoriteGroup;
+import com.example.wangzhaoyu.myguokr.model.response.User;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
 
-import de.greenrobot.event.EventBus;
+import rx.Observer;
 
 /**
  * @author wangzhaoyu
  */
-public class PhotoPickerActivity extends AppCompatActivity {
+public class PhotoPickerActivity extends BaseActivity {
     private static final String TAG = PhotoPickerActivity.class.getSimpleName();
     private ActivityPhotoPickerBinding mBinding;
-    private EventBus mEventBus = EventBus.builder()
-            .logNoSubscriberMessages(true)
-            .sendNoSubscriberEvent(false)
-            .build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,34 +27,26 @@ public class PhotoPickerActivity extends AppCompatActivity {
                 .load("http://goo.gl/gEgYUd")
                 .asBitmap()
                 .into(mBinding.testImage);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mEventBus.register(this);
-        HttpService.getInstance().getGroupService().getGroupFavorite(mEventBus);
-    }
+        mBinding.testButton.setOnClickListener(v -> mSubscriptions.add(
+                        HttpService.getInstance().getUserService().getUserInfo(
+                                HttpService.getInstance().getUserService().getUserUkey())
+                                .subscribe(new Observer<User>() {
+                                    @Override
+                                    public void onCompleted() {
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+                                    }
 
-    @Override
-    protected void onStop() {
-        mEventBus.unregister(this);
-        super.onStop();
-    }
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Toast.makeText(PhotoPickerActivity.this, "error", Toast.LENGTH_SHORT).show();
+                                    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        AppController.getInstance().getRefWatcher().watch(mEventBus);
-    }
-
-    // This method will be called when a MessageEvent is posted
-    public void onEvent(FavoriteGroup group){
-        Toast.makeText(this, group.getNow(), Toast.LENGTH_SHORT).show();
+                                    @Override
+                                    public void onNext(User user) {
+                                        Toast.makeText(PhotoPickerActivity.this, user.getResult().getNickname(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }))
+        );
     }
 }

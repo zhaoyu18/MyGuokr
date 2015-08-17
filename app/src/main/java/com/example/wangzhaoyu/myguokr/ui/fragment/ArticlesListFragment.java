@@ -3,13 +3,11 @@ package com.example.wangzhaoyu.myguokr.ui.fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.model.response.ArticleList;
@@ -17,7 +15,6 @@ import com.example.wangzhaoyu.myguokr.model.response.ArticleSnapShot;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.network.service.ArticleService;
 import com.example.wangzhaoyu.myguokr.ui.adapter.ArticleAdapter;
-import com.example.wangzhaoyu.myguokr.ui.widget.ProgressWheel;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrDefaultHandler;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrFrameLayout;
 import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.PtrHandler;
@@ -27,15 +24,13 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import de.greenrobot.event.EventBus;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.Observer;
+import rx.Subscription;
 
 /**
  * @author wangzhaoyu
  */
-public class ArticlesListFragment extends Fragment {
+public class ArticlesListFragment extends BaseFragment {
     private View mRootView;
     private ArrayList<ArticleSnapShot> mArticleList;
 
@@ -132,7 +127,25 @@ public class ArticlesListFragment extends Fragment {
      * 刷新列表
      */
     private void refresh() {
-        mArticleService.getArticleList(0);
+        Subscription subscribe = mArticleService.getArticleList(0).subscribe(new Observer<ArticleList>() {
+            @Override
+            public void onCompleted() {
+                mRefreshLayout.refreshComplete();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(ArticleList list) {
+                mArticleList.clear();
+                mArticleList.addAll(list.getResult());
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+        mSubscriptions.add(subscribe);
     }
 
     /**
@@ -141,44 +154,30 @@ public class ArticlesListFragment extends Fragment {
      */
     private void loadMore() {
         mAdapter.loadStart();
-        mArticleService.getArticleList(mArticleList.size());
+        Subscription subscribe = mArticleService.getArticleList(mArticleList.size()).subscribe(new Observer<ArticleList>() {
+            @Override
+            public void onCompleted() {
+                mAdapter.loadComplete();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(ArticleList list) {
+                int beforeSize = mArticleList.size();
+                mArticleList.addAll(list.getResult());
+                mAdapter.notifyContentItemRangeInserted(beforeSize, list.getResult().size());
+            }
+        });
+        mSubscriptions.add(subscribe);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.reset(this);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    public void onEvent(ArticleList list) {
-        if (list.getOffset() == 0) {
-            mArticleList.clear();
-            mArticleList.addAll(list.getResult());
-            mAdapter.notifyDataSetChanged();
-            mRefreshLayout.refreshComplete();
-
-        } else {
-            int beforeSize = mArticleList.size();
-            mArticleList.addAll(list.getResult());
-            mAdapter.notifyContentItemRangeInserted(beforeSize, list.getResult().size());
-            mAdapter.loadComplete();
-        }
-    }
-
-    public void onEvent(RetrofitError error) {
-        mAdapter.loadComplete();
-        mRefreshLayout.refreshComplete();
     }
 }

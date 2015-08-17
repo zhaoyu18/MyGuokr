@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,11 +32,11 @@ import com.example.wangzhaoyu.myguokr.ui.widget.GlideCircleTransform;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
-import retrofit.RetrofitError;
+import rx.Observer;
+import rx.Subscription;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private static String TAG = MainActivity.class.getSimpleName();
     private static final int ANIM_DURATION_TOOLBAR = 300;
     private static final int START_LOGIN_ACTIVITY_CODE = 5518;
@@ -109,7 +108,30 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mUserService.getUserInfo(mUserService.getUserUkey());
+        Subscription subscribe = mUserService.getUserInfo(mUserService.getUserUkey()).subscribe(new Observer<User>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(User user) {
+                //set up navigation drawer
+                Glide.with(MainActivity.this)
+                        .load(user.getResult().getAvatar().getLarge())
+                        .asBitmap()
+                        .transform(new GlideCircleTransform(MainActivity.this))
+                        .animate(android.R.anim.fade_in)
+                        .into(mNavAvatarImage);
+                mNavUserName.setText(user.getResult().getNickname());
+            }
+        });
+        mSubscriptions.add(subscribe);
         setUpMainFragment();
     }
 
@@ -147,7 +169,30 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == START_LOGIN_ACTIVITY_CODE && resultCode == RESULT_OK) {
             Log.i(TAG, "access token: " + mUserService.getAccessToken());
             Log.i(TAG, "ukey: " + mUserService.getUserUkey());
-            mUserService.getUserInfo(mUserService.getUserUkey());
+            Subscription subscribe = mUserService.getUserInfo(mUserService.getUserUkey()).subscribe(new Observer<User>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(User user) {
+                    //set up navigation drawer
+                    Glide.with(MainActivity.this)
+                            .load(user.getResult().getAvatar().getLarge())
+                            .asBitmap()
+                            .transform(new GlideCircleTransform(MainActivity.this))
+                            .animate(android.R.anim.fade_in)
+                            .into(mNavAvatarImage);
+                    mNavUserName.setText(user.getResult().getNickname());
+                }
+            });
+            mSubscriptions.add(subscribe);
         }
     }
 
@@ -178,32 +223,5 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction
                 .replace(R.id.fragment_container, fragment)
                 .commit();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    public void onEvent(User user) {
-        //set up navigation drawer
-        Glide.with(MainActivity.this)
-                .load(user.getResult().getAvatar().getLarge())
-                .asBitmap()
-                .transform(new GlideCircleTransform(MainActivity.this))
-                .animate(android.R.anim.fade_in)
-                .into(mNavAvatarImage);
-        mNavUserName.setText(user.getResult().getNickname());
-    }
-
-    public void onEvent(RetrofitError error) {
-
     }
 }

@@ -17,6 +17,7 @@ import retrofit.http.Header;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import rx.Observable;
 
 /**
  * @author wangzhaoyu
@@ -126,4 +127,96 @@ public interface GuokrAPI {
             @Query(ApiConfig.Query.CURRENT_TIME) long currentTime,
             @Query(ApiConfig.Query.ACCESS_TOKEN) String accessToken,
             Callback<NotificationCount> callback);
+
+    // -----------------------------------------------------
+
+    //article
+    @GET(ApiConfig.API.MINISITE_ARTICLE)
+    public Observable<ArticleList> getArticleList(
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset);
+
+    @GET(ApiConfig.API.ARTICLE_REPLY)
+    public Observable<ArticleReplies> getArticleCommentList(
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.ARTICLE_ID) int articleId,
+            @Query(ApiConfig.Query.OFFSET) int offset);
+
+    @POST(ApiConfig.API.ARTICLE_REPLY)
+    public Observable<ArticleSendComment> postArticleComment(
+            @Query(ApiConfig.Query.ARTICLE_ID) int articleId,
+            @Query(ApiConfig.Query.CONTENT) String content,
+            @Query(ApiConfig.Query.ACCESS_TOKEN) String accessToken,
+            @Body String body);
+
+    // user
+    @GET(ApiConfig.API.COMMUNITY_USER)
+    public Observable<User> getUserInfo(
+            @Path(ApiConfig.Path.UKEY) String ukey);
+
+    @GET(ApiConfig.API.NOTIFICATION_COUNT)
+    public Observable<NotificationCount> getNotifCount(
+            @Query(ApiConfig.Query.CURRENT_TIME) long currentTime,
+            @Query(ApiConfig.Query.ACCESS_TOKEN) String accessToken);
+
+    @GET(ApiConfig.API.GROUP_POST)
+    public Observable<GroupPosts> getGroupHotPostList(
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset);
+
+    @GET(ApiConfig.API.GROUP_POST)
+    public Observable<GroupPosts> getGroupHotPostList(
+            @Header(ApiConfig.Header.CACHE_CONTROL) String cacheControl,
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset);
+
+    @GET(ApiConfig.API.GROUP_POST)
+    public Observable<GroupPosts> getGroupPostList(
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.GROUP_ID) int groupId,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset);
+
+    @GET(ApiConfig.API.GROUP_POST)
+    public Observable<GroupPosts> getGroupPostList(
+            @Header(ApiConfig.Header.CACHE_CONTROL) String cacheControl,
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.GROUP_ID) int groupId,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset);
+
+    @GET(ApiConfig.API.GROUP_POST)
+    public Observable<GroupPosts> getGroupUserPostList(
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.ACCESS_TOKEN) String accessToken,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset);
+
+    @GET(ApiConfig.API.GROUP_POST)
+    public Observable<GroupPosts> getGroupUserPostList(
+            @Header(ApiConfig.Header.CACHE_CONTROL) String cacheControl,
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.ACCESS_TOKEN) String accessToken,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset);
+
+    @GET(ApiConfig.API.GROUP_POST_DETAIL)
+    public Observable<PostDetail> getGroupPost(
+            @Path(ApiConfig.Path.ID) int postId);
+
+    @GET(ApiConfig.API.GROUP_POST_COMMENT)
+    public Observable<GroupPostComments> getGroupPostCommentList(
+            @Query(ApiConfig.Query.RETRIEVE_TYPE) String retrieveType,
+            @Query(ApiConfig.Query.LIMIT) int limit,
+            @Query(ApiConfig.Query.OFFSET) int offset,
+            @Query(ApiConfig.Query.POST_ID) int postId);
+
+    @GET(ApiConfig.API.GROUP_FAVORITE)
+    public Observable<FavoriteGroup> getGroupFavorite(
+            @Query(ApiConfig.Query.ACCESS_TOKEN) String accessToken,
+            @Query(ApiConfig.Query.LIMIT) int offset);
+
 }

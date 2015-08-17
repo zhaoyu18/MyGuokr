@@ -4,9 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -28,12 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import retrofit.RetrofitError;
+import rx.Observer;
+import rx.Subscription;
 
 /**
  * @author wangzhaoyu
  */
-public class GroupTabFragment extends Fragment {
+public class GroupTabFragment extends BaseFragment {
     private static final String TAG = GroupTabFragment.class.getSimpleName();
     private FragmentGroupTabBinding mBinding;
     private PopupWindow mPopupWindow;
@@ -71,7 +70,29 @@ public class GroupTabFragment extends Fragment {
 
         //request groups
         mGroupService = HttpService.getInstance().getGroupService();
-        mGroupService.getGroupFavorite(mEventBus);
+        Subscription subscription = mGroupService.getGroupFavorite().subscribe(new Observer<FavoriteGroup>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(FavoriteGroup group) {
+                mGroups.clear();
+                mGroups.addAll(group.getResult());
+                mChannelAdapter.notifyItemRangeInserted(0, mGroups.size());
+                //update tabs
+                mPagerAdapter.setGroups(new ArrayList<>(group.getResult()));
+                mPagerAdapter.notifyDataSetChanged();
+                mBinding.tabs.setTabsFromPagerAdapter(mPagerAdapter);
+            }
+        });
+        mSubscriptions.add(subscription);
 
         //init popup group channel recycler view
         mChannelList.setLayoutManager(new GridLayoutManager(getActivity(), 4));
@@ -84,31 +105,5 @@ public class GroupTabFragment extends Fragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mChannelList);
         return rootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mEventBus.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        mEventBus.unregister(this);
-        super.onStop();
-    }
-
-    public void onEvent(FavoriteGroup group) {
-        mGroups.clear();
-        mGroups.addAll(group.getResult());
-        mChannelAdapter.notifyItemRangeInserted(0, mGroups.size());
-        //update tabs
-        mPagerAdapter.setGroups(new ArrayList<>(group.getResult()));
-        mPagerAdapter.notifyDataSetChanged();
-        mBinding.tabs.setTabsFromPagerAdapter(mPagerAdapter);
-    }
-
-    public void onEvent(RetrofitError error) {
-
     }
 }

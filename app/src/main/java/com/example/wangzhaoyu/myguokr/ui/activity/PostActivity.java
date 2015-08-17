@@ -5,14 +5,12 @@ import android.animation.AnimatorListenerAdapter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.wangzhaoyu.myguokr.AppController;
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.ActivityPostDetailBinding;
 import com.example.wangzhaoyu.myguokr.model.response.GroupPostComment;
@@ -24,13 +22,13 @@ import com.example.wangzhaoyu.myguokr.ui.adapter.GroupPostDetailAdapter;
 
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
-import retrofit.RetrofitError;
+import rx.Observer;
+import rx.Subscription;
 
 /**
  * @author wangzhaoyu
  */
-public class PostActivity extends AppCompatActivity {
+public class PostActivity extends BaseActivity {
     private final static String TAG = PostActivity.class.getSimpleName();
     private static final int ANIM_DURATION_BOTTOMBAR = 100;
 
@@ -42,7 +40,6 @@ public class PostActivity extends AppCompatActivity {
     private boolean mIsBottombarShow = true;
     private GroupService mGroupService;
     private int mPostId;
-    private EventBus mEventBus = new EventBus();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +91,50 @@ public class PostActivity extends AppCompatActivity {
 
         //request data
         mPostId = getIntent().getIntExtra(POST_ID_KEY, 0);
-        mGroupService.getGroupPost(mPostId, mEventBus);
+        Subscription subscription = mGroupService.getGroupPost(mPostId).subscribe(new Observer<PostDetail>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(PostDetail detail) {
+                mPostDetail = detail;
+                mAdapter.setPost(detail);
+                mAdapter.notifyHeaderItemInserted(0);
+                mGroupService.getGroupPostCommentList(0, mPostId).subscribe(new Observer<GroupPostComments>() {
+                    @Override
+                    public void onCompleted() {
+                        mAdapter.loadComplete();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(GroupPostComments comments) {
+                        if (comments.getOffset() == 0) {
+                            mComments.clear();
+                            mComments.addAll(comments.getResult());
+                            mAdapter.notifyContentItemRangeInserted(0, comments.getResult().size());
+                        } else {
+                            int beforeSize = mComments.size();
+                            mComments.addAll(comments.getResult());
+                            mAdapter.notifyContentItemRangeInserted(beforeSize, comments.getResult().size());
+                            mAdapter.loadComplete();
+                        }
+                    }
+                });
+            }
+        });
+        mSubscriptions.add(subscription);
     }
 
     @Override
@@ -109,7 +149,33 @@ public class PostActivity extends AppCompatActivity {
 
     private void loadMore() {
         mAdapter.loadStart();
-        mGroupService.getGroupPostCommentList(mComments.size(), mPostId, mEventBus);
+        Subscription subscription = mGroupService.getGroupPostCommentList(mComments.size(), mPostId).subscribe(new Observer<GroupPostComments>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(GroupPostComments comments) {
+                if (comments.getOffset() == 0) {
+                    mComments.clear();
+                    mComments.addAll(comments.getResult());
+                    mAdapter.notifyContentItemRangeInserted(0, comments.getResult().size());
+                } else {
+                    int beforeSize = mComments.size();
+                    mComments.addAll(comments.getResult());
+                    mAdapter.notifyContentItemRangeInserted(beforeSize, comments.getResult().size());
+                    mAdapter.loadComplete();
+                }
+            }
+        });
+
+        mSubscriptions.add(subscription);
     }
 
     public void onLikeBtnClicked(View view) {
@@ -137,42 +203,6 @@ public class PostActivity extends AppCompatActivity {
                 .translationY(destPos)
                 .setDuration(ANIM_DURATION_BOTTOMBAR)
                 .start();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mEventBus.register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        mEventBus.unregister(this);
-        super.onStop();
-    }
-
-    public void onEvent(PostDetail post) {
-        mPostDetail = post;
-        mAdapter.setPost(post);
-        mAdapter.notifyHeaderItemInserted(0);
-        mGroupService.getGroupPostCommentList(0, mPostId, mEventBus);
-    }
-
-    public void onEvent(GroupPostComments comments) {
-        if (comments.getOffset() == 0) {
-            mComments.clear();
-            mComments.addAll(comments.getResult());
-            mAdapter.notifyContentItemRangeInserted(0, comments.getResult().size());
-        } else {
-            int beforeSize = mComments.size();
-            mComments.addAll(comments.getResult());
-            mAdapter.notifyContentItemRangeInserted(beforeSize, comments.getResult().size());
-            mAdapter.loadComplete();
-        }
-    }
-
-    public void onEvent(RetrofitError error) {
-        mAdapter.loadComplete();
     }
 
     @Override

@@ -7,7 +7,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,16 +28,17 @@ import com.example.wangzhaoyu.myguokr.ui.widget.GlideCircleTransform;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import de.greenrobot.event.EventBus;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import rx.Observer;
+import rx.Subscription;
 
 /**
  * 文章详情页面
  *
  * @author wangzhaoyu
  */
-public class ArticleActivity extends AppCompatActivity {
+public class ArticleActivity extends BaseActivity {
     public static final String TAG = ArticleActivity.class.getSimpleName();
     public static final String ARTICLE_SNAPSHOT_KEY = "article_snapshot_key";
     private static final int ANIM_DURATION_TOOLBAR = 250;
@@ -100,8 +100,31 @@ public class ArticleActivity extends AppCompatActivity {
         mBinding.articleAuthorName.setText(mSnapShot.getAuthor().getNickname());
 
         //init web content
-        HttpService.getInstance().getArticleService().getArticleContent(mSnapShot.getId());
+        Subscription subscribe = HttpService.getInstance().getArticleService().getArticleContent(
+                mSnapShot.getId()).subscribe(new Observer<Response>() {
+            @Override
+            public void onCompleted() {
 
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Response response) {
+                Document doc = Jsoup.parse(new String(((TypedByteArray) response.getBody()).getBytes()));
+                String articleContent = doc.getElementById("articleContent").outerHtml();
+                String copyright = doc.getElementsByClass("copyright").outerHtml();
+                String content = articleContent + copyright;
+                String html = NetUtils.getArticleHtml(content);
+                mBinding.articleWeb.loadDataWithBaseURL("http://www.guokr.com/", html, "text/html",
+                        "charset=UTF-8", null);
+                startWebViewAnimation();
+            }
+        });
+        mSubscriptions.add(subscribe);
     }
 
     @Override
@@ -203,28 +226,5 @@ public class ArticleActivity extends AppCompatActivity {
             intent.putExtra(UserInfoActivity.ARG_UKEY, ukey);
             startActivity(intent);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    public void onEvent(Response response) {
-        Document doc = Jsoup.parse(new String(((TypedByteArray) response.getBody()).getBytes()));
-        String articleContent = doc.getElementById("articleContent").outerHtml();
-        String copyright = doc.getElementsByClass("copyright").outerHtml();
-        String content = articleContent + copyright;
-        String html = NetUtils.getArticleHtml(content);
-        mBinding.articleWeb.loadDataWithBaseURL("http://www.guokr.com/", html, "text/html",
-                "charset=UTF-8", null);
-        startWebViewAnimation();
     }
 }

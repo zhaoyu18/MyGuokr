@@ -3,7 +3,6 @@ package com.example.wangzhaoyu.myguokr.ui.fragment;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +14,13 @@ import com.example.wangzhaoyu.myguokr.databinding.FragmentSetttingsBinding;
 import com.example.wangzhaoyu.myguokr.model.response.NotificationCount;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
 
-import de.greenrobot.event.EventBus;
-import retrofit.RetrofitError;
+import rx.Observer;
+import rx.Subscription;
 
 /**
  * @author wangzhaoyu
  */
-public class SettingsFragment extends Fragment implements View.OnClickListener {
+public class SettingsFragment extends BaseFragment implements View.OnClickListener {
     private static final String TAG = SettingsFragment.class.getSimpleName();
     private FragmentSetttingsBinding mBinding;
 
@@ -56,31 +55,28 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                         })
                         .show();
 
-                HttpService.getInstance().getUserService().getNotifiCount();
+                Subscription subscription = HttpService.getInstance().getUserService().getNotifiCount().subscribe(new Observer<NotificationCount>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(NotificationCount count) {
+                        Toast.makeText(getActivity(), count.getResult().getN() + "", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                mSubscriptions.add(subscription);
                 break;
 
             default:
                 break;
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    public void onEvent(NotificationCount count) {
-        Toast.makeText(getActivity(), count.getResult().getN() + "", Toast.LENGTH_SHORT).show();
-    }
-
-    public void onEvent(RetrofitError error) {
-
     }
 }

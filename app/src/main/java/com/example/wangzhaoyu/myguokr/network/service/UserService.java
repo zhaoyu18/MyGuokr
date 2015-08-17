@@ -5,10 +5,9 @@ import com.example.wangzhaoyu.myguokr.model.response.NotificationCount;
 import com.example.wangzhaoyu.myguokr.model.response.User;
 import com.example.wangzhaoyu.myguokr.network.api.GuokrAPI;
 
-import de.greenrobot.event.EventBus;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * @author wangzhaoyu
@@ -29,38 +28,15 @@ public class UserService {
         return SPUtils.getInstance().getString(SPUtils.KEYS.USER_UKEY);
     }
 
-    public void getUserInfo(String ukey) {
-        mGuokrAPI.getUserInfo(
-                ukey,
-                new Callback<User>() {
-                    @Override
-                    public void success(User user, Response response) {
-                        EventBus.getDefault().post(user);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        EventBus.getDefault().post(error);
-                    }
-                }
-        );
+    public Observable<NotificationCount> getNotifiCount() {
+        return mGuokrAPI.getNotifCount(
+                System.currentTimeMillis(),
+                getAccessToken())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void getNotifiCount() {
-        mGuokrAPI.getNotifCount(
-                System.currentTimeMillis(),
-                getAccessToken(),
-                new Callback<NotificationCount>() {
-                    @Override
-                    public void success(NotificationCount count, Response response) {
-                        EventBus.getDefault().post(count);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        EventBus.getDefault().post(error);
-                    }
-                }
-        );
+    public Observable<User> getUserInfo(String ukey) {
+        return mGuokrAPI.getUserInfo(ukey).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 }

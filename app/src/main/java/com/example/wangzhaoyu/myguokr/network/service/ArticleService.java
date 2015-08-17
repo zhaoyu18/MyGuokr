@@ -8,10 +8,10 @@ import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
 import com.example.wangzhaoyu.myguokr.network.api.GuokrAPI;
 import com.example.wangzhaoyu.myguokr.network.api.GuokrHtmlAPI;
 
-import de.greenrobot.event.EventBus;
-import retrofit.Callback;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * @author wangzhaoyu
@@ -26,78 +26,38 @@ public class ArticleService {
         mGuokrAPI = guokrAPI;
     }
 
-    public void getArticleList(int offset) {
-        mGuokrAPI.getArticleList(
+    public Observable<ArticleList> getArticleList(int offset) {
+        return mGuokrAPI.getArticleList(
                 ApiConfig.Query.RetrieveType.BY_SUBJECT,
                 LIMIT,
-                offset,
-                new Callback<ArticleList>() {
-                    @Override
-                    public void success(ArticleList list, Response response) {
-                        EventBus.getDefault().post(list);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        EventBus.getDefault().post(error);
-                    }
-                }
-        );
+                offset)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void getArticleCommentList(int articleId, int offset) {
-        mGuokrAPI.getArticleCommentList(
+    public Observable<ArticleReplies> getArticleCommentList(int articleId, int offset) {
+        return mGuokrAPI.getArticleCommentList(
                 ApiConfig.Query.RetrieveType.BY_ARTICLE,
                 articleId,
-                offset,
-                new Callback<ArticleReplies>() {
-                    @Override
-                    public void success(ArticleReplies replies, Response response) {
-                        EventBus.getDefault().post(replies);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        EventBus.getDefault().post(error);
-                    }
-                }
-        );
+                offset)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void postArticleComment(int articleId, String content) {
-        mGuokrAPI.postArticleComment(
+    public Observable<ArticleSendComment> postArticleComment(int articleId, String content) {
+        return mGuokrAPI.postArticleComment(
                 articleId,
                 content,
                 HttpService.getInstance().getUserService().getAccessToken(),
-                "", //body required..
-                new Callback<ArticleSendComment>() {
-                    @Override
-                    public void success(ArticleSendComment comment, Response response) {
-                        EventBus.getDefault().post(comment);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        EventBus.getDefault().post(error);
-                    }
-                }
-        );
+                "")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void getArticleContent(int articleId) {
-        mGuokrHtmlAPI.getArticleContent(
-                articleId,
-                new Callback<Response>() {
-                    @Override
-                    public void success(Response response, Response response2) {
-                        EventBus.getDefault().post(response);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-
-                    }
-                }
-        );
+    public Observable<Response> getArticleContent(int articleId) {
+        return mGuokrHtmlAPI.getArticleContent(
+                articleId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

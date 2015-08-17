@@ -4,13 +4,11 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.wangzhaoyu.myguokr.R;
 import com.example.wangzhaoyu.myguokr.databinding.FragmentGroupPostListBinding;
@@ -26,21 +24,45 @@ import com.example.wangzhaoyu.myguokr.ui.widget.pulltorefresh.header.StoreHouseH
 
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
-import retrofit.RetrofitError;
+import rx.Observer;
+import rx.Subscription;
 
 /**
  * @author wangzhaoyu
  */
-public class GroupPostListFragment extends Fragment {
+public class GroupPostListFragment extends BaseFragment {
     private static final String TAG = GroupPostListFragment.class.getSimpleName();
     private FragmentGroupPostListBinding mBinding;
     private GroupPostAdapter mAdapter;
     private ArrayList<PostSnapShot> mPostSnapShots;
     private GroupService mGroupService;
-    private EventBus mEventBus = new EventBus();
     private Mode mMode = Mode.GROUPS_HOT_POST;
     private int mGroupId;
+    private Observer mObserver = new Observer<GroupPosts>() {
+        @Override
+        public void onCompleted() {
+            mAdapter.loadComplete();
+            mBinding.refreshLayout.refreshComplete();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onNext(GroupPosts posts) {
+            if (posts.getOffset() == 0) {
+                mPostSnapShots.clear();
+                mPostSnapShots.addAll(posts.getResult());
+                mAdapter.notifyDataSetChanged();
+            } else {
+                int beforeSize = mPostSnapShots.size();
+                mPostSnapShots.addAll(posts.getResult());
+                mAdapter.notifyContentItemRangeInserted(beforeSize, posts.getResult().size());
+            }
+        }
+    };
 
     public enum Mode {
         GROUPS_HOT_POST,
@@ -137,90 +159,74 @@ public class GroupPostListFragment extends Fragment {
     }
 
     private void requestCacheData() {
+        Subscription subscribe = null;
         //request data
         switch (mMode) {
             case GROUPS_HOT_POST:
-                mGroupService.getGroupHotPostListCacheFirst(0, mEventBus);
+                subscribe = mGroupService.getGroupHotPostListCacheFirst(0).subscribe(mObserver);
                 break;
             case USER_GROUP_POST:
-                mGroupService.getGroupUserPostListCacheFirst(0, mEventBus);
+                subscribe = mGroupService.getGroupUserPostListCacheFirst(0).subscribe(mObserver);
                 break;
             case GROUP_POST:
-                mGroupService.getGroupPostListCacheFirst(0, mGroupId, mEventBus);
+                subscribe = mGroupService.getGroupPostListCacheFirst(0, mGroupId).subscribe(mObserver);
                 break;
 
             default:
                 break;
         }
+
+        if (subscribe != null) {
+            mSubscriptions.add(subscribe);
+        }
+
+        refresh();
     }
 
     private void refresh() {
+        Subscription subscribe = null;
         //request data
         switch (mMode) {
             case GROUPS_HOT_POST:
-                mGroupService.getGroupHotPostList(0, mEventBus);
+                subscribe = mGroupService.getGroupHotPostList(0).subscribe(mObserver);
                 break;
             case USER_GROUP_POST:
-                mGroupService.getGroupUserPostList(0, mEventBus);
+                subscribe = mGroupService.getGroupUserPostList(0).subscribe(mObserver);
                 break;
             case GROUP_POST:
-                mGroupService.getGroupPostList(0, mGroupId, mEventBus);
+                subscribe = mGroupService.getGroupPostList(0, mGroupId).subscribe(mObserver);
                 break;
 
             default:
                 break;
+        }
+
+        if (subscribe != null) {
+            mSubscriptions.add(subscribe);
         }
     }
 
     private void loadMore() {
+        Subscription subscribe = null;
+
         mAdapter.loadStart();
         switch (mMode) {
             case GROUPS_HOT_POST:
-                mGroupService.getGroupHotPostList(mPostSnapShots.size(), mEventBus);
+                subscribe = mGroupService.getGroupHotPostList(mPostSnapShots.size()).subscribe(mObserver);
                 break;
             case USER_GROUP_POST:
-                mGroupService.getGroupUserPostList(mPostSnapShots.size(), mEventBus);
+                subscribe = mGroupService.getGroupUserPostList(mPostSnapShots.size()).subscribe(mObserver);
                 break;
             case GROUP_POST:
-                mGroupService.getGroupPostList(mPostSnapShots.size(), mGroupId, mEventBus);
+                subscribe = mGroupService.getGroupPostList(mPostSnapShots.size(), mGroupId).subscribe(mObserver);
                 break;
 
             default:
                 break;
         }
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mEventBus.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        mEventBus.unregister(this);
-        super.onStop();
-    }
-
-    public void onEvent(GroupPosts posts) {
-        if (posts.getOffset() == 0) {
-            mPostSnapShots.clear();
-            mPostSnapShots.addAll(posts.getResult());
-            mAdapter.notifyDataSetChanged();
-            mBinding.refreshLayout.refreshComplete();
-        } else {
-            int beforeSize = mPostSnapShots.size();
-            mPostSnapShots.addAll(posts.getResult());
-            mAdapter.notifyContentItemRangeInserted(beforeSize, posts.getResult().size());
-            mAdapter.loadComplete();
-        }
-    }
-
-    public void onEvent(RetrofitError error) {
-        mAdapter.loadComplete();
-        mBinding.refreshLayout.refreshComplete();
-        if (error.getResponse().getStatus() == 504) {
-            refresh();
+        if (subscribe != null) {
+            mSubscriptions.add(subscribe);
         }
     }
 }

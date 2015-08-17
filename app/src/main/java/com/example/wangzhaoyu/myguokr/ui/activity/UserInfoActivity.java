@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.example.wangzhaoyu.myguokr.R;
@@ -15,15 +14,13 @@ import com.example.wangzhaoyu.myguokr.model.response.User;
 import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.ui.fragment.UserInfoFragment;
 
-import de.greenrobot.event.EventBus;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.Observer;
+import rx.Subscription;
 
 /**
  * @author wangzhaoyu
  */
-public class UserInfoActivity extends AppCompatActivity {
+public class UserInfoActivity extends BaseActivity {
     private ActivitySingleFragmentBinding mBinding;
     public static final String ARG_UKEY = "ukey";
     private String mUkey;
@@ -45,7 +42,25 @@ public class UserInfoActivity extends AppCompatActivity {
 
         mUkey = getIntent().getStringExtra(ARG_UKEY);
 
-        HttpService.getInstance().getUserService().getUserInfo(mUkey);
+        Subscription subscription = HttpService.getInstance().getUserService().getUserInfo(mUkey).subscribe(new Observer<User>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(User user) {
+                mUser = user;
+                addMainFragment(new UserInfoFragment());
+            }
+        });
+
+        mSubscriptions.add(subscription);
     }
 
     @Override
@@ -68,26 +83,5 @@ public class UserInfoActivity extends AppCompatActivity {
         fragmentTransaction
                 .add(R.id.fragment_container, fragment)
                 .commit();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    public void onEvent(User user) {
-        mUser = user;
-        addMainFragment(new UserInfoFragment());
-    }
-
-    public void onEvent(RetrofitError error) {
-
     }
 }

@@ -8,10 +8,9 @@ import com.example.wangzhaoyu.myguokr.network.HttpService;
 import com.example.wangzhaoyu.myguokr.network.api.ApiConfig;
 import com.example.wangzhaoyu.myguokr.network.api.GuokrAPI;
 
-import de.greenrobot.event.EventBus;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * @author wangzhaoyu
@@ -29,24 +28,14 @@ public class GroupService {
      *
      * @param offset
      */
-    public void getGroupHotPostList(int offset, final EventBus eventBus) {
-        Callback<GroupPosts> callback = new Callback<GroupPosts>() {
-            @Override
-            public void success(GroupPosts posts, Response response) {
-                eventBus.post(posts);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                eventBus.post(error);
-            }
-        };
-
-        mGuokrAPI.getGroupHotPostList(
+    public Observable<GroupPosts> getGroupHotPostList(int offset) {
+        return mGuokrAPI.getGroupHotPostList(
                 ApiConfig.Query.RetrieveType.HOT_POST,
                 LIMIT,
-                offset,
-                callback);
+                offset)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .retry(3);
     }
 
     /**
@@ -54,25 +43,14 @@ public class GroupService {
      *
      * @param offset
      */
-    public void getGroupHotPostListCacheFirst(int offset, final EventBus eventBus) {
-        Callback<GroupPosts> callback = new Callback<GroupPosts>() {
-            @Override
-            public void success(GroupPosts posts, Response response) {
-                eventBus.post(posts);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                eventBus.post(error);
-            }
-        };
-
-        mGuokrAPI.getGroupHotPostList(
+    public Observable<GroupPosts> getGroupHotPostListCacheFirst(int offset) {
+        return mGuokrAPI.getGroupHotPostList(
                 ApiConfig.Header.CacheControl.ONE_HOUR_STALE,
                 ApiConfig.Query.RetrieveType.HOT_POST,
                 LIMIT,
-                offset,
-                callback);
+                offset)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     /**
@@ -80,26 +58,16 @@ public class GroupService {
      *
      * @param offset
      * @param groupId
-     * @param eventBus
      */
-    public void getGroupPostList(int offset, int groupId, final EventBus eventBus) {
-        mGuokrAPI.getGroupPostList(
+    public Observable<GroupPosts> getGroupPostList(int offset, int groupId) {
+        return mGuokrAPI.getGroupPostList(
                 ApiConfig.Query.RetrieveType.BY_GROUP,
                 groupId,
                 LIMIT,
-                offset,
-                new Callback<GroupPosts>() {
-                    @Override
-                    public void success(GroupPosts posts, Response response) {
-                        eventBus.post(posts);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        eventBus.post(error);
-                    }
-                }
-        );
+                offset)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .retry(3);
     }
 
     /**
@@ -107,80 +75,48 @@ public class GroupService {
      *
      * @param offset
      * @param groupId
-     * @param eventBus
      */
-    public void getGroupPostListCacheFirst(int offset, int groupId, final EventBus eventBus) {
-        mGuokrAPI.getGroupPostList(
+    public Observable<GroupPosts> getGroupPostListCacheFirst(int offset, int groupId) {
+        return mGuokrAPI.getGroupPostList(
                 ApiConfig.Header.CacheControl.ONE_HOUR_STALE,
                 ApiConfig.Query.RetrieveType.BY_GROUP,
                 groupId,
                 LIMIT,
-                offset,
-                new Callback<GroupPosts>() {
-                    @Override
-                    public void success(GroupPosts posts, Response response) {
-                        eventBus.post(posts);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        eventBus.post(error);
-                    }
-                }
-        );
+                offset)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     /**
      * get group user post list
      *
      * @param offset
-     * @param eventBus
      */
-    public void getGroupUserPostList(int offset, final EventBus eventBus) {
-        mGuokrAPI.getGroupUserPostList(
+    public Observable<GroupPosts> getGroupUserPostList(int offset) {
+        return mGuokrAPI.getGroupUserPostList(
                 ApiConfig.Query.RetrieveType.RECENT_REPLIES,
                 HttpService.getInstance().getUserService().getAccessToken(),
                 LIMIT,
-                offset,
-                new Callback<GroupPosts>() {
-                    @Override
-                    public void success(GroupPosts posts, Response response) {
-                        eventBus.post(posts);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        eventBus.post(error);
-                    }
-                }
-        );
+                offset)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .retry(3);
     }
 
     /**
      * get group user post list
      *
      * @param offset
-     * @param eventBus
      */
-    public void getGroupUserPostListCacheFirst(int offset, final EventBus eventBus) {
-        mGuokrAPI.getGroupUserPostList(
+    public Observable<GroupPosts> getGroupUserPostListCacheFirst(int offset) {
+        return mGuokrAPI.getGroupUserPostList(
                 ApiConfig.Header.CacheControl.ONE_HOUR_STALE,
                 ApiConfig.Query.RetrieveType.RECENT_REPLIES,
                 HttpService.getInstance().getUserService().getAccessToken(),
                 LIMIT,
-                offset,
-                new Callback<GroupPosts>() {
-                    @Override
-                    public void success(GroupPosts posts, Response response) {
-                        eventBus.post(posts);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        eventBus.post(error);
-                    }
-                }
-        );
+                offset)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     /**
@@ -189,25 +125,15 @@ public class GroupService {
      * @param offset
      * @param postId
      */
-    public void getGroupPostCommentList(int offset, int postId, final EventBus eventBus) {
-        Callback<GroupPostComments> callback = new Callback<GroupPostComments>() {
-            @Override
-            public void success(GroupPostComments comment, Response response) {
-                eventBus.post(comment);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                eventBus.post(error);
-            }
-        };
-
-        mGuokrAPI.getGroupPostCommentList(
+    public Observable<GroupPostComments> getGroupPostCommentList(int offset, int postId) {
+        return mGuokrAPI.getGroupPostCommentList(
                 ApiConfig.Query.RetrieveType.BY_POST,
                 LIMIT,
                 offset,
-                postId,
-                callback);
+                postId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .retry(3);
     }
 
     /**
@@ -215,44 +141,22 @@ public class GroupService {
      *
      * @param postId
      */
-    public void getGroupPost(int postId, final EventBus eventBus) {
-        Callback<PostDetail> callback = new Callback<PostDetail>() {
-            @Override
-            public void success(PostDetail detail, Response response) {
-                eventBus.post(detail);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                eventBus.post(error);
-            }
-        };
-
-        mGuokrAPI.getGroupPost(postId, callback);
+    public Observable<PostDetail> getGroupPost(int postId) {
+        return mGuokrAPI.getGroupPost(postId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .retry(3);
     }
 
     /**
      * get user favorite groups, 100 groups at most
-     *
-     * @param eventBus
      */
-    public void getGroupFavorite(final EventBus eventBus) {
-        Callback<FavoriteGroup> callback = new Callback<FavoriteGroup>() {
-            @Override
-            public void success(FavoriteGroup group, Response response) {
-                eventBus.post(group);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                eventBus.post(error);
-            }
-        };
-
-        mGuokrAPI.getGroupFavorite(
+    public Observable<FavoriteGroup> getGroupFavorite() {
+        return mGuokrAPI.getGroupFavorite(
                 HttpService.getInstance().getUserService().getAccessToken(),
-                100,
-                callback
-        );
+                100)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .retry(3);
     }
 }
